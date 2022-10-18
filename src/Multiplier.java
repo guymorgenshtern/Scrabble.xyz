@@ -13,6 +13,7 @@ public abstract class Multiplier {
     /**
      * Creates a Multiplier with the specified size.
      * @param multiplier An integer to represent the size of the multiplier.
+     * @author Emily Tang 101192604
      */
     public Multiplier(int multiplier) {
         MULTIPLIER = multiplier;
@@ -22,6 +23,7 @@ public abstract class Multiplier {
     /**
      * @param score An integer representing the score of the letter/word.
      * @return An integer representing the score of the letter/word after applying the multiplier.
+     * @author Emily Tang 101192604
      */
     public int calculateScore(int score) {
         // determine if the multiplier has not been used already
