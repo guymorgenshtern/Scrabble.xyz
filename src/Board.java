@@ -14,7 +14,26 @@
 
  */
 
+import java.util.HashMap;
+import java.util.HashSet; // Use Hashset for file containing words Dictionary
+
 public class Board {
 
+    private char [][] scrabbleBoard;
+    private static HashMap<String, String> boardScore;
+
+    /**
+     * Board Initialize (Init) Method
+     *
+     */
+    private void initBoard(){
+        this.scrabbleBoard = new char[15][15];
+        for (int i = 14; i >= 0; i--){
+            for (int j=0; j<15; j++){
+                this.scrabbleBoard[i][j] = ' ';
+
+            }
+        }
+    }
 
 }
