@@ -42,6 +42,8 @@ public class Board {
         put ie:
 
                 Land on triple word -> Mapping is; board.Score.put("00", "3W")
+
+         - Initialize Squares that are effected by multipliers in this class
          */
         Board.boardScore = new HashMap<>();
 
@@ -64,6 +66,21 @@ public class Board {
 
     }
 
+    // This may not be needed as we can just keep score in the game class later on post implementation of Board
+    public static String getTileBoardScore(String ref){
+        return Board.boardScore.getOrDefault(ref, null); // ref Object Key
+    }
+
+    /**
+     *
+     * @param row
+     * @param column
+     * @return word user placed their word on "word place on (x, y)"
+     */
+    public char getTileOnBoard(int row, int column){
+        return this.scrabbleBoard[row][column];
+
+    }
 
 
 
