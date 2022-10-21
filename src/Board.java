@@ -36,4 +36,36 @@ public class Board {
         }
     }
 
+    private void initBoardScore(){
+        /*
+        In this case not sure if multiplier classes (Word + Letter) should be called/used here in the Map with a
+        put ie:
+
+                Land on triple word -> Mapping is; board.Score.put("00", "3W")
+         */
+        Board.boardScore = new HashMap<>();
+
+
+        /*
+        Add word and letter multipliers here
+         */
+
+        //  Double Word
+
+
+        //  Triple Word
+
+
+        //  Double Letter
+
+
+        //  Triple Letter
+
+
+    }
+
+
+
+
+
 }
