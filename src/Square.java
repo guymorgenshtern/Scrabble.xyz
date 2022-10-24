@@ -4,7 +4,7 @@
 public class Square {
 
     /** A Letter that is placed on the Square. */
-    private Letter letter;
+    private char letter;
 
     /** A Letter/Word Multiplier. */
     private Multiplier multiplier;
@@ -27,7 +27,7 @@ public class Square {
     /**
      * @return The Letter that is on the Square.
      */
-    public Letter getLetter() {
+    public char getLetter() {
         return letter;
     }
 
@@ -35,8 +35,8 @@ public class Square {
      * @param letter A Letter to be placed on the Square.
      * @return True, if the Letter was placed on the Square successfully. False, if not.
      */
-    public boolean setLetter(Letter letter) {
-        if (letter != null) {
+    public boolean setLetter(char letter) {
+        if (letter != ' ') {
             this.letter = letter;
             return true;
         }
