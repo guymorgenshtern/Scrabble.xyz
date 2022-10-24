@@ -31,7 +31,7 @@ public class Game {
     }
 
     private static void printLegend() {
-        System.out.println("+: Triple Word, ~: Double Word, -: Triple Letter, `: Double Letter");
+        System.out.println("+: Triple Word, ~: Double Word, -: Triple Letter, *: Double Letter");
     }
 
     public static void initializeLetterBag(String fileName) throws IOException {
@@ -61,6 +61,10 @@ public class Game {
             currentPlayer = playerList.get(playerTurnCounter % playerList.size());
             board.printBoard();
             printLegend();
+            System.out.println(currentPlayer.getName() + ":");
+            System.out.println("Your current rack is: ");
+            currentPlayer.printRack();
+            System.out.println(" ");
             System.out.println("What word do you want to play? \"q\" to quit");
             String word = userInput.nextLine();
 

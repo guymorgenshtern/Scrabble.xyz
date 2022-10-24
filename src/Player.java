@@ -12,16 +12,16 @@ public class Player {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void addLetter(String l) {
         if (this.availableLetters.containsKey(l)) {
             this.availableLetters.put(l, this.availableLetters.get(l) + 1);
         } else {
             this.availableLetters.put(l, 1);
         }
-    }
-
-    public void drawLetters(Letter letter) {
-
     }
 
     private boolean hasLettersNeededForWord(String input) {
@@ -52,5 +52,12 @@ public class Player {
 
     }
 
+    public void printRack(){
+        for (String k : availableLetters.keySet()) {
+            for (int i = 0; i < availableLetters.get(k); i++) {
+                System.out.print(k + ",");
+            }
+        }
+    }
 
 }

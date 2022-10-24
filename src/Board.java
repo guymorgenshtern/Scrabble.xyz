@@ -36,7 +36,7 @@ public class Board {
         Board.boardScore = new HashMap<>();
         this.initBoard(fileName);
     }
-    private void initBoard() throws FileNotFoundException {
+    private void initBoard() {
         this.scrabbleBoard = new Square[15][15];
         for (int i = 14; i >= 0; i--) {
             for (int j = 0; j < 15; j++) {
@@ -58,7 +58,6 @@ public class Board {
                 row++;
                 for (char c : line.toCharArray()) {
                     column++;
-                    System.out.println(row + " " + column);
                     this.scrabbleBoard[row][column] = new Square();
                     scrabbleBoard[row][column].setLetter(c);
                     if (c != '.') {
@@ -89,14 +88,14 @@ public class Board {
         Add word and letter multipliers here
          */
         switch (type) {
-            case 'D':
+            case '+':
                 this.scrabbleBoard[row][column] = new Square(new WordMultiplier(2));
-            case 'T':
+            case '~':
                 this.scrabbleBoard[row][column] = new Square(new WordMultiplier(3));
-            case 'd':
+            case '*':
                 this.scrabbleBoard[row][column] = new Square(new LetterMultiplier(2));
-            case 't':
-                this.scrabbleBoard[row][column] = new Square(new LetterMultiplier(2));
+            case '-':
+                this.scrabbleBoard[row][column] = new Square(new LetterMultiplier(3));
         }
         this.scrabbleBoard[row][column].setLetter(type);
     }
@@ -127,9 +126,15 @@ public class Board {
      */
 
     public void printBoard() {
-        for (Square[] squares : scrabbleBoard) {
+        System.out.printf("%7d", 0);
+        for (int i = 1; i < scrabbleBoard.length; i++) {
+            System.out.printf("%5d", i);
+        }
+        System.out.println(" ");
+        for (int k = 0; k < scrabbleBoard.length; k++) {
+            System.out.printf("%2d", k);
             for (int j = 0; j < scrabbleBoard[0].length; j++) {
-                System.out.print(squares[j].getLetter());
+                System.out.printf("%5s", scrabbleBoard[k][j].getLetter());
             }
             System.out.println(" ");
         }

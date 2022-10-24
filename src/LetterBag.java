@@ -1,12 +1,16 @@
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class LetterBag  {
     //created a HashMap object called m
-    private HashMap<String, Integer> letterMap = new HashMap<>();
-    private int size = 0;
-    public LetterBag() {
+    private HashMap<String, Integer> letterMap;
+    private int size;
 
+    public LetterBag() {
+        size = 0;
+        letterMap = new HashMap<>();
     }
+
     public void addLetter(String letter, int quantity) {
         letterMap.put(letter, quantity);
         this.size += quantity;
@@ -25,15 +29,17 @@ public class LetterBag  {
 
     public String getRandomLetter() {
          int random = (int) ((Math.random() * (this.size)));
+         String[] availableLetters = new String[this.size];
          int count = 0;
          for (String k : letterMap.keySet()) {
-             count += letterMap.get(k);
-             if (count == random) {
-                 removeLetter(k);
-                 return k;
+             for (int i = 0; i < letterMap.get(k); i++) {
+                 availableLetters[count] = k;
+                 count++;
+
              }
          }
-         return null;
+         removeLetter(availableLetters[random]);
+         return availableLetters[random];
     }
 
     public int bagSize() {
