@@ -1,8 +1,6 @@
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class LetterBag  {
-    //created a HashMap object called m
     private HashMap<String, Integer> letterMap;
     private int size;
 
@@ -17,13 +15,14 @@ public class LetterBag  {
     }
     // maybe change return type depending on how we do game class
     public void removeLetter(String letter) {
-        if (size > 0) {
+        letter = letter.toUpperCase();
+        if (this.size > 0) {
             if (letterMap.get(letter) > 1) {
                 letterMap.put(letter, letterMap.get(letter) - 1);
-                this.size--;
             } else {
                 letterMap.remove(letter);
             }
+            this.size--;
         }
     }
 
@@ -33,13 +32,14 @@ public class LetterBag  {
          int count = 0;
          for (String k : letterMap.keySet()) {
              for (int i = 0; i < letterMap.get(k); i++) {
-                 availableLetters[count] = k;
+                 if (count == random) {
+                     removeLetter(k);
+                     return k;
+                 }
                  count++;
-
              }
          }
-         removeLetter(availableLetters[random]);
-         return availableLetters[random];
+         return null;
     }
 
     public int bagSize() {

@@ -40,10 +40,11 @@ public class Player {
     public boolean playWord(String input) {
         if (hasLettersNeededForWord(input)) {
             for (char l : input.toCharArray()) {
-                if (availableLetters.get(String.valueOf(l).toUpperCase()) - 1 == 0) {
-                    availableLetters.remove(l+"");
+                String c = String.valueOf(l).toUpperCase();
+                if (availableLetters.get(c) - 1 == 0) {
+                    availableLetters.remove(c);
                 } else {
-                    availableLetters.put(l + " ", availableLetters.get(String.valueOf(l).toUpperCase()) - 1);
+                    availableLetters.put(c, availableLetters.get(c) - 1);
                 }
             }
             return true;
