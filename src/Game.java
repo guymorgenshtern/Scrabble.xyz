@@ -1,3 +1,5 @@
+import com.zetcode.Library;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,6 +14,7 @@ public class Game {
     private static Player p2;
     private static ArrayList<Player> playerList;
     private static LetterBag letterBag;
+    private static Library lib;
 
     public enum Direction {
         HORIZONTAL,
@@ -20,6 +23,7 @@ public class Game {
 
     public static void main (String[] args) throws IOException {
         board = new Board("res/default_board.txt");
+        lib = new Library();
 
         playerList = new ArrayList<>();
         p1 = new Player("Guy");
@@ -94,8 +98,10 @@ public class Game {
             System.out.println("Starting column?");
             int column = Integer.parseInt(userInput.nextLine());
 
+            ScrabbleMove move = new ScrabbleMove(word, row, column, direction);
+
             //are all the spaces player wants to use available and does player have the letters necessary
-            if (board.checkMoveValidity(word, row, column, direction) && (currentPlayer.playWord(word))) {
+            if (lib.isValidWord(word) && board.checkMoveValidity(move) && (currentPlayer.playWord(word))) {
 
                 //setting board
                 if (direction == Direction.VERTICAL) {
@@ -111,7 +117,7 @@ public class Game {
                 }
 
                 //awarding score
-                currentPlayer.setScore(currentPlayer.getScore() + board.calculateMoveScore(word, row, column, direction));
+                currentPlayer.setScore(currentPlayer.getScore() + board.calculateMoveScore(move));
 
                 //re-upping letters
                 for (int i = 0 ; i < word.length(); i++) {

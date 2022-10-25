@@ -7,21 +7,26 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Library {
-    public static void words() throws IOException{
-        ArrayList<String> wordMap = new ArrayList<>();
+    private ArrayList<String> wordMap;
 
-        var url = new URL("https://www.mit.edu/~ecprice/wordlist.10000");
-        var br = new BufferedReader(new InputStreamReader(url.openStream()));
+    public Library() throws IOException {
+        wordMap = new ArrayList<>();
+
+        URL url = new URL("https://www.mit.edu/~ecprice/wordlist.10000");
+        BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
 
         String line;
 
         while ((line = br.readLine()) != null) {
             wordMap.add(line);
         }
-        System.out.println(wordMap);
     }
 
-    public static void main(String[] args) throws IOException{
-        words();
+    public boolean isValidWord(String word) {
+        return this.wordMap.contains(word);
     }
+
+//    public static void main(String[] args) throws IOException{
+//        words();
+//    }
 }

@@ -18,25 +18,38 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet; // Use Hashset for file containing words Dictionary
 
+/**
+ * Board
+ * Representation of the Scrabble board
+ * @author francisco 101147447
+ * @author guymorgenshtern 101151430
+ */
 public class Board {
+
 
     private Square [][] scrabbleBoard;
     private static HashMap<String, Multiplier> boardScore;
 
     /**
-     * Board Initialize (Init) Method
-     *
+     * Constructor for Board
+     * @param fileName
+     * @throws IOException
      */
-
     public Board(String fileName) throws IOException {
         this.scrabbleBoard = new Square[15][15];
         Board.boardScore = new HashMap<>();
         this.initBoard(fileName);
     }
+
+    /**
+     * Board Initialize (Init) Method
+     *
+     */
     private void initBoard() {
         this.scrabbleBoard = new Square[15][15];
         for (int i = 14; i >= 0; i--) {
@@ -128,16 +141,16 @@ public class Board {
                 || s.getLetter() == '-');
     }
 
-    public boolean checkMoveValidity(String word, int row, int column, Game.Direction direction) {
-        if (direction == Game.Direction.HORIZONTAL) {
-            for (int i = column; i < word.length(); i++) {
-                if(isSquareFilled(row,i)) {
+    public boolean checkMoveValidity(ScrabbleMove move) {
+        if (move.getDirection() == Game.Direction.HORIZONTAL) {
+            for (int i = move.getColumn(); i < move.getWord().length(); i++) {
+                if(isSquareFilled(move.getRow(),i)) {
                     return false;
                 }
             }
         } else {
-            for (int i = row; i < word.length(); i++) {
-                if(isSquareFilled(i,column)) {
+            for (int i = move.getRow(); i < move.getWord().length(); i++) {
+                if(isSquareFilled(i,move.getColumn())) {
                     return false;
                 }
             }
@@ -146,35 +159,31 @@ public class Board {
         return true;
     }
 
-    public int calculateMoveScore(String word, int row, int column, Game.Direction direction) {
+    public int calculateMoveScore(ScrabbleMove move) {
 
         //currently doesn't work for word multipliers
         //need to find a good way to differentiate between different word and letter multipliers
         int total = 0;
-        if (direction == Game.Direction.HORIZONTAL) {
-            System.out.println("here");
-            System.out.println(column + " " + word);
-            for (int i = column; i < column + word.length(); i++) {
+        if (move.getDirection() == Game.Direction.HORIZONTAL) {
+            for (int i = move.getColumn(); i < move.getColumn() + move.getWord().length(); i++) {
                 //1 is a placehplder for letter value
-                System.out.println("in for");
-                if(this.scrabbleBoard[row][i].isPremiumSquare()) {
-                    total += this.scrabbleBoard[row][i].getMultiplier().calculateScore(1);
+
+                if(this.scrabbleBoard[move.getRow()][i].isPremiumSquare()) {
+                    total += this.scrabbleBoard[move.getRow()][i].getMultiplier().calculateScore(1);
                 } else {
                     total++;
                 }
             }
         } else {
-            for (int i = row; i < row + word.length(); i++) {
+            for (int i = move.getRow(); i < move.getRow() + move.getWord().length(); i++) {
                 //1 is a placehplder for letter value
-                if(this.scrabbleBoard[i][column].isPremiumSquare()) {
-                    System.out.println("here 2");
-                    total += this.scrabbleBoard[row][i].getMultiplier().calculateScore(1);
+                if(this.scrabbleBoard[i][move.getColumn()].isPremiumSquare()) {
+                    total += this.scrabbleBoard[i][move.getColumn()].getMultiplier().calculateScore(1);
                 } else {
                     total++;
                 }
             }
         }
-        System.out.println(total);
         return total;
     }
 
@@ -192,5 +201,27 @@ public class Board {
             System.out.println(" ");
         }
     }
+
+//    public ArrayList<String> surroundingWords(ScrabbleMove move) {
+//        ArrayList<String> surroundingWords = new ArrayList<>();
+//        String foundWord = move.getWord();
+//        int count = 1;
+//        if (move.getDirection() == Game.Direction.HORIZONTAL) {
+//            while ((move.getColumn() - count >= 0) && isSquareFilled(move.getRow(), move.getColumn() - count)) {
+//                foundWord = (this.scrabbleBoard[move.getRow()][move.getColumn() - count].getLetter())
+//                        + foundWord;
+//                System.out.println(this.scrabbleBoard[move.getRow()][move.getColumn() - count]);
+//                count++;
+//            }
+//            count = 1;
+//            while (isSquareFilled(move.getRow(), move.getColumn() + move.getWord().length() + count)) {
+//                foundWord = foundWord + (this.scrabbleBoard[move.getRow()][move.getColumn() - count].getLetter());
+//                count++;
+//
+//            }
+//            surroundingWords.add(foundWord);
+//        }
+//
+//    }
 
 }
