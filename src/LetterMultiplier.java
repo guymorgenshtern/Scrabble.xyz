@@ -6,6 +6,7 @@ public class LetterMultiplier extends Multiplier {
     /**
      * Creates a LetterMultiplier with the specified size.
      * @param multiplier An integer to represent the size of the letter multiplier.
+     * @author Emily Tang 101192604
      */
     public LetterMultiplier(int multiplier) {
         super(multiplier);
