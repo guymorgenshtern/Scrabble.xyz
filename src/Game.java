@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Game {
@@ -11,6 +12,11 @@ public class Game {
     private static Player p2;
     private static ArrayList<Player> playerList;
     private static LetterBag letterBag;
+
+    public enum Direction {
+        HORIZONTAL,
+        VERTICAL
+    }
 
     public static void main (String[] args) throws IOException {
         board = new Board("res/default_board.txt");
@@ -72,7 +78,7 @@ public class Game {
             }
 
             System.out.println("Play word (h)orizontally or (v)ertically?");
-            String direction = userInput.nextLine();
+            Direction direction = userInput.nextLine().equals("h") ? Direction.HORIZONTAL : Direction.VERTICAL;
 
             System.out.println("Starting row?");
             int row = Integer.parseInt(userInput.nextLine());
@@ -80,8 +86,9 @@ public class Game {
             System.out.println("Starting column?");
             int column = Integer.parseInt(userInput.nextLine());
 
-            if (currentPlayer.playWord(word)) {
-                if (direction.equals("v")) {
+
+            if (board.checkMoveValidity(word, row, column, direction) && (currentPlayer.playWord(word))) {
+                if (direction == Direction.VERTICAL) {
                     for (char c : word.toCharArray()) {
                         Game.board.setTile(c, row, column);
                         row++;

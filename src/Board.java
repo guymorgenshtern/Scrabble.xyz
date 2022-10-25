@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet; // Use Hashset for file containing words Dictionary
 
@@ -69,7 +70,6 @@ public class Board {
         } finally {
             br.close();
         }
-
     }
 
     //Francisco Degrano
@@ -121,9 +121,30 @@ public class Board {
         return true;
     }
 
-    /*
-     *      ADD ADDITIONAL NEEDED METHODS FOR BOARD CLASS
-     */
+    public boolean isSquareFilled(int row, int column) {
+        Square s = this.scrabbleBoard[row][column];
+
+        return !(s.getLetter() == '.' || s.getLetter() == '+' || s.getLetter() == '*' || s.getLetter() == '~'
+                || s.getLetter() == '-');
+    }
+
+    public boolean checkMoveValidity(String word, int row, int column, Game.Direction direction) {
+        if (direction == Game.Direction.HORIZONTAL) {
+            for (int i = column; i < word.length(); i++) {
+                if(isSquareFilled(row,i)) {
+                    return false;
+                }
+            }
+        } else {
+            for (int i = row; i < word.length(); i++) {
+                if(isSquareFilled(i,column)) {
+                    return false;
+                }
+            }
+        }
+        //validity checks for surrounding letter combinations creating valid words will eventually be added
+        return true;
+    }
 
     public void printBoard() {
         System.out.printf("%7d", 0);
