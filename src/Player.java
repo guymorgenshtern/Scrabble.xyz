@@ -17,6 +17,7 @@ public class Player {
     }
 
     public void addLetter(String l) {
+        l = l.toUpperCase();
         if (this.availableLetters.containsKey(l)) {
             this.availableLetters.put(l, this.availableLetters.get(l) + 1);
         } else {
@@ -28,7 +29,7 @@ public class Player {
         char[] inputAsArray = input.toCharArray();
 
         for (char c : inputAsArray) {
-            int q = availableLetters.getOrDefault(c + "", 0);
+            int q = availableLetters.getOrDefault(String.valueOf(c).toUpperCase(), 0);
             if (q == 0) {
                 return false;
             }
@@ -39,10 +40,10 @@ public class Player {
     public boolean playWord(String input) {
         if (hasLettersNeededForWord(input)) {
             for (char l : input.toCharArray()) {
-                if (availableLetters.get(l+"") - 1 == 0) {
+                if (availableLetters.get(String.valueOf(l).toUpperCase()) - 1 == 0) {
                     availableLetters.remove(l+"");
                 } else {
-                    availableLetters.put(l + " ", availableLetters.get(l+"") - 1);
+                    availableLetters.put(l + " ", availableLetters.get(String.valueOf(l).toUpperCase()) - 1);
                 }
             }
             return true;
