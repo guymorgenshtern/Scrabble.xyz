@@ -4,23 +4,39 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ * A text-based playable version of Scrabble.
+ * @author Guy Morgenshtern 101151430
+ */
 public class Game {
 
+    /** A Scrabble board. */
     private static Board board;
+
     private static Player p1;
     private static Player p2;
+
+    /** An ArrayList of players. */
     private static ArrayList<Player> playerList;
+
+    /** A LetterBag containing the letter tiles. */
     private static LetterBag letterBag;
+
+    /** A Library for word validation checking. */
     private static Library lib;
 
-    public enum Direction {
-        HORIZONTAL,
-        VERTICAL
-    }
+    /**
+     * A word can either be horizontally, or vertically placed onto the board.
+     */
+    public enum Direction { HORIZONTAL, VERTICAL }
 
+    /**
+     * Runs a text-based playable version of Scrabble.
+     * @param args An array of command-line arguments.
+     * @throws IOException If an I/O error occurs.
+     */
     public static void main (String[] args) throws IOException {
         board = new Board("res/default_board.txt");
         lib = new Library();
@@ -39,10 +55,18 @@ public class Game {
         playGame();
     }
 
+    /**
+     * Prints a legend of the ASCII symbols used to represent the text-based board.
+     */
     private static void printLegend() {
         System.out.println("+: Triple Word, ~: Double Word, -: Triple Letter, *: Double Letter");
     }
 
+    /**
+     * Initializes the LetterBag using the specified file.
+     * @param fileName A String representing the name of the file that contains the specific quantity of letters.
+     * @throws IOException If an I/O error occurs.
+     */
     public static void initializeLetterBag(String fileName) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
@@ -54,6 +78,9 @@ public class Game {
         }
     }
 
+    /**
+     * Deals seven letters to each player.
+     */
     public static void dealLetters() {
         for (Player p : playerList) {
             for (int i = 0; i < 7; i++) {
@@ -62,8 +89,9 @@ public class Game {
         }
     }
 
-    // we can probably refactor word, row, column, direction to be a class called ScrabbleMove since it's used so often
-
+    /**
+     * Scrabble game logic.
+     */
     public static void playGame() {
         Scanner userInput = new Scanner(System.in);
         int playerTurnCounter = 0;
