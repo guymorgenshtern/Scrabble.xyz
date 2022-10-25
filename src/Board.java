@@ -146,6 +146,38 @@ public class Board {
         return true;
     }
 
+    public int calculateMoveScore(String word, int row, int column, Game.Direction direction) {
+
+        //currently doesn't work for word multipliers
+        //need to find a good way to differentiate between different word and letter multipliers
+        int total = 0;
+        if (direction == Game.Direction.HORIZONTAL) {
+            System.out.println("here");
+            System.out.println(column + " " + word);
+            for (int i = column; i < column + word.length(); i++) {
+                //1 is a placehplder for letter value
+                System.out.println("in for");
+                if(this.scrabbleBoard[row][i].isPremiumSquare()) {
+                    total += this.scrabbleBoard[row][i].getMultiplier().calculateScore(1);
+                } else {
+                    total++;
+                }
+            }
+        } else {
+            for (int i = row; i < row + word.length(); i++) {
+                //1 is a placehplder for letter value
+                if(this.scrabbleBoard[i][column].isPremiumSquare()) {
+                    System.out.println("here 2");
+                    total += this.scrabbleBoard[row][i].getMultiplier().calculateScore(1);
+                } else {
+                    total++;
+                }
+            }
+        }
+        System.out.println(total);
+        return total;
+    }
+
     public void printBoard() {
         System.out.printf("%7d", 0);
         for (int i = 1; i < scrabbleBoard.length; i++) {

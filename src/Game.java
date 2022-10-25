@@ -58,18 +58,26 @@ public class Game {
         }
     }
 
+    // we can probably refactor word, row, column, direction to be a class called ScrabbleMove since it's used so often
+
     public static void playGame() {
         Scanner userInput = new Scanner(System.in);
         int playerTurnCounter = 0;
         Player currentPlayer;
+
         while (true) {
+            //cycle through players
             currentPlayer = playerList.get(playerTurnCounter % playerList.size());
+
+            //game details
             board.printBoard();
             printLegend();
-            System.out.println(currentPlayer.getName() + ":");
+            System.out.println(currentPlayer.getName() + ": " + currentPlayer.getScore() + " points");
             System.out.println("Your current rack is: ");
             currentPlayer.printRack();
             System.out.println(" ");
+
+            //move details
             System.out.println("What word do you want to play? \"q\" to quit");
             String word = userInput.nextLine();
 
@@ -86,8 +94,10 @@ public class Game {
             System.out.println("Starting column?");
             int column = Integer.parseInt(userInput.nextLine());
 
-
+            //are all the spaces player wants to use available and does player have the letters necessary
             if (board.checkMoveValidity(word, row, column, direction) && (currentPlayer.playWord(word))) {
+
+                //setting board
                 if (direction == Direction.VERTICAL) {
                     for (char c : word.toCharArray()) {
                         Game.board.setTile(c, row, column);
@@ -99,10 +109,15 @@ public class Game {
                         column++;
                     }
                 }
+
+                //awarding score
+                currentPlayer.setScore(currentPlayer.getScore() + board.calculateMoveScore(word, row, column, direction));
+
+                //re-upping letters
                 for (int i = 0 ; i < word.length(); i++) {
                     currentPlayer.addLetter(letterBag.getRandomLetter());
                 }
-            } else {
+            } else { //can't play selected word
                 System.out.println("cant bruh");
             }
             playerTurnCounter++;

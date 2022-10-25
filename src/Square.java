@@ -50,4 +50,7 @@ public class Square {
         return multiplier != null;
     }
 
+    public Multiplier getMultiplier() {
+        return multiplier;
+    }
 }
