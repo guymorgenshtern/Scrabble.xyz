@@ -15,30 +15,26 @@
  */
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet; // Use Hashset for file containing words Dictionary
 
 /**
- * Board
- * Representation of the Scrabble board
- * @author francisco 101147447
- * @author guymorgenshtern 101151430
+ * A Board in the game of Scrabble.
+ * @author Francisco DeGrano 101147447
+ * @author Guy Morgenshtern 101151430
  */
 public class Board {
 
-
+    /** A 2D array of squares to represent the board. */
     private Square [][] scrabbleBoard;
+
     private static HashMap<String, Multiplier> boardScore;
 
     /**
-     * Constructor for Board
-     * @param fileName
-     * @throws IOException
+     * Creates a Board using the specified file.
+     * @param fileName A String representing the name of the file that contains the orientation of the Scrabble board.
+     * @throws IOException If an I/O error occurs.
      */
     public Board(String fileName) throws IOException {
         this.scrabbleBoard = new Square[15][15];
@@ -47,18 +43,21 @@ public class Board {
     }
 
     /**
-     * Board Initialize (Init) Method
-     *
+     * Initializes the 15x15 Board with only regular squares (no premium squares).
      */
     private void initBoard() {
-        this.scrabbleBoard = new Square[15][15];
         for (int i = 14; i >= 0; i--) {
             for (int j = 0; j < 15; j++) {
                 this.scrabbleBoard[i][j] = new Square();
-
             }
         }
     }
+
+    /**
+     * Initializes the 15x15 Board using the specified file.
+     * @param fileName A String representing the name of the file that contains the orientation of the Scrabble board.
+     * @throws IOException If an I/O error occurs.
+     */
     public void initBoard (String fileName) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
@@ -85,8 +84,12 @@ public class Board {
         }
     }
 
-    //Francisco Degrano
-    //Guy Morgenshtern
+    /**
+     * Initializes a Premium Square on the Board using a specified ASCII character, a row, and a column.
+     * @param type A char representing a Premium Square.
+     * @param row An integer representing a row on the Board.
+     * @param column An integer representing a column on the Board.
+     */
     private void addBoardScore(char type, int row, int column){
         /*
         In this case not sure if multiplier classes (Word + Letter) should be called/used here in the Map with a
@@ -113,27 +116,38 @@ public class Board {
         this.scrabbleBoard[row][column].setLetter(type);
     }
 
-    // This may not be needed as we can just keep score in the game class later on post implementation of Board
-    public static Multiplier getTileBoardScore(String ref){
+    /**
+     * NOTE: This may not be needed as we can just keep score in the game class later on post implementation of Board.
+     * @param ref A String representing a reference.
+     * @return A Multiplier representing an Object key.
+     */
+    public static Multiplier getTileBoardScore(String ref) {
         return Board.boardScore.getOrDefault(ref, null); // ref Object Key
     }
 
     /**
-     *
-     * @param row
-     * @param column
-     * @return word user placed their word on "word place on (x, y)"
+     * @param row An integer representing a row on the Board.
+     * @param column An integer representing a column on the Board.
+     * @return The Square at the specified row and column.
      */
     public Square getTileOnBoard(int row, int column){
         return this.scrabbleBoard[row][column];
-
     }
 
-    public boolean setTile(char letter, int row, int column) {
+    /**
+     * @param letter A Letter to place on the Square.
+     * @param row An integer representing a row on the Board.
+     * @param column An integer representing a column on the Board.
+     */
+    public void setSquare(char letter, int row, int column) {
         this.scrabbleBoard[row][column].setLetter(letter);
-        return true;
     }
 
+    /**
+     * @param row An integer representing a row on the Board.
+     * @param column An integer representing a column on the Board.
+     * @return True, if the Square has a Letter on it. False, if not.
+     */
     public boolean isSquareFilled(int row, int column) {
         Square s = this.scrabbleBoard[row][column];
 
@@ -141,34 +155,40 @@ public class Board {
                 || s.getLetter() == '-');
     }
 
+    /**
+     * @param move A ScrabbleMove with a word, row, column, and direction.
+     * @return True, if the move is valid. False, if not.
+     */
     public boolean checkMoveValidity(ScrabbleMove move) {
         if (move.getDirection() == Game.Direction.HORIZONTAL) {
             for (int i = move.getColumn(); i < move.getWord().length(); i++) {
-                if(isSquareFilled(move.getRow(),i)) {
+                if (isSquareFilled(move.getRow(), i)) {
                     return false;
                 }
             }
         } else {
             for (int i = move.getRow(); i < move.getWord().length(); i++) {
-                if(isSquareFilled(i,move.getColumn())) {
+                if (isSquareFilled(i, move.getColumn())) {
                     return false;
                 }
             }
         }
-        //validity checks for surrounding letter combinations creating valid words will eventually be added
+        // validity checks for surrounding letter combinations creating valid words will eventually be added
         return true;
     }
 
+    /**
+     * @param move A ScrabbleMove with a word, row, column, and direction.
+     * @return An integer representing the score of the Player's move.
+     */
     public int calculateMoveScore(ScrabbleMove move) {
-
-        //currently doesn't work for word multipliers
-        //need to find a good way to differentiate between different word and letter multipliers
+        // currently doesn't work for word multipliers
+        // need to find a good way to differentiate between different word and letter multipliers
         int total = 0;
         if (move.getDirection() == Game.Direction.HORIZONTAL) {
             for (int i = move.getColumn(); i < move.getColumn() + move.getWord().length(); i++) {
-                //1 is a placehplder for letter value
-
-                if(this.scrabbleBoard[move.getRow()][i].isPremiumSquare()) {
+                // 1 is a placeholder for letter value
+                if (this.scrabbleBoard[move.getRow()][i].isPremiumSquare()) {
                     total += this.scrabbleBoard[move.getRow()][i].getMultiplier().calculateScore(1);
                 } else {
                     total++;
@@ -176,8 +196,8 @@ public class Board {
             }
         } else {
             for (int i = move.getRow(); i < move.getRow() + move.getWord().length(); i++) {
-                //1 is a placehplder for letter value
-                if(this.scrabbleBoard[i][move.getColumn()].isPremiumSquare()) {
+                // 1 is a placeholder for letter value
+                if (this.scrabbleBoard[i][move.getColumn()].isPremiumSquare()) {
                     total += this.scrabbleBoard[i][move.getColumn()].getMultiplier().calculateScore(1);
                 } else {
                     total++;
@@ -187,6 +207,9 @@ public class Board {
         return total;
     }
 
+    /**
+     * Prints a text-based representation of the Board.
+     */
     public void printBoard() {
         System.out.printf("%7d", 0);
         for (int i = 1; i < scrabbleBoard.length; i++) {
@@ -221,7 +244,6 @@ public class Board {
 //            }
 //            surroundingWords.add(foundWord);
 //        }
-//
 //    }
 
 }

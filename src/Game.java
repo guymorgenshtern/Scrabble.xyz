@@ -134,12 +134,12 @@ public class Game {
                 //setting board
                 if (direction == Direction.VERTICAL) {
                     for (char c : word.toCharArray()) {
-                        Game.board.setTile(c, row, column);
+                        Game.board.setSquare(c, row, column);
                         row++;
                     }
                 } else {
                     for (char c : word.toCharArray()) {
-                        Game.board.setTile(c, row, column);
+                        Game.board.setSquare(c, row, column);
                         column++;
                     }
                 }
