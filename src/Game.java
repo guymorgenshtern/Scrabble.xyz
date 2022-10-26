@@ -15,9 +15,6 @@ public class Game {
     /** A Scrabble board. */
     private static Board board;
 
-    private static Player p1;
-    private static Player p2;
-
     /** An ArrayList of players. */
     private static ArrayList<Player> playerList;
 
@@ -42,17 +39,35 @@ public class Game {
         lib = new Library();
 
         playerList = new ArrayList<>();
-        p1 = new Player("Guy");
-        p2 = new Player("Alex");
-        playerList.add(p1);
-        playerList.add(p2);
+        initializePlayers();
+
 
         letterBag = new LetterBag();
 
-        //board.printBoard();
         initializeLetterBag("res/letters_by_quantity");
         dealLetters();
         playGame();
+    }
+
+    /**
+     * initializes players based on input
+     */
+    public static void initializePlayers() {
+        Scanner userInput = new Scanner(System.in);
+
+        int numPlayers = 0;
+        while (!(numPlayers > 1 && numPlayers <= 4)) {
+            System.out.println("How many players are playing?");
+            numPlayers = Integer.parseInt(userInput.nextLine());
+        }
+
+
+        for (int i = 0; i < numPlayers; i++) {
+            System.out.printf("Player %d's name: ", i + 1);
+            String name = userInput.nextLine();
+            playerList.add(new Player(name));
+            System.out.println(" ");
+        }
     }
 
     /**
@@ -100,7 +115,7 @@ public class Game {
         while (true) {
             //cycle through players
             currentPlayer = playerList.get(playerTurnCounter % playerList.size());
-
+            boolean validMove = true;
             //game details
             board.printBoard();
             printLegend();
@@ -152,9 +167,13 @@ public class Game {
                     currentPlayer.addLetter(letterBag.getRandomLetter());
                 }
             } else { //can't play selected word
-                System.out.println("cant bruh");
+                System.out.println("Invalid move");
+                validMove = false;
             }
-            playerTurnCounter++;
+            if (validMove) {
+                playerTurnCounter++;
+
+            }
         }
     }
 }
