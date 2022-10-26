@@ -21,12 +21,10 @@ public class Library {
      */
     public Library() throws IOException {
         acceptableWords = new ArrayList<>();
-
         URL url = new URL("https://www.mit.edu/~ecprice/wordlist.10000");
+        // Used ZetCode when accessing the web page for the words
         BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-
         String word;
-
         while ((word = br.readLine()) != null) {
             acceptableWords.add(word);
         }
