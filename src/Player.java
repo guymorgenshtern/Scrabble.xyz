@@ -1,21 +1,37 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ *  Class Player for every play that enters the game
+ *  @author Guy Morgenshtern 101151430
+ */
 public class Player {
+    /** A hash map for the available letters */
     private HashMap<String, Integer> availableLetters;
+    /** A score for the player */
     private int score;
+    /** A name for the player */
     private String name;
-
+    /**
+     * Creates player with a name
+     * @param name String representing the name of the player
+     * @author Guy Morgenshtern 101151430
+     */
     public Player(String name) {
         this.score = 0;
         this.availableLetters = new HashMap<>();
         this.name = name;
     }
-
+    /**
+     * @return the name in a string
+     * @author Guy Morgenshtern 101151430
+     */
     public String getName() {
         return name;
     }
-
+    /**
+     * @param l string representation of the latter
+     * @author Guy Morgenshtern 101151430
+     */
     public void addLetter(String l) {
         l = l.toUpperCase();
         if (this.availableLetters.containsKey(l)) {
@@ -24,7 +40,12 @@ public class Player {
             this.availableLetters.put(l, 1);
         }
     }
-
+    /**
+     * checks if the input word from the user has all the letters to make that word
+     * @param input string representation of word that will be checked
+     * @return true if the user has all the letters needed
+     * @author Guy Morgenshtern 101151430
+     */
     private boolean hasLettersNeededForWord(String input) {
         char[] inputAsArray = input.toCharArray();
 
@@ -36,7 +57,12 @@ public class Player {
         }
         return true;
     }
-
+    /**
+     * checks if the player can place the word on the board properly
+     * @param input string representation of inputted word
+     * @return true if the
+     * @author Guy Morgenshtern 101151430
+     */
     public boolean playWord(String input) {
         if (hasLettersNeededForWord(input)) {
             for (char l : input.toCharArray()) {
@@ -51,9 +77,11 @@ public class Player {
         } else {
             return false;
         }
-
     }
-
+    /**
+     * prints the players current letters that they have
+     * @author Guy Morgenshtern 101151430
+     */
     public void printRack(){
         for (String k : availableLetters.keySet()) {
             for (int i = 0; i < availableLetters.get(k); i++) {
@@ -62,10 +90,18 @@ public class Player {
         }
     }
 
+    /**
+     * @return the players score
+     * @author Guy Morgenshtern 101151430
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * @param score integer for the score
+     * @author Guy Morgenshtern 101151430
+     */
     public void setScore(int score) {
         this.score = score;
     }
