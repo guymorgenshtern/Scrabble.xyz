@@ -5,7 +5,7 @@
 public class Multiplier {
 
     /** An enumeration to represent the type of the multiplier. */
-    public enum Type { WORD, LETTER }
+    public enum Type { LETTER, WORD }
 
     /** A Multiplier can either be a Letter, or a Word Multiplier. */
     private final Type TYPE;
