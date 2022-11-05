@@ -5,10 +5,10 @@
 public class Multiplier {
 
     /** An enumeration to represent the type of the multiplier. */
-    public enum TypeOfMultiplier { WORD, LETTER }
+    public enum Type { WORD, LETTER }
 
     /** A Multiplier can either be a Letter, or a Word Multiplier. */
-    private final TypeOfMultiplier TYPE;
+    private final Type TYPE;
 
     /** An integer to represent the size of the multiplier. */
     private final int MULTIPLIER;
@@ -22,7 +22,7 @@ public class Multiplier {
      * @param multiplier An integer to represent the size of the multiplier.
      * @author Emily Tang 101192604
      */
-    public Multiplier(TypeOfMultiplier type, int multiplier) {
+    public Multiplier(Type type, int multiplier) {
         TYPE = type;
         MULTIPLIER = multiplier;
         used = false;
@@ -32,7 +32,7 @@ public class Multiplier {
      * @return The Type of Multiplier.
      * @author Emily Tang 101192604
      */
-    public TypeOfMultiplier getType() {
+    public Type getType() {
         return TYPE;
     }
 
