@@ -1,5 +1,6 @@
 import com.zetcode.Library;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -41,7 +42,6 @@ public class Game {
         playerList = new ArrayList<>();
         initializePlayers();
 
-
         letterBag = new LetterBag();
 
         initializeLetterBag("res/letters_by_quantity");
@@ -51,23 +51,38 @@ public class Game {
 
     /**
      * initializes players based on input
+     * FIXME: should have an int (for numPlayers) and a String[] (for player's names) as params
      */
     public static void initializePlayers() {
-        Scanner userInput = new Scanner(System.in);
-
+        // FIXME: needs to be in separate "controller" class for proper MVC pattern
+        // user inputs the number of players
         int numPlayers = 0;
         while (!(numPlayers > 1 && numPlayers <= 4)) {
-            System.out.println("How many players are playing?");
-            numPlayers = Integer.parseInt(userInput.nextLine());
+            try {
+                numPlayers = Integer.parseInt(JOptionPane.showInputDialog("How many players are playing?\n2 to 4 " +
+                        "players can play at a time."));
+            } catch (NumberFormatException e) { // if user enters a non-numeric value
+                JOptionPane.showMessageDialog(new JFrame(), "Please enter a valid numeric value.", "Alert",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         }
 
-
+        // user inputs the names of the players
         for (int i = 0; i < numPlayers; i++) {
-            System.out.printf("Player %d's name: ", i + 1);
-            String name = userInput.nextLine();
+            String name = "";
+            while (name.equals("")) { // player's name must not be empty
+                name = JOptionPane.showInputDialog("What is Player " + (i + 1) + "'s name?");
+            }
             playerList.add(new Player(name));
-            System.out.println(" ");
         }
+
+        // FIXME: print to command line for testing
+        System.out.println("Number of players: " + numPlayers);
+        System.out.println("Names of players: ");
+        for (Player p : playerList) {
+            System.out.println(p.getName());
+        }
+        System.out.println();
     }
 
     /**
