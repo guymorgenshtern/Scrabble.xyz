@@ -320,6 +320,23 @@ public class BoardView extends javax.swing.JFrame {
         boardPanel.setPreferredSize(new Dimension(625, 600));
         boardPanel.setLayout(new GridLayout(0,15)); // 15 x 15 board
 
+        /*
+        User Control Panel
+         */
+        controlPanel.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        controlPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        controlPanel.setPreferredSize(new Dimension(625, 140));
+
+        /*
+        Start New Game Button
+         */
+
+        startGameButton.setText("Start New Game");
+
+        /*
+        Continue to setup gameboard tiles here
+         */
+
 
 
 
