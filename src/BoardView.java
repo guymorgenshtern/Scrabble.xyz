@@ -10,6 +10,7 @@ import java.awt.Color;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 
 /*
@@ -222,6 +223,56 @@ public class BoardView extends javax.swing.JFrame {
     }
 
     public void initBoardComponents(Board gameBoard){
+
+        // Board Components
+        JPanel boardPanel = new JPanel();
+        JPanel controlPanel = new JPanel();
+
+        JButton startGameButton = new JButton();
+        DEFAULT_BUTTON_COLOR = startGameButton.getBackground();
+        JButton letterRack1 = new JButton();
+        JButton letterRack2 = new JButton();
+        JButton letterRack3 = new JButton();
+        JButton letterRack4 = new JButton();
+        JButton letterRack5 = new JButton();
+        JButton letterRack6 = new JButton();
+        JButton letterRack7 = new JButton();
+        JButton endTurnButton = new JButton();
+        buttonsOnRack = new ArrayList<>();
+
+        JLabel directionalLabel = new JLabel();
+
+        JLabel player1Label = new JLabel();
+        JLabel player1ScoreLabel = new JLabel();
+
+        JLabel player2Label = new JLabel();
+        JLabel player2LabelScore = new JLabel();
+
+        /*
+         JFrame Setup
+         */
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new Dimension(800, 800));
+        setAlwaysOnTop(true);
+        setResizable(true);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+        /*
+        Setting up user directions
+         */
+        directionalLabel.setText("Select where you want to place your character");
+        directionalLabel.setVisible(false);
+
+        /*
+        Setting up Player 1 Score Label
+         */
+
+
+
+
+
+
 
     }
 
