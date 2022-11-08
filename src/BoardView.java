@@ -267,6 +267,61 @@ public class BoardView extends javax.swing.JFrame {
         /*
         Setting up Player 1 Score Label
          */
+        player1Label.setText("Player 1 Score: ");
+        player1ScoreLabel.setText("0");
+
+        /*
+        Setting up Player 2 Score Label
+         */
+        player2Label.setText("Player 2 Score: ");
+        player2LabelScore.setText("0");
+
+        /*
+        Setting up Rack Buttons (Users Characters chosen from bag)
+         */
+
+        letterRack1.setPreferredSize(new Dimension(60, 40));
+        letterRack1.setEnabled(false);
+
+        letterRack2.setPreferredSize(new Dimension(60, 40));
+        letterRack2.setEnabled(false);
+
+        letterRack3.setPreferredSize(new Dimension(60, 40));
+        letterRack3.setEnabled(false);
+
+        letterRack4.setPreferredSize(new Dimension(60, 40));
+        letterRack4.setEnabled(false);
+
+        letterRack5.setPreferredSize(new Dimension(60, 40));
+        letterRack5.setEnabled(false);
+
+        letterRack6.setPreferredSize(new Dimension(60, 40));
+        letterRack6.setEnabled(false);
+
+        letterRack7.setPreferredSize(new Dimension(60, 40));
+        letterRack7.setEnabled(false);
+
+        /*
+
+        We then want these buttons to be in a row to represent the rack so maybe implement
+
+        arraylist <>(); -> use the .add then (letterRackX)
+
+         */
+
+        // Code here
+
+        /*
+        Game Board Panel Setup
+        Placed Above the user controls, more intuitive design than to have the controls on the side.
+
+         */
+        boardPanel.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        boardPanel.setPreferredSize(new Dimension(625, 600));
+        boardPanel.setLayout(new GridLayout(0,15)); // 15 x 15 board
+
+
+
 
 
 
