@@ -25,178 +25,6 @@ public class BoardView extends javax.swing.JFrame {
         // Add initialize parts after initial window prompt Emily Tang init Frame?
     }
 
-    @SuppressWarnings("unchecked") // Added this line for now cause things got messy :)
-    private void initComponents(){
-
-        controlPanel = new javax.swing.JPanel();
-        startGameButton = new javax.swing.JButton();
-        letterRack1 = new javax.swing.JButton();
-        letterRack2 = new javax.swing.JButton();
-        letterRack3 = new javax.swing.JButton();
-        letterRack4 = new javax.swing.JButton();
-        letterRack5 = new javax.swing.JButton();
-        letterRack6 = new javax.swing.JButton();
-        letterRack7 = new javax.swing.JButton();
-        endTurnButton = new javax.swing.JButton();
-
-        player1Label = new javax.swing.JLabel();
-        player1ScoreLabel = new javax.swing.JLabel();
-
-        player2Label = new javax.swing.JLabel();
-        player2ScoreLabel = new javax.swing.JLabel();
-
-        directionalLabel = new javax.swing.JLabel();
-
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setAlwaysOnTop(true);
-        setMinimumSize(new java.awt.Dimension(800, 800));
-
-        setResizable(false);
-
-        controlPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        controlPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        controlPanel.setPreferredSize(new java.awt.Dimension(616, 151));
-
-        startGameButton.setText("Start New Game");
-        startGameButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                startGameButtonActionPerformed(evt);
-            }
-        });
-
-        letterRack1.setPreferredSize(new java.awt.Dimension(80, 62));
-        letterRack1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                letterRack1ActionPerformed(evt);
-            }
-        });
-
-        letterRack2.setPreferredSize(new java.awt.Dimension(80, 62));
-        letterRack2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                letterRack2ActionPerformed(evt);
-            }
-        });
-
-        letterRack3.setPreferredSize(new java.awt.Dimension(80, 62));
-        letterRack3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                letterRack3ActionPerformed(evt);
-            }
-        });
-
-        letterRack4.setPreferredSize(new java.awt.Dimension(80, 62));
-        letterRack4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                letterRack4ActionPerformed(evt);
-            }
-        });
-
-        letterRack5.setPreferredSize(new java.awt.Dimension(80, 62));
-        letterRack5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                letterRack5ActionPerformed(evt);
-            }
-        });
-
-        letterRack6.setPreferredSize(new java.awt.Dimension(80, 62));
-        letterRack6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                letterRack6ActionPerformed(evt);
-            }
-        });
-
-        letterRack7.setPreferredSize(new java.awt.Dimension(80, 62));
-        letterRack7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                letterRack7ActionPerformed(evt);
-            }
-        });
-
-        player1Label.setText("Player 1 Score: ");
-        player1ScoreLabel.setText("0");
-
-        player2Label.setText("Player 2 Score: ");
-        player2ScoreLabel.setText("0");
-
-        directionalLabel.setText("Select where you want to place your letter");
-
-        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
-        controlPanel.setLayout(controlPanelLayout);
-        controlPanelLayout.setHorizontalGroup(
-                controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(controlPanelLayout.createSequentialGroup()
-                                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(controlPanelLayout.createSequentialGroup()
-                                                .addContainerGap()
-                                                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(startGameButton)
-                                                        .addComponent(endTurnButton))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(player1Label)
-                                                        .addComponent(player2Label))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(player2ScoreLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(player1ScoreLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGroup(controlPanelLayout.createSequentialGroup()
-                                                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(controlPanelLayout.createSequentialGroup()
-                                                                .addContainerGap()
-                                                                .addComponent(letterRack1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(letterRack2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(letterRack3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(letterRack4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(letterRack5, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(letterRack6, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(letterRack7, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(controlPanelLayout.createSequentialGroup()
-                                                                .addGap(12, 12, 12)
-                                                                .addComponent(directionalLabel)))
-                                                .addGap(0, 0, Short.MAX_VALUE)))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        controlPanelLayout.setVerticalGroup(
-                controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(controlPanelLayout.createSequentialGroup()
-                                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(controlPanelLayout.createSequentialGroup()
-                                                .addGap(6, 6, 6)
-                                                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(startGameButton)
-                                                        .addComponent(player1Label)
-                                                        .addComponent(player1ScoreLabel)))
-                                        .addGroup(controlPanelLayout.createSequentialGroup()
-                                                .addContainerGap()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(player2Label)
-                                        .addComponent(player2ScoreLabel)
-                                        .addComponent(endTurnButton))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(directionalLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(letterRack4, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(letterRack1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(letterRack2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(letterRack3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(letterRack4, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(letterRack5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(letterRack7, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, 0))
-        );
-    }
-
     private void letterRack7ActionPerformed(ActionEvent evt) {
     }
 
@@ -243,7 +71,7 @@ public class BoardView extends javax.swing.JFrame {
         JLabel directionalLabel = new JLabel();
 
         JLabel player1Label = new JLabel();
-        JLabel player1ScoreLabel = new JLabel();
+        JLabel player1LabelScore = new JLabel();
 
         JLabel player2Label = new JLabel();
         JLabel player2LabelScore = new JLabel();
@@ -268,7 +96,7 @@ public class BoardView extends javax.swing.JFrame {
         Setting up Player 1 Score Label
          */
         player1Label.setText("Player 1 Score: ");
-        player1ScoreLabel.setText("0");
+        player1LabelScore.setText("0");
 
         /*
         Setting up Player 2 Score Label
@@ -314,7 +142,6 @@ public class BoardView extends javax.swing.JFrame {
         /*
         Game Board Panel Setup
         Placed Above the user controls, more intuitive design than to have the controls on the side.
-
          */
         boardPanel.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
         boardPanel.setPreferredSize(new Dimension(625, 600));
@@ -335,16 +162,75 @@ public class BoardView extends javax.swing.JFrame {
 
         /*
         Continue to setup gameboard tiles here
+
+        What I wanted to do was to visually show the tiles in the Scrabble GUI
+        but i'm not too sure how i'd show the squares
+
          */
 
+        /*
+        Control Panel Layout
 
+        Horizontal Layout of Components
 
+        createParallelGroup - https://docs.oracle.com/en/java/javase/18/docs/api/java.desktop/javax/swing/GroupLayout.ParallelGroup.html
+        createSequentialGroup - https://docs.oracle.com/en/java/javase/18/docs/api/java.desktop/javax/swing/GroupLayout.SequentialGroup.html
+        addContainerGap - https://docs.oracle.com/en/java/javase/18/docs/api/java.desktop/javax/swing/GroupLayout.SequentialGroup.html#addContainerGap()
+         */
 
+        GroupLayout controlPanelLayout = new GroupLayout(controlPanel);
+        controlPanel.setLayout(controlPanelLayout);
 
+        controlPanelLayout.setHorizontalGroup(
+                controlPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(controlPanelLayout.createSequentialGroup()
+                                .addGroup(controlPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(controlPanelLayout.createSequentialGroup()
+                                                .addContainerGap()
+                                                .addGroup(controlPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addComponent(startGameButton)
+                                                        .addComponent(endTurnButton))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(controlPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addComponent(player1Label)
+                                                        .addComponent(player2Label))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(controlPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(player2LabelScore, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(player1LabelScore, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 
+                                        .addGroup(controlPanelLayout.createSequentialGroup()
 
+                                                .addGroup(controlPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addGroup(controlPanelLayout.createSequentialGroup()
+                                                                .addContainerGap()
 
+                                                                .addComponent(letterRack1, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 
+                                                                .addComponent(letterRack2, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+
+                                                                .addComponent(letterRack3, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+
+                                                                .addComponent(letterRack4, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+
+                                                                .addComponent(letterRack5, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+
+                                                                .addComponent(letterRack6, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+
+                                                                .addComponent(letterRack7, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(controlPanelLayout.createSequentialGroup()
+                                                                .addGap(12, 12, 12)
+                                                                .addComponent(directionalLabel)))
+                                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
     }
 
