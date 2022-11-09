@@ -139,7 +139,7 @@ public class BoardView extends javax.swing.JFrame {
          */
 
         // Code here
-        //
+        // TODO
         //
 
 
@@ -168,7 +168,7 @@ public class BoardView extends javax.swing.JFrame {
         Continue to setup gameboard tiles here
 
         What I wanted to do was to visually show the tiles in the Scrabble GUI
-        but i'm not too sure how i'd show the squares
+        but i'm not too sure how i'd show the squares TODO
 
          */
 
@@ -344,12 +344,27 @@ public class BoardView extends javax.swing.JFrame {
 
         // If we make the squares interactive then we'd need actionlistener for all squares
 
+        /*
+        Updates the users Rack based on what they put down during the game
+        logic needs to be determined here. TODO
+         */
+        public void updateUserRack(){
 
+        }
 
+        /*
+        Setting ButtonRack/Set
+        TODO
+         */
+        public void setRack(){
 
+        }
 
-
-
+        /*
+        Button Enabling -
+        We can decide if we want to enable the buttons below and call upon them when we build the
+        game logic out
+         */
 
 
 
