@@ -138,6 +138,9 @@ public class BoardView extends javax.swing.JFrame {
          */
 
         // Code here
+        //
+        //
+
 
         /*
         Game Board Panel Setup
@@ -187,17 +190,22 @@ public class BoardView extends javax.swing.JFrame {
                                 .addGroup(controlPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(controlPanelLayout.createSequentialGroup()
                                                 .addContainerGap()
+
                                                 .addGroup(controlPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addComponent(startGameButton)
                                                         .addComponent(endTurnButton))
+
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+
                                                 .addGroup(controlPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addComponent(player1Label)
                                                         .addComponent(player2Label))
+
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addGroup(controlPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                                         .addComponent(player2LabelScore, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(player1LabelScore, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 
                                         .addGroup(controlPanelLayout.createSequentialGroup()
@@ -206,31 +214,77 @@ public class BoardView extends javax.swing.JFrame {
                                                         .addGroup(controlPanelLayout.createSequentialGroup()
                                                                 .addContainerGap()
 
-                                                                .addComponent(letterRack1, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(letterRack1, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 
-                                                                .addComponent(letterRack2, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(letterRack2, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 
-                                                                .addComponent(letterRack3, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(letterRack3, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 
-                                                                .addComponent(letterRack4, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(letterRack4, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 
-                                                                .addComponent(letterRack5, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(letterRack5, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 
-                                                                .addComponent(letterRack6, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(letterRack6, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 
-                                                                .addComponent(letterRack7, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
+                                                                .addComponent(letterRack7, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
                                                         .addGroup(controlPanelLayout.createSequentialGroup()
-                                                                .addGap(12, 12, 12)
+                                                                .addGap(10, 10, 10)
                                                                 .addComponent(directionalLabel)))
                                                 .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        /*
+        Horizontal Setup of Components "Complete"
+
+        The following section sets up the components Vertically.
+        Will look more or less the same as the code above since we are working within a "square".
+         */
+
+        controlPanelLayout.setVerticalGroup(
+                controlPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(controlPanelLayout.createSequentialGroup()
+                                .addGroup(controlPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(controlPanelLayout.createSequentialGroup()
+                                                .addGap(5, 5, 5)
+                                                .addGroup(controlPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(startGameButton)
+                                                        .addComponent(player1Label)
+                                                        .addComponent(player1LabelScore)))
+                                        .addGroup(controlPanelLayout.createSequentialGroup()
+                                                .addContainerGap()))
+
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(controlPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(player2Label)
+                                        .addComponent(player2LabelScore)
+                                        .addComponent(endTurnButton))
+
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(directionalLabel)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(controlPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+
+                                        .addComponent(letterRack4, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(letterRack1, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(letterRack2, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(letterRack3, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(letterRack5, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(letterRack6, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(letterRack7, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, 0))
+        );
+
+        /*
+        JFrame Setup/Layout Vertical
+         */
 
     }
 
