@@ -10,6 +10,7 @@ import java.awt.Color;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
@@ -25,29 +26,29 @@ public class BoardView extends javax.swing.JFrame {
         // Add initialize parts after initial window prompt Emily Tang init Frame?
     }
 
-    private void letterRack7ActionPerformed(ActionEvent evt) {
+    private void letterRack7ActionPerformed(ActionEvent e) {
     }
 
-    private void letterRack6ActionPerformed(ActionEvent evt){
+    private void letterRack6ActionPerformed(ActionEvent e){
 
     }
 
-    private void letterRack5ActionPerformed(ActionEvent evt) {
+    private void letterRack5ActionPerformed(ActionEvent e) {
     }
 
-    private void letterRack4ActionPerformed(ActionEvent evt) {
+    private void letterRack4ActionPerformed(ActionEvent e) {
     }
 
-    private void letterRack3ActionPerformed(ActionEvent evt) {
+    private void letterRack3ActionPerformed(ActionEvent e) {
     }
 
-    private void letterRack2ActionPerformed(ActionEvent evt) {
+    private void letterRack2ActionPerformed(ActionEvent e) {
     }
 
-    private void letterRack1ActionPerformed(ActionEvent evt) {
+    private void letterRack1ActionPerformed(ActionEvent e) {
     }
 
-    private void startGameButtonActionPerformed(ActionEvent evt) {
+    private void startGameButtonActionPerformed(ActionEvent e) {
     }
 
     public void initBoardComponents(Board gameBoard){
@@ -66,7 +67,7 @@ public class BoardView extends javax.swing.JFrame {
         JButton letterRack6 = new JButton();
         JButton letterRack7 = new JButton();
         JButton endTurnButton = new JButton();
-        buttonsOnRack = new ArrayList<>();
+        buttonsOnRack = new ArrayList<>(); //   Not sure if this is needed
 
         JLabel directionalLabel = new JLabel();
 
@@ -301,6 +302,56 @@ public class BoardView extends javax.swing.JFrame {
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(controlPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
+
+        /*
+        Action Listeners for Buttons
+         */
+        public void addStartGameButtonActionListener(ActionListener listener){
+            startGameButton.addActionListener(listener);
+        }
+
+        public void addEndTurnButtonActionListener(ActionListener listener) {
+            endTurnButton.addActionListener(listener);
+        }
+
+        public void addLetterRack1ActionListener(ActionListener listener) {
+            letterRack1.addActionListener(listener);
+        }
+
+        public void addLetterRack2ActionListener(ActionListener listener) {
+            letterRack2.addActionListener(listener);
+        }
+
+        public void addLetterRack3ActionListener(ActionListener listener) {
+            letterRack3.addActionListener(listener);
+        }
+
+        public void addLetterRack4ActionListener(ActionListener listener) {
+            letterRack4.addActionListener(listener);
+        }
+
+        public void addLetterRack5ActionListener(ActionListener listener) {
+            letterRack5.addActionListener(listener);
+        }
+
+        public void addLetterRack6ActionListener(ActionListener listener) {
+            letterRack6.addActionListener(listener);
+        }
+
+        public void addLetterRack7ActionListener(ActionListener listener) {
+            letterRack7.addActionListener(listener);
+        }
+
+        // If we make the squares interactive then we'd need actionlistener for all squares
+
+
+
+
+
+
+
+
+
 
     }
 
