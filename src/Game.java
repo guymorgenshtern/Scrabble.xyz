@@ -40,7 +40,8 @@ public class Game {
         lib = new Library();
 
         playerList = new ArrayList<>();
-        initializePlayers();
+        // TODO: initialize InitController here instead??
+        // initializePlayers();
 
         letterBag = new LetterBag();
 
@@ -50,39 +51,14 @@ public class Game {
     }
 
     /**
-     * initializes players based on input
-     * FIXME: should have an int (for numPlayers) and a String[] (for player's names) as params
+     * Initializes players with their specified names.
+     * @param namesOfPlayers An array of Strings representing the names of the players.
+     * @author Emily Tang 101192604
      */
-    public static void initializePlayers() {
-        // FIXME: needs to be in separate "controller" class for proper MVC pattern
-        // user inputs the number of players
-        int numPlayers = 0;
-        while (!(numPlayers > 1 && numPlayers <= 4)) {
-            try {
-                numPlayers = Integer.parseInt(JOptionPane.showInputDialog("How many players are playing?\n2 to 4 " +
-                        "players can play at a time."));
-            } catch (NumberFormatException e) { // if user enters a non-numeric value
-                JOptionPane.showMessageDialog(new JFrame(), "Please enter a valid numeric value.", "Alert",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-        }
-
-        // user inputs the names of the players
-        for (int i = 0; i < numPlayers; i++) {
-            String name = "";
-            while (name.equals("")) { // player's name must not be empty
-                name = JOptionPane.showInputDialog("What is Player " + (i + 1) + "'s name?");
-            }
+    public void initializePlayers(String[] namesOfPlayers) {
+        for (String name : namesOfPlayers) {
             playerList.add(new Player(name));
         }
-
-        // FIXME: print to command line for testing
-        System.out.println("Number of players: " + numPlayers);
-        System.out.println("Names of players: ");
-        for (Player p : playerList) {
-            System.out.println(p.getName());
-        }
-        System.out.println();
     }
 
     /**
