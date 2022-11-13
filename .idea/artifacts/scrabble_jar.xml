@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="scrabble:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/scrabble_jar</output-path>
+    <root id="archive" name="scrabble.jar">
+      <element id="module-output" name="scrabble" />
+      <element id="module-source" name="scrabble" />
+    </root>
+  </artifact>
+</component>

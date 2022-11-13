@@ -7,22 +7,26 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
+ * MAKE THIS CLASS ACTUALLY WORK INSTEAD OF BEING STATIC
+ */
+
+/**
  * A text-based playable version of Scrabble.
  * @author Guy Morgenshtern 101151430
  */
 public class Game {
 
     /** A Scrabble board. */
-    private static Board board;
+    private Board board;
 
     /** An ArrayList of players. */
-    private static ArrayList<Player> playerList;
+    private ArrayList<Player> playerList;
 
     /** A LetterBag containing the letter tiles. */
-    private static LetterBag letterBag;
+    private LetterBag letterBag;
 
     /** A Library for word validation checking. */
-    private static Library lib;
+    private Library lib;
 
     /**
      * A word can either be horizontally, or vertically placed onto the board.
@@ -31,18 +35,17 @@ public class Game {
 
     /**
      * Runs a text-based playable version of Scrabble.
-     * @param args An array of command-line arguments.
      * @throws IOException If an I/O error occurs.
      */
-    public static void main (String[] args) throws IOException {
-        board = new Board("res/default_board.txt");
-        lib = new Library();
+    public Game() throws IOException {
+        this.board = new Board("res/default_board.txt");
+        this.lib = new Library();
 
-        playerList = new ArrayList<>();
+        this.playerList = new ArrayList<>();
         initializePlayers();
 
 
-        letterBag = new LetterBag();
+        this.letterBag = new LetterBag();
 
         initializeLetterBag("res/letters_by_quantity");
         dealLetters();
@@ -52,7 +55,7 @@ public class Game {
     /**
      * initializes players based on input
      */
-    public static void initializePlayers() {
+    public void initializePlayers() {
         Scanner userInput = new Scanner(System.in);
 
         int numPlayers = 0;
@@ -73,7 +76,7 @@ public class Game {
     /**
      * Prints a legend of the ASCII symbols used to represent the text-based board.
      */
-    private static void printLegend() {
+    private void printLegend() {
         System.out.println("+: Triple Word, ~: Double Word, -: Triple Letter, *: Double Letter");
     }
 
@@ -82,7 +85,7 @@ public class Game {
      * @param fileName A String representing the name of the file that contains the specific quantity of letters.
      * @throws IOException If an I/O error occurs.
      */
-    public static void initializeLetterBag(String fileName) throws IOException {
+    public void initializeLetterBag(String fileName) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
         String line = br.readLine();
@@ -96,7 +99,7 @@ public class Game {
     /**
      * Deals seven letters to each player.
      */
-    public static void dealLetters() {
+    public void dealLetters() {
         for (Player p : playerList) {
             for (int i = 0; i < 7; i++) {
                 p.addLetter(letterBag.getRandomLetter());
@@ -104,10 +107,76 @@ public class Game {
         }
     }
 
+    public void initializeBoard() {
+        String firstLetter = letterBag.getRandomLetter();
+        int centerSquare = (board.getSize() - 1) / 2;
+        board.setSquare(firstLetter.toCharArray()[0], centerSquare, centerSquare);
+    }
+
+    private String findFullWord(Direction dir, int move[][]) {
+        //this assumes the move array is sorted from first letter->last, we should make sure this is always the case
+        int x = move[0][0];
+        int y = move[0][1];
+        String word = "";
+
+        if(dir == Direction.HORIZONTAL) {
+            int startingPosition = move[0][0];
+            int walkingPointer = startingPosition;
+            while (this.board.getTileOnBoard(walkingPointer,y).getLetter() != ' ') {
+                word += String.valueOf(this.board.getTileOnBoard(x,y).getLetter());
+                walkingPointer++;
+            }
+            walkingPointer = startingPosition + 1;
+            while (this.board.getTileOnBoard(walkingPointer,y).getLetter() != ' ') {
+                word = this.board.getTileOnBoard(x,y).getLetter() + word;
+                walkingPointer++;
+            }
+        } else if(dir == Direction.VERTICAL) {
+            int startingPosition = move[0][1];
+            int walkingPointer = startingPosition;
+            while (this.board.getTileOnBoard(x,walkingPointer).getLetter() != ' ') {
+                word += String.valueOf(this.board.getTileOnBoard(x,y).getLetter());
+                walkingPointer++;
+            }
+            walkingPointer = startingPosition + 1;
+            while (this.board.getTileOnBoard(x,walkingPointer).getLetter() != ' ') {
+                word = this.board.getTileOnBoard(x,y).getLetter() + word;
+                walkingPointer++;
+            }
+        }
+        return word;
+    }
+
+    public void play(int move[][]) {
+        int xDifferential = move[0][0];
+        int yDifferential = move[0][1];
+        Direction dir = null;
+        for (int i = 1; i < move.length; i++) {
+            xDifferential -= move[i][0];
+            yDifferential -= move[i][1];
+        }
+
+        if ((xDifferential == 0) && (yDifferential == 0)) {
+            System.out.println("decide what to do here");
+        } else if (xDifferential == 0) {
+            dir = Direction.VERTICAL;
+        } else if (yDifferential == 0) {
+            dir = Direction.HORIZONTAL;
+        } else {
+            System.out.println("this is an issue");
+        }
+
+        String finalWord = findFullWord(dir, move);
+
+
+    }
     /**
      * Scrabble game logic.
      */
-    public static void playGame() {
+    public void playGame() {
+
+        initializeBoard();
+
         Scanner userInput = new Scanner(System.in);
         int playerTurnCounter = 0;
         Player currentPlayer;
@@ -144,7 +213,7 @@ public class Game {
             ScrabbleMove move = new ScrabbleMove(word, row, column, direction);
 
             //are all the spaces player wants to use available and does player have the letters necessary
-            if (lib.isValidWord(word) && board.checkMoveValidity(move) && (currentPlayer.playWord(word))) {
+            if (board.checkMoveValidity(move) && (currentPlayer.playWord(word))) {
 
                 //setting board
                 if (direction == Direction.VERTICAL) {
