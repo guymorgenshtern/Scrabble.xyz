@@ -3,7 +3,7 @@ import javax.swing.*;
 /**
  * Initializes players in a game of Scrabble using JOptionPanes.
  */
-public class InitController {
+public class InitController extends JOptionPane {
 
     /**
      * Initializes players in a game of Scrabble.
@@ -15,10 +15,10 @@ public class InitController {
         int numOfPlayers = 0;
         while (!(numOfPlayers > 1 && numOfPlayers <= 4)) {
             try {
-                numOfPlayers = Integer.parseInt(JOptionPane.showInputDialog("How many players are playing?\n2 to 4 " +
+                numOfPlayers = Integer.parseInt(showInputDialog("How many players are playing?\n2 to 4 " +
                         "players can play at a time."));
             } catch (NumberFormatException e) { // if user enters a non-numeric value
-                JOptionPane.showMessageDialog(new JFrame(), "Please enter a valid numeric value.", "Alert",
+                showMessageDialog(new JFrame(), "Please enter a valid numeric value.", "Alert",
                         JOptionPane.WARNING_MESSAGE);
             }
         }
@@ -30,7 +30,7 @@ public class InitController {
         for (int i = 0; i < numOfPlayers; i++) {
             String name = "";
             while (name.equals("")) { // player's name must not be empty
-                name = JOptionPane.showInputDialog("What is Player " + (i + 1) + "'s name?");
+                name = showInputDialog("What is Player " + (i + 1) + "'s name?");
             }
             nameOfPlayers[i] = name;
         }
