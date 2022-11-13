@@ -14,6 +14,8 @@ public class BoardPane extends JPanel implements ScrabbleView {
 
         buttons = new JButton[][] // Place board size in place
 
+        //TODO
+
         // Once size is defined we can insert a for loop
         // i = 0; i<Board.size; i++ -> goes up to 15 x 15
 
@@ -23,6 +25,10 @@ public class BoardPane extends JPanel implements ScrabbleView {
 
     @Override
     public void update(Game game) {
+        Board board = getBoard;
+
+        //TODO
+
 
     }
 }
