@@ -1,7 +1,8 @@
 import javax.swing.*;
 
 /**
- * Initializes players in a game of Scrabble using JOptionPanes.
+ * Initializes players in a game of Scrabble using JOptionPanes. The first JOptionPane asks the user for the number of
+ * players. The following JOptionPanes asks the user to input the names of the players.
  */
 public class InitController extends JOptionPane {
 
