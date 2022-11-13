@@ -11,6 +11,10 @@ public class Player {
     private int score;
     /** A name for the player */
     private String name;
+
+    /** True, if player is a winner. False, if not. */
+    private boolean isWinner;
+
     /**
      * Creates player with a name
      * @param name String representing the name of the player
@@ -20,7 +24,17 @@ public class Player {
         this.score = 0;
         this.availableLetters = new HashMap<>();
         this.name = name;
+        this.isWinner = false;
     }
+
+    public void setWinner(boolean isWinner) {
+        this.isWinner = isWinner;
+    }
+
+    public boolean getWinner() {
+        return isWinner;
+    }
+
     /**
      * @return the name in a string
      * @author Guy Morgenshtern 101151430
