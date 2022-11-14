@@ -52,6 +52,7 @@ public class Game {
 
     /**
      * Initializes players with their specified names.
+     * NOTE: Error checking already in InitController. Users can only enter between two and four players there.
      * @param namesOfPlayers An array of Strings representing the names of the players.
      * @author Emily Tang 101192604
      */
@@ -59,6 +60,14 @@ public class Game {
         for (String name : namesOfPlayers) {
             playerList.add(new Player(name));
         }
+    }
+
+    /**
+     * @return An ArrayList of Players
+     * @author Emily Tang 101192604
+     */
+    public ArrayList<Player> getPlayerList() {
+        return playerList;
     }
 
     /**
