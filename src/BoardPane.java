@@ -12,12 +12,13 @@ public class BoardPane extends JPanel implements ScrabbleView {
         this.setLayout(new GridLayout(Board.SIZE, Board.SIZE)); // Need to define size within board
         this.setSize(300,300);
 
-        buttons = new JButton[][] // Place board size in place
+        buttons = new JButton[Board.size][Board.size]; // Place board size in place. Call Board Size Directly?
 
         //TODO
 
-        // Once size is defined we can insert a for loop
-        // i = 0; i<Board.size; i++ -> goes up to 15 x 15
+        for (int i < 0; i < Board__; i++){
+            for (int j = 0; j < Board.size)
+        }
 
 
     }

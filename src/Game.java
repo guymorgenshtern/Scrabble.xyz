@@ -156,6 +156,7 @@ public class Game {
                     for (char c : word.toCharArray()) {
                         Game.board.setSquare(c, row, column);
                         column++;
+
                     }
                 }
 
