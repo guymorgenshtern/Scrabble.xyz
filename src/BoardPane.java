@@ -15,7 +15,7 @@ public class BoardPane extends JPanel implements ScrabbleView {
         buttons = new JButton[Board.size][Board.size]; // Place board size in place. Call Board Size Directly
 
         for (int i < 0; i < Board.size; i++){          // Place board size.
-            for (int j = 0; j < Board.size; j++){      // Place board size. 
+            for (int j = 0; j < Board.size; j++){      // Place board size.
                 JButton b = new JButton("");
                 b.setActionCommand(i + "" + j);
                 b.addActionListener(); // Call to controller from Scrabble Controller
@@ -30,11 +30,13 @@ public class BoardPane extends JPanel implements ScrabbleView {
 
 
     @Override
-    public void update(Game game) {
-        Board board = getBoard;
+    public void update(Game game) { // Update Game Model
+        Board board = model.getBoard;
 
-        //TODO
+        /*
 
+        Set Text -> Get Pieces -> Get Letter
 
+         */
     }
 }
