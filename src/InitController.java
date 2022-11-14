@@ -16,8 +16,8 @@ public class InitController extends JOptionPane {
         int numOfPlayers = 0;
         while (!(numOfPlayers > 1 && numOfPlayers <= 4)) {
             try {
-                numOfPlayers = Integer.parseInt(showInputDialog("How many players are playing?\n2 to 4 " +
-                        "players can play at a time."));
+                numOfPlayers = Integer.parseInt(showInputDialog("How many players are playing?\n2 to 4 players can " +
+                        "play at a time."));
             } catch (NumberFormatException e) { // if user enters a non-numeric value
                 showMessageDialog(new JFrame(), "Please enter a valid numeric value.", "Alert",
                         JOptionPane.WARNING_MESSAGE);

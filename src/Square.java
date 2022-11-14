@@ -13,9 +13,7 @@ public class Square {
      * Creates a Square.
      * @author Emily Tang 101192604
      */
-    public Square() {
-
-    }
+    public Square() { }
 
     /**
      * Creates a Premium Letter/Word Square with the specified multiplier.

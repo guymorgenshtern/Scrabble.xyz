@@ -1,6 +1,5 @@
 import com.zetcode.Library;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class Game {
 
     /**
      * Initializes players with their specified names.
-     * NOTE: Error checking already in InitController. Users can only enter between two and four players there.
+     * NOTE: Error checking already in InitController. User can only enter between two and four players there.
      * @param namesOfPlayers An array of Strings representing the names of the players.
      * @author Emily Tang 101192604
      */
@@ -172,7 +171,6 @@ public class Game {
             }
             if (validMove) {
                 playerTurnCounter++;
-
             }
         }
     }
