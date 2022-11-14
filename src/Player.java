@@ -11,6 +11,7 @@ public class Player {
     private int score;
     /** A name for the player */
     private String name;
+
     /**
      * Creates player with a name
      * @param name String representing the name of the player
@@ -21,6 +22,7 @@ public class Player {
         this.availableLetters = new HashMap<>();
         this.name = name;
     }
+
     /**
      * @return the name in a string
      * @author Guy Morgenshtern 101151430

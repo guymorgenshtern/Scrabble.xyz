@@ -1,5 +1,6 @@
 import com.zetcode.Library;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -45,9 +46,9 @@ public class Game {
         this.lib = new Library();
         this.scorePerLetter = new HashMap<>();
 
-        this.playerList = new ArrayList<>();
-        initializePlayers();
-
+        playerList = new ArrayList<>();
+        // TODO: initialize InitController here instead??
+        // initializePlayers();
 
         this.letterBag = new LetterBag();
 
@@ -57,24 +58,23 @@ public class Game {
     }
 
     /**
-     * initializes players based on input
+     * Initializes players with their specified names.
+     * NOTE: Error checking already in InitController. Users can only enter between two and four players there.
+     * @param namesOfPlayers An array of Strings representing the names of the players.
+     * @author Emily Tang 101192604
      */
-    public void initializePlayers() {
-        Scanner userInput = new Scanner(System.in);
-
-        int numPlayers = 0;
-        while (!(numPlayers > 1 && numPlayers <= 4)) {
-            System.out.println("How many players are playing?");
-            numPlayers = Integer.parseInt(userInput.nextLine());
-        }
-
-
-        for (int i = 0; i < numPlayers; i++) {
-            System.out.printf("Player %d's name: ", i + 1);
-            String name = userInput.nextLine();
+    public void initializePlayers(String[] namesOfPlayers) {
+        for (String name : namesOfPlayers) {
             playerList.add(new Player(name));
-            System.out.println(" ");
         }
+    }
+
+    /**
+     * @return An ArrayList of Players
+     * @author Emily Tang 101192604
+     */
+    public ArrayList<Player> getPlayerList() {
+        return playerList;
     }
 
     /**

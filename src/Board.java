@@ -111,13 +111,13 @@ public class Board {
          */
         switch (type) {
             case '+':
-                this.scrabbleBoard[row][column] = new Square(new WordMultiplier(2));
+                this.scrabbleBoard[row][column] = new Square(new Multiplier(Multiplier.Type.WORD, 2));
             case '~':
-                this.scrabbleBoard[row][column] = new Square(new WordMultiplier(3));
+                this.scrabbleBoard[row][column] = new Square(new Multiplier(Multiplier.Type.WORD, 3));
             case '*':
-                this.scrabbleBoard[row][column] = new Square(new LetterMultiplier(2));
+                this.scrabbleBoard[row][column] = new Square(new Multiplier(Multiplier.Type.LETTER, 2));
             case '-':
-                this.scrabbleBoard[row][column] = new Square(new LetterMultiplier(3));
+                this.scrabbleBoard[row][column] = new Square(new Multiplier(Multiplier.Type.LETTER, 3));
         }
         this.scrabbleBoard[row][column].setLetter(type);
     }
@@ -220,7 +220,7 @@ public class Board {
     }
 
     /**
-     * Prints a text-based representation of the Board.
+     * Prints a text-based representation of the Board.›
      */
     public void printBoard() {
         System.out.printf("%7d", 0);

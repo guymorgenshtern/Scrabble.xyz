@@ -2,7 +2,13 @@
  * A Multiplier can be added to a Square to multiply how many points a letter/word is worth. A Multiplier counts only on
  * the turn in which it is played.
  */
-public abstract class Multiplier {
+public class Multiplier {
+
+    /** An enumeration to represent the type of the multiplier. */
+    public enum Type { LETTER, WORD }
+
+    /** A Multiplier can either be a Letter, or a Word Multiplier. */
+    private final Type TYPE;
 
     /** An integer to represent the size of the multiplier. */
     private final int MULTIPLIER;
@@ -12,12 +18,22 @@ public abstract class Multiplier {
 
     /**
      * Creates a Multiplier with the specified size.
+     * @param type A multiplier can either be a letter, or a word multiplier.
      * @param multiplier An integer to represent the size of the multiplier.
      * @author Emily Tang 101192604
      */
-    public Multiplier(int multiplier) {
+    public Multiplier(Type type, int multiplier) {
+        TYPE = type;
         MULTIPLIER = multiplier;
         used = false;
+    }
+
+    /**
+     * @return The Type of Multiplier.
+     * @author Emily Tang 101192604
+     */
+    public Type getType() {
+        return TYPE;
     }
 
     /**
