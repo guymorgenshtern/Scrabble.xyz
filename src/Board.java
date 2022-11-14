@@ -28,6 +28,7 @@ public class Board {
 
     /** A 2D array of squares to represent the board. */
     private Square [][] scrabbleBoard;
+    private int size;
 
     private static HashMap<String, Multiplier> boardScore;
 
@@ -38,8 +39,13 @@ public class Board {
      */
     public Board(String fileName) throws IOException {
         this.scrabbleBoard = new Square[15][15];
+        this.size = 15;
         Board.boardScore = new HashMap<>();
         this.initBoard(fileName);
+    }
+
+    public int getSize() {
+        return this.size;
     }
 
     /**
@@ -150,7 +156,7 @@ public class Board {
      */
     public boolean isSquareFilled(int row, int column) {
         Square s = this.scrabbleBoard[row][column];
-
+        System.out.println(s.getLetter());
         return !(s.getLetter() == '.' || s.getLetter() == '+' || s.getLetter() == '*' || s.getLetter() == '~'
                 || s.getLetter() == '-');
     }
@@ -160,12 +166,18 @@ public class Board {
      * @return True, if the move is valid. False, if not.
      */
     public boolean checkMoveValidity(ScrabbleMove move) {
+        StringBuilder finalWord = new StringBuilder();
         if (move.getDirection() == Game.Direction.HORIZONTAL) {
             for (int i = move.getColumn(); i < move.getWord().length(); i++) {
+                System.out.println(move.getRow() + " " + i);
                 if (isSquareFilled(move.getRow(), i)) {
-                    return false;
+
+                    finalWord.append(getTileOnBoard(move.getRow(), i));
                 }
+                finalWord.append(move.getWord().charAt(i));
             }
+            System.out.println(finalWord);
+
         } else {
             for (int i = move.getRow(); i < move.getWord().length(); i++) {
                 if (isSquareFilled(i, move.getColumn())) {
