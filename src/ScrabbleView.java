@@ -7,5 +7,5 @@ Francisco De Grano
     "View" updating only.
  */
 public interface ScrabbleView {
-    public void update(Game game); // Need to check if this is being updated properly
+    public void update(ScrabbleEvent event); // Need to check if this is being updated properly
 }

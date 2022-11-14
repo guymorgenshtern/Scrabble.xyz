@@ -15,7 +15,7 @@ public class EndFrame extends JFrame implements EndView {
     @Override
     public void update(GameEvent e) {
         String message = "Congratulations " + e.getPlayerList().get(0).getName() + "!\nLeaderboard";
-        for(int i=0; i < playerList.size; i++) {
+        for(int i=0; i < e.getPlayerList().size(); i++) {
             message += "\n" + e.getPlayerList().get(i).getName() + " " + e.getPlayerList().get(i).getScore();
         }
         JOptionPane.showMessageDialog(this, message);

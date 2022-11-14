@@ -21,7 +21,7 @@ public class GameButtonPane extends JPanel{
         play.setAlignmentX(Component.CENTER_ALIGNMENT);
         skipTurn.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        play.addActionListener();   // Insert Controller
-        play.addActionListener();   // Insert Controller
+//        play.addActionListener();   // Insert Controller
+//        play.addActionListener();   // Insert Controller
     }
 }

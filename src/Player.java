@@ -92,6 +92,18 @@ public class Player {
         }
     }
 
+    public String[] getAvailableLetters() {
+        String letters[] = new String[7];
+        int count = 0;
+        for (String s : availableLetters.keySet()) {
+            for (int i = 0; i < availableLetters.get(s); i++) {
+                letters[count] = s;
+                count++;
+            }
+        }
+        return letters;
+    }
+
     /**
      * @return the players score
      * @author Guy Morgenshtern 101151430

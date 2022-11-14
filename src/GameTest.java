@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import static org.junit.Assert.*;
 
@@ -8,7 +9,7 @@ public class GameTest {
      * @author Emily Tang 101192604
      */
     @org.junit.Test
-    public void testInitializePlayers() {
+    public void testInitializePlayers() throws IOException {
         Game game = new Game();
         assertNull(null); // game has not initialized players yet
 

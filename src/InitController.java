@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.io.IOException;
 
 /**
  * Initializes players in a game of Scrabble using JOptionPanes. The first JOptionPane asks the user for the number of
@@ -11,7 +12,7 @@ public class InitController extends JOptionPane {
      * @param game The Game of Scrabble to update.
      * @author Emily Tang 101192604
      */
-    public InitController(Game game) {
+    public InitController(Game game) throws IOException {
         // user inputs the number of players
         int numOfPlayers = 0;
         while (!(numOfPlayers > 1 && numOfPlayers <= 4)) {
@@ -37,6 +38,9 @@ public class InitController extends JOptionPane {
         }
 
         // update the game
+        System.out.println("here");
         game.initializePlayers(nameOfPlayers);
+        game.dealLetters();
+        game.initializeBoard();
     }
 }

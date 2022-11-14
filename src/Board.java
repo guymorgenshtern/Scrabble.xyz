@@ -162,64 +162,6 @@ public class Board {
     }
 
     /**
-     * @param move A ScrabbleMove with a word, row, column, and direction.
-     * @return True, if the move is valid. False, if not.
-     */
-    public boolean checkMoveValidity(ScrabbleMove move) {
-        StringBuilder finalWord = new StringBuilder();
-        if (move.getDirection() == Game.Direction.HORIZONTAL) {
-            for (int i = move.getColumn(); i < move.getWord().length(); i++) {
-                System.out.println(move.getRow() + " " + i);
-                if (isSquareFilled(move.getRow(), i)) {
-
-                    finalWord.append(getTileOnBoard(move.getRow(), i));
-                }
-                finalWord.append(move.getWord().charAt(i));
-            }
-            System.out.println(finalWord);
-
-        } else {
-            for (int i = move.getRow(); i < move.getWord().length(); i++) {
-                if (isSquareFilled(i, move.getColumn())) {
-                    return false;
-                }
-            }
-        }
-        // validity checks for surrounding letter combinations creating valid words will eventually be added
-        return true;
-    }
-
-    /**
-     * @param move A ScrabbleMove with a word, row, column, and direction.
-     * @return An integer representing the score of the Player's move.
-     */
-    public int calculateMoveScore(ScrabbleMove move) {
-        // currently doesn't work for word multipliers
-        // need to find a good way to differentiate between different word and letter multipliers
-        int total = 0;
-        if (move.getDirection() == Game.Direction.HORIZONTAL) {
-            for (int i = move.getColumn(); i < move.getColumn() + move.getWord().length(); i++) {
-                // 1 is a placeholder for letter value
-                if (this.scrabbleBoard[move.getRow()][i].isPremiumSquare()) {
-                    total += this.scrabbleBoard[move.getRow()][i].getMultiplier().calculateScore(1);
-                } else {
-                    total++;
-                }
-            }
-        } else {
-            for (int i = move.getRow(); i < move.getRow() + move.getWord().length(); i++) {
-                // 1 is a placeholder for letter value
-                if (this.scrabbleBoard[i][move.getColumn()].isPremiumSquare()) {
-                    total += this.scrabbleBoard[i][move.getColumn()].getMultiplier().calculateScore(1);
-                } else {
-                    total++;
-                }
-            }
-        }
-        return total;
-    }
-
-    /**
      * Prints a text-based representation of the Board.›
      */
     public void printBoard() {
