@@ -12,14 +12,19 @@ public class BoardPane extends JPanel implements ScrabbleView {
         this.setLayout(new GridLayout(Board.SIZE, Board.SIZE)); // Need to define size within board
         this.setSize(300,300);
 
-        buttons = new JButton[Board.size][Board.size]; // Place board size in place. Call Board Size Directly?
+        buttons = new JButton[Board.size][Board.size]; // Place board size in place. Call Board Size Directly
 
-        //TODO
-
-        for (int i < 0; i < Board__; i++){
-            for (int j = 0; j < Board.size)
+        for (int i < 0; i < Board.size; i++){          // Place board size.
+            for (int j = 0; j < Board.size; j++){      // Place board size. 
+                JButton b = new JButton("");
+                b.setActionCommand(i + "" + j);
+                b.addActionListener(); // Call to controller from Scrabble Controller
+                buttons[i][j];
+                this.add(b);
+            }
         }
 
+        this.setVisible(true);
 
     }
 
