@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -28,6 +29,8 @@ public class Game {
     /** A Library for word validation checking. */
     private Library lib;
 
+    private HashMap<String, Integer> scorePerLetter;
+
     /**
      * A word can either be horizontally, or vertically placed onto the board.
      */
@@ -40,6 +43,7 @@ public class Game {
     public Game() throws IOException {
         this.board = new Board("res/default_board.txt");
         this.lib = new Library();
+        this.scorePerLetter = new HashMap<>();
 
         this.playerList = new ArrayList<>();
         initializePlayers();
@@ -80,6 +84,10 @@ public class Game {
         System.out.println("+: Triple Word, ~: Double Word, -: Triple Letter, *: Double Letter");
     }
 
+    private int getLetterScore(String l) {
+        return this.scorePerLetter.get(l);
+    }
+
     /**
      * Initializes the LetterBag using the specified file.
      * @param fileName A String representing the name of the file that contains the specific quantity of letters.
@@ -91,7 +99,8 @@ public class Game {
         String line = br.readLine();
 
         while (line != null) {
-            letterBag.addLetter(line.substring(0,1), Integer.parseInt(line.substring(2)));
+            letterBag.addLetter(line.substring(0,1), Integer.parseInt(line.substring(2,line.lastIndexOf("-"))));
+            this.scorePerLetter.put(line.substring(0,1), Integer.parseInt(line.substring(line.lastIndexOf("-"))));
             line = br.readLine();
         }
     }
@@ -111,43 +120,115 @@ public class Game {
         String firstLetter = letterBag.getRandomLetter();
         int centerSquare = (board.getSize() - 1) / 2;
         board.setSquare(firstLetter.toCharArray()[0], centerSquare, centerSquare);
+
     }
 
-    private String findFullWord(Direction dir, int move[][]) {
+    private String findFullWord(ScrabbleMove scrabbleMove) {
         //this assumes the move array is sorted from first letter->last, we should make sure this is always the case
-        int x = move[0][0];
-        int y = move[0][1];
+        int x = scrabbleMove.getCoords()[0][0];
+        int y = scrabbleMove.getCoords()[0][1];
         String word = "";
 
-        if(dir == Direction.HORIZONTAL) {
-            int startingPosition = move[0][0];
-            int walkingPointer = startingPosition;
+        if(scrabbleMove.getDirection() == Direction.HORIZONTAL) {
+            int walkingPointer = x;
             while (this.board.getTileOnBoard(walkingPointer,y).getLetter() != ' ') {
-                word += String.valueOf(this.board.getTileOnBoard(x,y).getLetter());
+                word += String.valueOf(this.board.getTileOnBoard(walkingPointer,y).getLetter());
                 walkingPointer++;
             }
-            walkingPointer = startingPosition + 1;
+            walkingPointer = x - 1;
             while (this.board.getTileOnBoard(walkingPointer,y).getLetter() != ' ') {
-                word = this.board.getTileOnBoard(x,y).getLetter() + word;
+                word = this.board.getTileOnBoard(walkingPointer,y).getLetter() + word;
                 walkingPointer++;
             }
-        } else if(dir == Direction.VERTICAL) {
-            int startingPosition = move[0][1];
-            int walkingPointer = startingPosition;
+        } else if(scrabbleMove.getDirection() == Direction.VERTICAL) {
+            int walkingPointer = y;
             while (this.board.getTileOnBoard(x,walkingPointer).getLetter() != ' ') {
-                word += String.valueOf(this.board.getTileOnBoard(x,y).getLetter());
+                word += String.valueOf(this.board.getTileOnBoard(x,walkingPointer).getLetter());
                 walkingPointer++;
             }
-            walkingPointer = startingPosition + 1;
+            walkingPointer = y - 1;
             while (this.board.getTileOnBoard(x,walkingPointer).getLetter() != ' ') {
-                word = this.board.getTileOnBoard(x,y).getLetter() + word;
+                word = this.board.getTileOnBoard(x,walkingPointer).getLetter() + word;
                 walkingPointer++;
             }
         }
         return word;
     }
 
+    private ArrayList<String> findSurroundingWords(ScrabbleMove move) {
+        Direction newDirection = move.getDirection() == Direction.HORIZONTAL ? Direction.VERTICAL : Direction.HORIZONTAL;
+        ArrayList<String> surroundingWordList = new ArrayList<>();
+        for (int i = 0; i < move.getCoords().length; i++) {
+            int arr[][] = new int[1][2];
+            arr[0] = move.getCoords()[i];
+            ScrabbleMove newMove = new ScrabbleMove(arr, newDirection, move.getPlayer());
+            String found = findFullWord(newMove);
+            if (found.length() > 1) {
+                surroundingWordList.add(found);
+            }
+        }
+
+        return surroundingWordList;
+    }
+
+    private boolean checkMoveValidity(ScrabbleMove move) {
+        boolean adjacentToSquare = false;
+        boolean isWord = false;
+        boolean surroundingWordsAreWords = true;
+
+        adjacentToSquare = (move.getWord().length() > move.getCoords().length);
+        isWord = lib.isValidWord(move.getWord());
+        for (String word : findSurroundingWords(move)) {
+            if (!lib.isValidWord(word)) {
+                surroundingWordsAreWords = false;
+            }
+        }
+        return adjacentToSquare && isWord && surroundingWordsAreWords;
+    }
+
+    private void deleteInvalidWordFromBoard(ScrabbleMove move){
+        for (int i = 0; i < move.getCoords().length; i++) {
+            this.board.getTileOnBoard(move.getCoords()[i][0], move.getCoords()[i][1]).setLetter(' ');
+            move.getPlayer().addLetter(String.valueOf( this.board.getTileOnBoard(move.getCoords()[i][0], move.getCoords()[i][1])));
+        }
+    }
+
+//    private int calculateSurroundingWordsScore(int coords[][]) {
+//        for (this.findSurroundingWords())
+//    }
+
+    private int calculateMoveScore(ScrabbleMove move) {
+        int total = 0;
+        ArrayList<Multiplier> wordMultipliers = new ArrayList<>();
+        for (int i = 0; i < move.getCoords().length; i++) {
+            Square tile = this.board.getTileOnBoard(move.getCoords()[i][0], move.getCoords()[i][1]);
+            String letter = String.valueOf(tile.getLetter());
+            int value = this.getLetterScore(letter);
+
+            if (tile.isPremiumSquare()) {
+                if (tile.getMultiplier().getType() == "Letter") { //will be fixed with merge with emily
+                    value = tile.getMultiplier().calculateScore(value);
+                } else {
+                    wordMultipliers.add(tile.getMultiplier());
+                }
+            }
+            total += value;
+
+            for (String s : this.findSurroundingWords(move)) {
+                total += this.scorePerLetter.get(s);
+            }
+
+        }
+        for (Multiplier m : wordMultipliers) {
+            total = m.calculateScore(total);
+        }
+
+        return total;
+    }
+
     public void play(int move[][]) {
+        int playerTurnCounter = 0;
+        Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
         int xDifferential = move[0][0];
         int yDifferential = move[0][1];
         Direction dir = null;
@@ -165,10 +246,19 @@ public class Game {
         } else {
             System.out.println("this is an issue");
         }
+        ScrabbleMove scrabbleMove = new ScrabbleMove(move, dir, currentPlayer);
+        scrabbleMove.setWord(findFullWord(scrabbleMove));
+        boolean validMove = checkMoveValidity(scrabbleMove);
 
-        String finalWord = findFullWord(dir, move);
+        if (validMove) {
+            //calculate score
+            currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(scrabbleMove));
+            playerTurnCounter++;
 
-
+            //UPDATE VIEWS
+        } else {
+            deleteInvalidWordFromBoard(scrabbleMove);
+        }
     }
     /**
      * Scrabble game logic.
@@ -181,68 +271,67 @@ public class Game {
         int playerTurnCounter = 0;
         Player currentPlayer;
 
-        while (true) {
-            //cycle through players
-            currentPlayer = playerList.get(playerTurnCounter % playerList.size());
-            boolean validMove = true;
-            //game details
-            board.printBoard();
-            printLegend();
-            System.out.println(currentPlayer.getName() + ": " + currentPlayer.getScore() + " points");
-            System.out.println("Your current rack is: ");
-            currentPlayer.printRack();
-            System.out.println(" ");
-
-            //move details
-            System.out.println("What word do you want to play? \"q\" to quit");
-            String word = userInput.nextLine();
-
-            if (word.equals("q")) {
-                System.exit(0);
-            }
-
-            System.out.println("Play word (h)orizontally or (v)ertically?");
-            Direction direction = userInput.nextLine().equals("h") ? Direction.HORIZONTAL : Direction.VERTICAL;
-
-            System.out.println("Starting row?");
-            int row = Integer.parseInt(userInput.nextLine());
-
-            System.out.println("Starting column?");
-            int column = Integer.parseInt(userInput.nextLine());
-
-            ScrabbleMove move = new ScrabbleMove(word, row, column, direction);
-
-            //are all the spaces player wants to use available and does player have the letters necessary
-            if (board.checkMoveValidity(move) && (currentPlayer.playWord(word))) {
-
-                //setting board
-                if (direction == Direction.VERTICAL) {
-                    for (char c : word.toCharArray()) {
-                        Game.board.setSquare(c, row, column);
-                        row++;
-                    }
-                } else {
-                    for (char c : word.toCharArray()) {
-                        Game.board.setSquare(c, row, column);
-                        column++;
-                    }
-                }
-
-                //awarding score
-                currentPlayer.setScore(currentPlayer.getScore() + board.calculateMoveScore(move));
-
-                //re-upping letters
-                for (int i = 0 ; i < word.length(); i++) {
-                    currentPlayer.addLetter(letterBag.getRandomLetter());
-                }
-            } else { //can't play selected word
-                System.out.println("Invalid move");
-                validMove = false;
-            }
-            if (validMove) {
-                playerTurnCounter++;
-
-            }
-        }
+//        while (true) {
+//            //cycle through players
+//            boolean validMove = true;
+//            //game details
+//            board.printBoard();
+//            printLegend();
+//            System.out.println(currentPlayer.getName() + ": " + currentPlayer.getScore() + " points");
+//            System.out.println("Your current rack is: ");
+//            currentPlayer.printRack();
+//            System.out.println(" ");
+//
+//            //move details
+//            System.out.println("What word do you want to play? \"q\" to quit");
+//            String word = userInput.nextLine();
+//
+//            if (word.equals("q")) {
+//                System.exit(0);
+//            }
+//
+//            System.out.println("Play word (h)orizontally or (v)ertically?");
+//            Direction direction = userInput.nextLine().equals("h") ? Direction.HORIZONTAL : Direction.VERTICAL;
+//
+//            System.out.println("Starting row?");
+//            int row = Integer.parseInt(userInput.nextLine());
+//
+//            System.out.println("Starting column?");
+//            int column = Integer.parseInt(userInput.nextLine());
+//
+//            //ScrabbleMove move = new ScrabbleMove(word, row, column, direction);
+//
+//            //are all the spaces player wants to use available and does player have the letters necessary
+//            if (board.checkMoveValidity(move) && (currentPlayer.playWord(word))) {
+//
+//                //setting board
+//                if (direction == Direction.VERTICAL) {
+//                    for (char c : word.toCharArray()) {
+//                        Game.board.setSquare(c, row, column);
+//                        row++;
+//                    }
+//                } else {
+//                    for (char c : word.toCharArray()) {
+//                        Game.board.setSquare(c, row, column);
+//                        column++;
+//                    }
+//                }
+//
+//                //awarding score
+//                currentPlayer.setScore(currentPlayer.getScore() + board.calculateMoveScore(move));
+//
+//                //re-upping letters
+//                for (int i = 0 ; i < word.length(); i++) {
+//                    currentPlayer.addLetter(letterBag.getRandomLetter());
+//                }
+//            } else { //can't play selected word
+//                System.out.println("Invalid move");
+//                validMove = false;
+//            }
+//            if (validMove) {
+//                playerTurnCounter++;
+//
+//            }
+//        }
     }
 }

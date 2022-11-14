@@ -5,21 +5,55 @@
 public class ScrabbleMove {
     // initializes the word, row, column and direction
     private String word;
-    private int row, column;
+    private int coords[][];
     private Game.Direction direction;
+    private boolean isValid;
+    private Player p;
 
     /**
      * creates ScrabbleMove
      * @param word A string representation for the word
-     * @param row An integer representation for the row
-     * @param column An integer representation for the column
      * @param direction A Game.Direction representation for the direction
      * @author Guy Morgenshtern 101151430
      */
-    public ScrabbleMove(String word, int row, int column, Game.Direction direction) {
+    public ScrabbleMove(String word, int coords[][], Game.Direction direction) {
         this.word = word;
-        this.row = row;
-        this.column = column;
+        this.direction = direction;
+        this.isValid = false;
+    }
+
+    public ScrabbleMove(int coords[][], Game.Direction direction, Player player) {
+        this.coords = coords;
+        this.direction = direction;
+        this.isValid = false;
+        this.p = player;
+    }
+
+    public Player getPlayer() {
+        return p;
+    }
+
+    public void setPlayer(Player p) {
+        this.p = p;
+    }
+
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void setValid(boolean valid) {
+        isValid = valid;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+    }
+
+    public void setCoords(int[][] coords) {
+        this.coords = coords;
+    }
+
+    public void setDirection(Game.Direction direction) {
         this.direction = direction;
     }
 
@@ -31,22 +65,11 @@ public class ScrabbleMove {
     public String getWord() {
         return word;
     }
-    /**
-     * gets the row
-     * @return row as an integer
-     * @author Guy Morgenshtern 101151430
-     */
-    public int getRow() {
-        return row;
+
+    public int[][] getCoords() {
+        return coords;
     }
-    /**
-     * gets the column
-     * @return column as an integer
-     * @author Guy Morgenshtern 101151430
-     */
-    public int getColumn() {
-        return column;
-    }
+
     /**
      * gets the direction
      * @return direction as a direction in the game
