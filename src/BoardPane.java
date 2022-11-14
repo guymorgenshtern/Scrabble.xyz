@@ -14,7 +14,7 @@ public class BoardPane extends JPanel implements ScrabbleView {
 
         buttons = new JButton[Board.size][Board.size]; // Place board size in place. Call Board Size Directly
 
-        for (int i < 0; i < Board.size; i++){          // Place board size.
+        for (int i = 0; i < Board.size; i++){          // Place board size.
             for (int j = 0; j < Board.size; j++){      // Place board size.
                 JButton b = new JButton("");
                 b.setActionCommand(i + "" + j);

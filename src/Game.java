@@ -78,6 +78,14 @@ public class Game {
     }
 
     /**
+     * @return The Scrabble board.
+     * @author Emily Tang 101192604
+     */
+    public Board getBoard() {
+        return board;
+    }
+
+    /**
      * Prints a legend of the ASCII symbols used to represent the text-based board.
      */
     private void printLegend() {
@@ -120,7 +128,6 @@ public class Game {
         String firstLetter = letterBag.getRandomLetter();
         int centerSquare = (board.getSize() - 1) / 2;
         board.setSquare(firstLetter.toCharArray()[0], centerSquare, centerSquare);
-
     }
 
     private String findFullWord(ScrabbleMove scrabbleMove) {
@@ -206,7 +213,7 @@ public class Game {
             int value = this.getLetterScore(letter);
 
             if (tile.isPremiumSquare()) {
-                if (tile.getMultiplier().getType() == "Letter") { //will be fixed with merge with emily
+                if (tile.getMultiplier().getType() == Multiplier.Type.LETTER) { //will be fixed with merge with emily
                     value = tile.getMultiplier().calculateScore(value);
                 } else {
                     wordMultipliers.add(tile.getMultiplier());
@@ -226,7 +233,7 @@ public class Game {
         return total;
     }
 
-    public void play(int move[][]) {
+    public void play(int[][] move) {
         int playerTurnCounter = 0;
         Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
         int xDifferential = move[0][0];

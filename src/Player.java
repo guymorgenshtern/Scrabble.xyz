@@ -24,6 +24,14 @@ public class Player {
     }
 
     /**
+     * @return A HashMap representing the letters the Player has.
+     * @author Emily Tang 101192604
+     */
+    public HashMap<String, Integer> getAvailableLetters() {
+        return availableLetters;
+    }
+
+    /**
      * @return the name in a string
      * @author Guy Morgenshtern 101151430
      */

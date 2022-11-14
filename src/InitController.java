@@ -39,4 +39,5 @@ public class InitController extends JOptionPane {
         // update the game
         game.initializePlayers(nameOfPlayers);
     }
+    
 }
