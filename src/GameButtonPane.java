@@ -5,7 +5,7 @@ public class GameButtonPane extends JPanel{
     JButton play;
     JButton skipTurn;
     //  JButton swapLetter; //  Commented out for now
-    Game game;
+    ScrabbleModel scrabbleModel;
 
     public GameButtonPane(){
         super();

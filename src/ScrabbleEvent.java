@@ -2,12 +2,12 @@ import java.util.EventObject;
 
 public class ScrabbleEvent extends EventObject {
     private Player currentPlayer;
-    private Game.Status status;
+    private ScrabbleModel.Status status;
     private Board board;
     private int coords[][];
 
-    public ScrabbleEvent(Game game, int coords[][], Player currentPlayer, Board board, Game.Status status) {
-        super(game);
+    public ScrabbleEvent(ScrabbleModel scrabbleModel, int coords[][], Player currentPlayer, Board board, ScrabbleModel.Status status) {
+        super(scrabbleModel);
         this.status = status;
         this.currentPlayer = currentPlayer;
         this.board = board;
@@ -26,7 +26,7 @@ public class ScrabbleEvent extends EventObject {
         return currentPlayer;
     }
 
-    public Game.Status getStatus() {
+    public ScrabbleModel.Status getStatus() {
         return status;
     }
 }

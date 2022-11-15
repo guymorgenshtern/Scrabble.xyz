@@ -5,8 +5,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Scanner;
 
 /**
  * MAKE THIS CLASS ACTUALLY WORK INSTEAD OF BEING STATIC
@@ -16,7 +16,7 @@ import java.util.Scanner;
  * A text-based playable version of Scrabble.
  * @author Guy Morgenshtern 101151430
  */
-public class Game {
+public class ScrabbleModel {
 
     /** A Scrabble board. */
     private Board board;
@@ -39,24 +39,39 @@ public class Game {
     public enum Direction { HORIZONTAL, VERTICAL }
     public enum Status { DONE, NOT_DONE }
 
+    private String selectedLetter;
+    private ScrabbleMove currentMove;
+
     /**
      * Runs a text-based playable version of Scrabble.
      * @throws IOException If an I/O error occurs.
      */
-    public Game() throws IOException {
+    public ScrabbleModel() throws IOException {
         this.board = new Board("res/default_board.txt");
         this.lib = new Library();
         this.scorePerLetter = new HashMap<>();
         this.views = new ArrayList<>();
-
+        this.selectedLetter = "";
         playerList = new ArrayList<>();
         // TODO: initialize InitController here instead??
         // initializePlayers();
-
+        this.currentMove = new ScrabbleMove();
         this.letterBag = new LetterBag();
 
         initializeLetterBag("res/letters_by_quantity");
         System.out.println(letterBag.bagSize());
+    }
+
+    public ScrabbleMove getCurrentMove() {
+        return currentMove;
+    }
+
+    public String getSelectedLetter() {
+        return selectedLetter;
+    }
+
+    public void setSelectedLetter(String selectedLetter) {
+        this.selectedLetter = selectedLetter;
     }
 
     public ArrayList<ScrabbleView> getViews() {
@@ -138,31 +153,32 @@ public class Game {
 
     private String findFullWord(ScrabbleMove scrabbleMove) {
         //this assumes the move array is sorted from first letter->last, we should make sure this is always the case
-        int x = scrabbleMove.getCoords()[0][0];
-        int y = scrabbleMove.getCoords()[0][1];
+        int x = scrabbleMove.getCoords().get(0).getCoords()[0];
+        int y = scrabbleMove.getCoords().get(0).getCoords()[1];
         String word = "";
-
+        board.printBoard();
         if(scrabbleMove.getDirection() == Direction.HORIZONTAL) {
             int walkingPointer = x;
-            while (this.board.getTileOnBoard(walkingPointer,y).getLetter() != ' ') {
+            while (walkingPointer < this.board.getSize() && Character.isAlphabetic(this.board.getTileOnBoard(walkingPointer,y).getLetter())) {
                 word += String.valueOf(this.board.getTileOnBoard(walkingPointer,y).getLetter());
                 walkingPointer++;
             }
             walkingPointer = x - 1;
-            while (this.board.getTileOnBoard(walkingPointer,y).getLetter() != ' ') {
+            while (walkingPointer >= 0 && Character.isAlphabetic(this.board.getTileOnBoard(walkingPointer,y).getLetter())) {
                 word = this.board.getTileOnBoard(walkingPointer,y).getLetter() + word;
-                walkingPointer++;
+                walkingPointer--;
             }
         } else if(scrabbleMove.getDirection() == Direction.VERTICAL) {
             int walkingPointer = y;
-            while (this.board.getTileOnBoard(x,walkingPointer).getLetter() != ' ') {
+            while (walkingPointer < this.board.getSize() && Character.isAlphabetic(this.board.getTileOnBoard(x,walkingPointer).getLetter())) {
                 word += String.valueOf(this.board.getTileOnBoard(x,walkingPointer).getLetter());
                 walkingPointer++;
             }
             walkingPointer = y - 1;
-            while (this.board.getTileOnBoard(x,walkingPointer).getLetter() != ' ') {
+            while (walkingPointer >= 0 && Character.isAlphabetic(this.board.getTileOnBoard(x,walkingPointer).getLetter())) {
                 word = this.board.getTileOnBoard(x,walkingPointer).getLetter() + word;
-                walkingPointer++;
+                walkingPointer--;
+
             }
         }
         return word;
@@ -171,9 +187,9 @@ public class Game {
     private ArrayList<String> findSurroundingWords(ScrabbleMove move) {
         Direction newDirection = move.getDirection() == Direction.HORIZONTAL ? Direction.VERTICAL : Direction.HORIZONTAL;
         ArrayList<String> surroundingWordList = new ArrayList<>();
-        for (int i = 0; i < move.getCoords().length; i++) {
-            int arr[][] = new int[1][2];
-            arr[0] = move.getCoords()[i];
+        for (int i = 0; i < move.getCoords().size(); i++) {
+            ArrayList<BoardClick> arr= new ArrayList<>();
+            arr.add(move.getCoords().get(i));
             ScrabbleMove newMove = new ScrabbleMove(arr, newDirection, move.getPlayer());
             String found = findFullWord(newMove);
             if (found.length() > 1) {
@@ -189,7 +205,7 @@ public class Game {
         boolean isWord = false;
         boolean surroundingWordsAreWords = true;
 
-        adjacentToSquare = (move.getWord().length() > move.getCoords().length);
+        adjacentToSquare = (move.getWord().length() > move.getCoords().size());
         isWord = lib.isValidWord(move.getWord());
         for (String word : findSurroundingWords(move)) {
             if (!lib.isValidWord(word)) {
@@ -200,9 +216,9 @@ public class Game {
     }
 
     private void deleteInvalidWordFromBoard(ScrabbleMove move){
-        for (int i = 0; i < move.getCoords().length; i++) {
-            this.board.getTileOnBoard(move.getCoords()[i][0], move.getCoords()[i][1]).setLetter(' ');
-            move.getPlayer().addLetter(String.valueOf( this.board.getTileOnBoard(move.getCoords()[i][0], move.getCoords()[i][1])));
+        for (int i = 0; i < move.getCoords().size(); i++) {
+            this.board.getTileOnBoard(move.getCoords().get(i).getCoords()[0], move.getCoords().get(i).getCoords()[1]).setLetter(' ');
+            move.getPlayer().addLetter(String.valueOf( this.board.getTileOnBoard(move.getCoords().get(i).getCoords()[0], move.getCoords().get(i).getCoords()[1])));
         }
     }
 
@@ -213,8 +229,8 @@ public class Game {
     private int calculateMoveScore(ScrabbleMove move) {
         int total = 0;
         ArrayList<Multiplier> wordMultipliers = new ArrayList<>();
-        for (int i = 0; i < move.getCoords().length; i++) {
-            Square tile = this.board.getTileOnBoard(move.getCoords()[i][0], move.getCoords()[i][1]);
+        for (int i = 0; i < move.getCoords().size(); i++) {
+            Square tile = this.board.getTileOnBoard(move.getCoords().get(i).getCoords()[0], move.getCoords().get(i).getCoords()[1]);
             String letter = String.valueOf(tile.getLetter());
             int value = this.getLetterScore(letter);
 
@@ -239,35 +255,38 @@ public class Game {
         return total;
     }
 
-    public void play(int move[][]) {
+    public void play(ScrabbleMove move) {
         int playerTurnCounter = 0;
         Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
-        int xDifferential = move[0][0];
-        int yDifferential = move[0][1];
+        boolean horizontal = true;
+        boolean vertical = true;
         Direction dir = null;
-        for (int i = 1; i < move.length; i++) {
-            xDifferential -= move[i][0];
-            yDifferential -= move[i][1];
+        for (int i = 1; i < move.getCoords().size(); i++) {
+            horizontal = horizontal && move.getCoords().get(i).getCoords()[0] == move.getCoords().get(0).getCoords()[0];
+            vertical = vertical && move.getCoords().get(i).getCoords()[1] == move.getCoords().get(0).getCoords()[1];
         }
 
-        if ((xDifferential == 0) && (yDifferential == 0)) {
+        if ((horizontal) && (vertical)) {
             System.out.println("decide what to do here");
-        } else if (xDifferential == 0) {
+        } else if (vertical) {
             dir = Direction.VERTICAL;
-        } else if (yDifferential == 0) {
+            System.out.println("here");
+        } else if (horizontal) {
             dir = Direction.HORIZONTAL;
         } else {
             System.out.println("this is an issue");
         }
-        ScrabbleMove scrabbleMove = new ScrabbleMove(move, dir, currentPlayer);
+        ScrabbleMove scrabbleMove = new ScrabbleMove(move.getCoords(), dir, currentPlayer);
         scrabbleMove.setWord(findFullWord(scrabbleMove));
+        System.out.println(scrabbleMove.getWord());
         boolean validMove = checkMoveValidity(scrabbleMove);
+        System.out.println(validMove);
 
         if (validMove) {
             //calculate score
             currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(scrabbleMove));
             playerTurnCounter++;
-
+            System.out.println(currentPlayer.getScore());
             //UPDATE VIEWS
         } else {
             deleteInvalidWordFromBoard(scrabbleMove);
@@ -275,13 +294,12 @@ public class Game {
     }
 
     public static void main (String args[]) throws IOException {
-        Game scrabble = new Game();
+        ScrabbleModel scrabble = new ScrabbleModel();
 
-        scrabble.getViews().add(new BoardFrame(scrabble));
-        scrabble.getViews().add(new HandFrame(scrabble));
+        ScrabbleGameFrame gameFrame = new ScrabbleGameFrame(scrabble);
+        gameFrame.attachTextBoard(scrabble.board);
+        scrabble.getViews().add(gameFrame);
         InitController initFrame = new InitController(scrabble);
-
-
 
     }
 }

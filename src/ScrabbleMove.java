@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Class ScrableMove allows the user
  * @author Guy Morgenshtern 101151430
@@ -5,10 +7,14 @@
 public class ScrabbleMove {
     // initializes the word, row, column and direction
     private String word;
-    private int coords[][];
-    private Game.Direction direction;
+    private ArrayList<BoardClick> coords;
+    private ScrabbleModel.Direction direction;
     private boolean isValid;
     private Player p;
+
+    public ScrabbleMove() {
+        this.coords = new ArrayList<>();
+    }
 
     /**
      * creates ScrabbleMove
@@ -16,13 +22,15 @@ public class ScrabbleMove {
      * @param direction A Game.Direction representation for the direction
      * @author Guy Morgenshtern 101151430
      */
-    public ScrabbleMove(String word, int coords[][], Game.Direction direction) {
+    public ScrabbleMove(String word, ArrayList<int[]> coords[][], ScrabbleModel.Direction direction) {
         this.word = word;
         this.direction = direction;
         this.isValid = false;
     }
 
-    public ScrabbleMove(int coords[][], Game.Direction direction, Player player) {
+
+
+    public ScrabbleMove(ArrayList<BoardClick> coords, ScrabbleModel.Direction direction, Player player) {
         this.coords = coords;
         this.direction = direction;
         this.isValid = false;
@@ -49,11 +57,11 @@ public class ScrabbleMove {
         this.word = word;
     }
 
-    public void setCoords(int[][] coords) {
+    public void setCoords(ArrayList<BoardClick> coords) {
         this.coords = coords;
     }
 
-    public void setDirection(Game.Direction direction) {
+    public void setDirection(ScrabbleModel.Direction direction) {
         this.direction = direction;
     }
 
@@ -66,7 +74,7 @@ public class ScrabbleMove {
         return word;
     }
 
-    public int[][] getCoords() {
+    public ArrayList<BoardClick> getCoords() {
         return coords;
     }
 
@@ -75,7 +83,7 @@ public class ScrabbleMove {
      * @return direction as a direction in the game
      * @author Guy Morgenshtern 101151430
      */
-    public Game.Direction getDirection() {
+    public ScrabbleModel.Direction getDirection() {
         return direction;
     }
 }

@@ -9,10 +9,10 @@ public class InitController extends JOptionPane {
 
     /**
      * Initializes players in a game of Scrabble.
-     * @param game The Game of Scrabble to update.
+     * @param scrabbleModel The Game of Scrabble to update.
      * @author Emily Tang 101192604
      */
-    public InitController(Game game) throws IOException {
+    public InitController(ScrabbleModel scrabbleModel) throws IOException {
         // user inputs the number of players
         int numOfPlayers = 0;
         while (!(numOfPlayers > 1 && numOfPlayers <= 4)) {
@@ -39,8 +39,8 @@ public class InitController extends JOptionPane {
 
         // update the game
         System.out.println("here");
-        game.initializePlayers(nameOfPlayers);
-        game.dealLetters();
-        game.initializeBoard();
+        scrabbleModel.initializePlayers(nameOfPlayers);
+        scrabbleModel.dealLetters();
+        scrabbleModel.initializeBoard();
     }
 }
