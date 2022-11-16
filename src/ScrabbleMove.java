@@ -5,7 +5,7 @@
 public class ScrabbleMove {
     // initializes the word, row, column and direction
     private String word;
-    private int coords[][];
+    private int[][] coords;
     private Game.Direction direction;
     private boolean isValid;
     private Player p;
@@ -16,7 +16,7 @@ public class ScrabbleMove {
      * @param direction A Game.Direction representation for the direction
      * @author Guy Morgenshtern 101151430
      */
-    public ScrabbleMove(String word, int coords[][], Game.Direction direction) {
+    public ScrabbleMove(String word, int[][] coords, Game.Direction direction) {
         this.word = word;
         this.direction = direction;
         this.isValid = false;

@@ -1,16 +1,11 @@
 import com.zetcode.Library;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-
-/**
- * MAKE THIS CLASS ACTUALLY WORK INSTEAD OF BEING STATIC
- */
 
 /**
  * A text-based playable version of Scrabble.
@@ -32,12 +27,10 @@ public class Game {
 
     private HashMap<String, Integer> scorePerLetter;
 
-    private ArrayList<ScrabbleView> views;
     /**
      * A word can either be horizontally, or vertically placed onto the board.
      */
     public enum Direction { HORIZONTAL, VERTICAL }
-    public enum Status { DONE, NOT_DONE }
 
     /**
      * Runs a text-based playable version of Scrabble.
@@ -47,7 +40,6 @@ public class Game {
         this.board = new Board("res/default_board.txt");
         this.lib = new Library();
         this.scorePerLetter = new HashMap<>();
-        this.views = new ArrayList<>();
 
         playerList = new ArrayList<>();
         // TODO: initialize InitController here instead??
@@ -56,11 +48,8 @@ public class Game {
         this.letterBag = new LetterBag();
 
         initializeLetterBag("res/letters_by_quantity");
-        System.out.println(letterBag.bagSize());
-    }
-
-    public ArrayList<ScrabbleView> getViews() {
-        return this.views;
+        dealLetters();
+        playGame();
     }
 
     /**
@@ -71,7 +60,6 @@ public class Game {
      */
     public void initializePlayers(String[] namesOfPlayers) {
         for (String name : namesOfPlayers) {
-            System.out.println(name);
             playerList.add(new Player(name));
         }
     }
@@ -82,6 +70,14 @@ public class Game {
      */
     public ArrayList<Player> getPlayerList() {
         return playerList;
+    }
+
+    /**
+     * @return The Scrabble board.
+     * @author Emily Tang 101192604
+     */
+    public Board getBoard() {
+        return board;
     }
 
     /**
@@ -127,13 +123,6 @@ public class Game {
         String firstLetter = letterBag.getRandomLetter();
         int centerSquare = (board.getSize() - 1) / 2;
         board.setSquare(firstLetter.toCharArray()[0], centerSquare, centerSquare);
-        int coords[][] = new int[1][2];
-        coords[0][0] = (board.getSize() - 1) / 2;
-        coords[0][1] = (board.getSize() - 1) / 2;
-        for (ScrabbleView v : this.getViews()) {
-            v.update(new ScrabbleEvent(this, coords, playerList.get(0), board, Status.NOT_DONE));
-        }
-
     }
 
     private String findFullWord(ScrabbleMove scrabbleMove) {
@@ -239,7 +228,7 @@ public class Game {
         return total;
     }
 
-    public void play(int move[][]) {
+    public void play(int[][] move) {
         int playerTurnCounter = 0;
         Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
         int xDifferential = move[0][0];
@@ -273,15 +262,78 @@ public class Game {
             deleteInvalidWordFromBoard(scrabbleMove);
         }
     }
+    /**
+     * Scrabble game logic.
+     */
+    public void playGame() {
 
-    public static void main (String args[]) throws IOException {
-        Game scrabble = new Game();
+        initializeBoard();
 
-        scrabble.getViews().add(new BoardFrame(scrabble));
-        scrabble.getViews().add(new HandFrame(scrabble));
-        InitController initFrame = new InitController(scrabble);
+        Scanner userInput = new Scanner(System.in);
+        int playerTurnCounter = 0;
+        Player currentPlayer;
 
-
-
+//        while (true) {
+//            //cycle through players
+//            boolean validMove = true;
+//            //game details
+//            board.printBoard();
+//            printLegend();
+//            System.out.println(currentPlayer.getName() + ": " + currentPlayer.getScore() + " points");
+//            System.out.println("Your current rack is: ");
+//            currentPlayer.printRack();
+//            System.out.println(" ");
+//
+//            //move details
+//            System.out.println("What word do you want to play? \"q\" to quit");
+//            String word = userInput.nextLine();
+//
+//            if (word.equals("q")) {
+//                System.exit(0);
+//            }
+//
+//            System.out.println("Play word (h)orizontally or (v)ertically?");
+//            Direction direction = userInput.nextLine().equals("h") ? Direction.HORIZONTAL : Direction.VERTICAL;
+//
+//            System.out.println("Starting row?");
+//            int row = Integer.parseInt(userInput.nextLine());
+//
+//            System.out.println("Starting column?");
+//            int column = Integer.parseInt(userInput.nextLine());
+//
+//            //ScrabbleMove move = new ScrabbleMove(word, row, column, direction);
+//
+//            //are all the spaces player wants to use available and does player have the letters necessary
+//            if (board.checkMoveValidity(move) && (currentPlayer.playWord(word))) {
+//
+//                //setting board
+//                if (direction == Direction.VERTICAL) {
+//                    for (char c : word.toCharArray()) {
+//                        Game.board.setSquare(c, row, column);
+//                        row++;
+//                    }
+//                } else {
+//                    for (char c : word.toCharArray()) {
+//                        Game.board.setSquare(c, row, column);
+//                        column++;
+//                    }
+//                }
+//
+//                //awarding score
+//                currentPlayer.setScore(currentPlayer.getScore() + board.calculateMoveScore(move));
+//
+//                //re-upping letters
+//                for (int i = 0 ; i < word.length(); i++) {
+//                    currentPlayer.addLetter(letterBag.getRandomLetter());
+//                }
+//            } else { //can't play selected word
+//                System.out.println("Invalid move");
+//                validMove = false;
+//            }
+//            if (validMove) {
+//                playerTurnCounter++;
+//
+//            }
+//        }
     }
 }
