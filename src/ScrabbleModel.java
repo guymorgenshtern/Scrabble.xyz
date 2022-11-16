@@ -41,6 +41,10 @@ public class ScrabbleModel {
 
     private String selectedLetter;
     private ScrabbleMove currentMove;
+    private ScrabbleMove skipMove;
+    private int skipCount;
+
+    private int playerTurnCounter;
 
     /**
      * Runs a text-based playable version of Scrabble.
@@ -57,6 +61,7 @@ public class ScrabbleModel {
         // initializePlayers();
         this.currentMove = new ScrabbleMove();
         this.letterBag = new LetterBag();
+        this.playerTurnCounter = 0;
 
         initializeLetterBag("res/letters_by_quantity");
         System.out.println(letterBag.bagSize());
@@ -64,6 +69,10 @@ public class ScrabbleModel {
 
     public ScrabbleMove getCurrentMove() {
         return currentMove;
+    }
+
+    public ScrabbleMove getSkipMove() {
+        return skipMove;
     }
 
     public String getSelectedLetter() {
@@ -271,58 +280,76 @@ public class ScrabbleModel {
         return total;
     }
 
+    private void incrementSkipCounter() {
+        skipCount++;
+        if(skipCount == playerList.size()) {
+            //set board to false, set end frame to true
+            //EndFrame end = new EndFrame();
+        }
+    }
+
     public void play(ScrabbleMove move) {
-        int playerTurnCounter = 0;
         Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
         boolean horizontal = true;
         boolean vertical = true;
         Direction dir = null;
-        for (int i = 1; i < move.getCoords().size(); i++) {
-            horizontal = horizontal && move.getCoords().get(i).getCoords()[1] == move.getCoords().get(0).getCoords()[1];
-            vertical = vertical && move.getCoords().get(i).getCoords()[0] == move.getCoords().get(0).getCoords()[0];
-        }
-
-        if ((horizontal) && (vertical)) {
-            System.out.println("decide what to do here");
-        } else if (vertical) {
-            dir = Direction.VERTICAL;
-            System.out.println("here");
-        } else if (horizontal) {
-            dir = Direction.HORIZONTAL;
-        } else {
-            System.out.println("this is an issue");
-        }
-
-        move.setDirection(dir);
-        move.setPlayer(currentPlayer);
-        move.setWord(findFullWord(move));
-        System.out.println(move.getWord());
-        boolean validMove = checkMoveValidity(move);
-        System.out.println(validMove);
-
-
-        if (validMove) {
-            //calculate score
-            currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
-            for (BoardClick b : move.getCoords()) {
-                currentPlayer.removeLetter(b.getLetter());
-            }
-
-            for (int i = 0; i < move.getCoords().size(); i++) {
-                currentPlayer.addLetter(letterBag.getRandomLetter());
-            }
-
+        //coords is checking letters on the board
+       if(move.getCoords().size() == 0) {
+            incrementSkipCounter();
             playerTurnCounter++;
-            System.out.println(currentPlayer.getScore());
-            //UPDATE VIEWS
-        } else {
-            deleteInvalidWordFromBoard(move);
-        }
-        ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.NOT_DONE);
-        //currentMove = new ScrabbleMove();
-        for (ScrabbleView v: this.getViews()) {
-            v.update(event);
-        }
+            ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.NOT_DONE);
+
+            //currentMove = new ScrabbleMove();
+            for (ScrabbleView v : this.getViews()) {
+                v.update(event);
+            }
+       } else {
+           for (int i = 1; i < move.getCoords().size(); i++) {
+               horizontal = horizontal && move.getCoords().get(i).getCoords()[1] == move.getCoords().get(0).getCoords()[1];
+               vertical = vertical && move.getCoords().get(i).getCoords()[0] == move.getCoords().get(0).getCoords()[0];
+           }
+
+           if ((horizontal) && (vertical)) {
+               System.out.println("decide what to do here");
+           } else if (vertical) {
+               dir = Direction.VERTICAL;
+               System.out.println("here");
+           } else if (horizontal) {
+               dir = Direction.HORIZONTAL;
+           } else {
+               System.out.println("this is an issue");
+           }
+
+           move.setDirection(dir);
+           move.setPlayer(currentPlayer);
+           move.setWord(findFullWord(move));
+           System.out.println(move.getWord());
+           boolean validMove = checkMoveValidity(move);
+           System.out.println(validMove);
+
+           if (validMove) {
+               //calculate score
+               currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
+               for (BoardClick b : move.getCoords()) {
+                   currentPlayer.removeLetter(b.getLetter());
+               }
+
+               for (int i = 0; i < move.getCoords().size(); i++) {
+                   currentPlayer.addLetter(letterBag.getRandomLetter());
+               }
+               playerTurnCounter++;
+               System.out.println(currentPlayer.getScore());
+               //UPDATE VIEWS
+           } else {
+               deleteInvalidWordFromBoard(move);
+           }
+           ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.NOT_DONE);
+
+           //currentMove = new ScrabbleMove();
+           for (ScrabbleView v : this.getViews()) {
+               v.update(event);
+           }
+       }
     }
 
     public static void main (String args[]) throws IOException {
