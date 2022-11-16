@@ -4,22 +4,22 @@ public class ScrabbleEvent extends EventObject {
     private Player currentPlayer;
     private ScrabbleModel.Status status;
     private Board board;
-    private int coords[][];
+    private ScrabbleMove move;
 
-    public ScrabbleEvent(ScrabbleModel scrabbleModel, int coords[][], Player currentPlayer, Board board, ScrabbleModel.Status status) {
+    public ScrabbleEvent(ScrabbleModel scrabbleModel, ScrabbleMove move, Player currentPlayer, Board board, ScrabbleModel.Status status) {
         super(scrabbleModel);
         this.status = status;
         this.currentPlayer = currentPlayer;
         this.board = board;
-        this.coords = coords;
+        this.move = move;
     }
 
     public Board getBoard() {
         return board;
     }
 
-    public int[][] getCoords() {
-        return coords;
+    public ScrabbleMove getMove() {
+        return move;
     }
 
     public Player getCurrentPlayer() {
