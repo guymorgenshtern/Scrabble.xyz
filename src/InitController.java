@@ -13,7 +13,7 @@ public class InitController extends JOptionPane {
      * @author Emily Tang 101192604
      */
     public InitController(Game game) throws IOException {
-        // create a JPanels to allow longer descriptors
+        // create a JPanel to allow for longer descriptors
         JPanel numPanel = new JPanel();
         numPanel.add(new JLabel("How many players are playing?"));
 
