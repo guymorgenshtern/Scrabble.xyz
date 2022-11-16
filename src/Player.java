@@ -59,38 +59,16 @@ public class Player {
         }
         return true;
     }
-    /**
-     * checks if the player can place the word on the board properly
-     * @param input string representation of inputted word
-     * @return true if the
-     * @author Guy Morgenshtern 101151430
-     */
-    public boolean playWord(String input) {
-        if (hasLettersNeededForWord(input)) {
-            for (char l : input.toCharArray()) {
-                String c = String.valueOf(l).toUpperCase();
-                if (availableLetters.get(c) - 1 == 0) {
-                    availableLetters.remove(c);
-                } else {
-                    availableLetters.put(c, availableLetters.get(c) - 1);
-                }
-            }
-            return true;
-        } else {
-            return false;
+
+    public void removeLetter(String l) {
+        int amount = availableLetters.getOrDefault(l, -1);
+        if (amount == 1) {
+            availableLetters.remove(l);
+        } else if (amount > 1){
+            availableLetters.put(l, availableLetters.get(l) - 1);
         }
     }
-    /**
-     * prints the players current letters that they have
-     * @author Guy Morgenshtern 101151430
-     */
-    public void printRack(){
-        for (String k : availableLetters.keySet()) {
-            for (int i = 0; i < availableLetters.get(k); i++) {
-                System.out.print(k + ",");
-            }
-        }
-    }
+
 
     public String[] getAvailableLetters() {
         String letters[] = new String[7];

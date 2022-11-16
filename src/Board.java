@@ -179,7 +179,11 @@ public class Board {
         }
     }
 
-//    public ArrayList<String> surroundingWords(ScrabbleMove move) {
+    public Square[][] getScrabbleBoard() {
+        return scrabbleBoard;
+    }
+
+    //    public ArrayList<String> surroundingWords(ScrabbleMove move) {
 //        ArrayList<String> surroundingWords = new ArrayList<>();
 //        String foundWord = move.getWord();
 //        int count = 1;

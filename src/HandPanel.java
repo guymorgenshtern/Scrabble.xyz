@@ -4,13 +4,13 @@ import java.awt.*;
 /*
     Following Class will represent the users Hand/Rack
  */
-public class HandFrame extends JFrame implements ScrabbleView{
+public class HandPanel extends JPanel implements ScrabbleView{
     private JButton [] buttons;
-    private Game game;
+    private ScrabbleModel scrabbleModel;
 
-    public HandFrame(Game game){
+    public HandPanel(ScrabbleModel scrabbleModel){
         super();
-        this.game = game;
+        this.scrabbleModel = scrabbleModel;
 
         GridLayout buttonGrid = new GridLayout(1, 7); // Place handsize
         this.setLayout(buttonGrid);
@@ -21,7 +21,10 @@ public class HandFrame extends JFrame implements ScrabbleView{
         for(int i = 0; i < buttons.length; i ++){  // Game.HandSize value (7){
             buttons[i] = new JButton();
             buttons[i].setActionCommand("" + i);
-           // buttons[i].addActionListener(controller); // insert controller
+            int letter = i;
+            buttons[i].addActionListener(e -> {
+                scrabbleModel.setSelectedLetter(buttons[letter].getText());
+           }); // insert controller
             this.add(buttons[i]);
         }
 
@@ -35,10 +38,14 @@ public class HandFrame extends JFrame implements ScrabbleView{
         }
     }
 
+    public JButton[] getButtons() {
+        return buttons;
+    }
+
     /*
-    Use following update section to update the Scrabble Game Model
-        -   missing players rack size is 0
-     */
+        Use following update section to update the Scrabble Game Model
+            -   missing players rack size is 0
+         */
     @Override
     public void update(ScrabbleEvent event){ // Use this section to update the Scrabble game model
         setHandForTurn(event.getCurrentPlayer());

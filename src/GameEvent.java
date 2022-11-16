@@ -15,7 +15,7 @@ public class GameEvent extends EventObject {
      * @param model A model for the scrabble game
      * @param playerList A playerlist for players
      */
-    public GameEvent(Game model, ArrayList<Player> playerList) {
+    public GameEvent(ScrabbleModel model, ArrayList<Player> playerList) {
         super(model);
         this.playerList = playerList;
     }
@@ -24,8 +24,8 @@ public class GameEvent extends EventObject {
      *
      * @return the model
      */
-    public Game getModel() {
-        return (Game) getSource();
+    public ScrabbleModel getModel() {
+        return (ScrabbleModel) getSource();
     }
 
     /**

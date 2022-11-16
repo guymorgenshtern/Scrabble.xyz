@@ -2,34 +2,27 @@ import javax.swing.*;
 import java.io.IOException;
 
 /**
- * Initializes players in a game of Scrabble using a series of JOptionPanes. The first JOptionPane asks the user for the
- * number of players. The following JOptionPanes asks the user to input the names of the players.
+ * Initializes players in a game of Scrabble using JOptionPanes. The first JOptionPane asks the user for the number of
+ * players. The following JOptionPanes asks the user to input the names of the players.
  */
 public class InitController extends JOptionPane {
 
     /**
      * Initializes players in a game of Scrabble.
-     * @param game The Game of Scrabble to update.
+     * @param scrabbleModel The Game of Scrabble to update.
      * @author Emily Tang 101192604
      */
-    public InitController(Game game) throws IOException {
-        // create a JPanel to allow for longer descriptors
-        JPanel numPanel = new JPanel();
-        numPanel.add(new JLabel("How many players are playing?"));
-
-        // create a JComboBox to allow user to select the num of players using a dropdown menu and add it to the panel
-        JComboBox<Integer> comboBox = new JComboBox<>();
-        comboBox.addItem(2);
-        comboBox.addItem(3);
-        comboBox.addItem(4);
-        numPanel.add(comboBox);
-
-        // user inputs number of players
+    public InitController(ScrabbleModel scrabbleModel) throws IOException {
+        // user inputs the number of players
         int numOfPlayers = 0;
-        int result = showConfirmDialog(null, numPanel, "Number of Players", OK_CANCEL_OPTION);
-        switch (result) {
-            case OK_OPTION -> numOfPlayers = (int) comboBox.getSelectedItem(); // not-editable, never a problem
-            case CANCEL_OPTION -> System.exit(0); // hahahah you don't get to play suckerr
+        while (!(numOfPlayers > 1 && numOfPlayers <= 4)) {
+            try {
+                numOfPlayers = Integer.parseInt(showInputDialog("How many players are playing?\n2 to 4 " +
+                        "players can play at a time."));
+            } catch (NumberFormatException e) { // if user enters a non-numeric value
+                showMessageDialog(new JFrame(), "Please enter a valid numeric value.", "Alert",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         }
 
         // create a String array to store the player's names
@@ -45,6 +38,9 @@ public class InitController extends JOptionPane {
         }
 
         // update the game
-        game.initializeGame(nameOfPlayers);
+        System.out.println("here");
+        scrabbleModel.initializePlayers(nameOfPlayers);
+        scrabbleModel.dealLetters();
+        scrabbleModel.initializeBoard();
     }
 }

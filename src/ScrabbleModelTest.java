@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import static org.junit.Assert.*;
 
-public class GameTest {
+public class ScrabbleModelTest {
 
     /**
      * Test initializePlayers() in Game.
@@ -10,13 +10,13 @@ public class GameTest {
      */
     @org.junit.Test
     public void testInitializePlayers() throws IOException {
-        Game game = new Game();
+        ScrabbleModel scrabbleModel = new ScrabbleModel();
         assertNull(null); // game has not initialized players yet
 
         String[] playerNames = new String[] {"Guy", "Francisco", "Emily", "Alex"};
-        game.initializeGame(playerNames);
+        scrabbleModel.initializePlayers(playerNames);
 
-        ArrayList<Player> initializedPlayerList = game.getPlayerList();
+        ArrayList<Player> initializedPlayerList = scrabbleModel.getPlayerList();
         assertEquals(playerNames.length, initializedPlayerList.size());
         for (int i = 0; i < initializedPlayerList.size(); i++) {
             assertEquals(playerNames[i], initializedPlayerList.get(i).getName()); // checks that name is the same

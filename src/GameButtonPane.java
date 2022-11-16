@@ -2,10 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameButtonPane extends JPanel{
-    private JButton play;
-    private JButton skipTurn;
+    JButton play;
+    JButton skipTurn;
     //  JButton swapLetter; //  Commented out for now
-    private Game game;
+    ScrabbleModel scrabbleModel;
 
     public GameButtonPane(){
         super();
@@ -21,7 +21,7 @@ public class GameButtonPane extends JPanel{
         play.setAlignmentX(Component.CENTER_ALIGNMENT);
         skipTurn.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        play.addActionListener();   // Insert Controller
-        play.addActionListener();   // Insert Controller
+//        play.addActionListener();   // Insert Controller
+//        play.addActionListener();   // Insert Controller
     }
 }
