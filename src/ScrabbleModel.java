@@ -79,16 +79,18 @@ public class ScrabbleModel {
     }
 
     /**
-     * Initializes players with their specified names.
+     * Initializes players with their specified names. Deal letters to players. Initialize the game board.
      * NOTE: Error checking already in InitController. Users can only enter between two and four players there.
      * @param namesOfPlayers An array of Strings representing the names of the players.
      * @author Emily Tang 101192604
      */
-    public void initializePlayers(String[] namesOfPlayers) {
+    public void initializeGame(String[] namesOfPlayers) {
         for (String name : namesOfPlayers) {
             System.out.println(name);
             playerList.add(new Player(name));
         }
+        dealLetters();
+        initializeBoard();
     }
 
     /**

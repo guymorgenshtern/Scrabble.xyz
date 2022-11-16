@@ -14,7 +14,7 @@ public class ScrabbleModelTest {
         assertNull(null); // game has not initialized players yet
 
         String[] playerNames = new String[] {"Guy", "Francisco", "Emily", "Alex"};
-        scrabbleModel.initializePlayers(playerNames);
+        scrabbleModel.initializeGame(playerNames);
 
         ArrayList<Player> initializedPlayerList = scrabbleModel.getPlayerList();
         assertEquals(playerNames.length, initializedPlayerList.size());

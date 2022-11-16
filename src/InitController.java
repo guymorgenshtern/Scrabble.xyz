@@ -13,16 +13,23 @@ public class InitController extends JOptionPane {
      * @author Emily Tang 101192604
      */
     public InitController(ScrabbleModel scrabbleModel) throws IOException {
-        // user inputs the number of players
+        // create a JPanel to allow for longer descriptors
+        JPanel numPanel = new JPanel();
+        numPanel.add(new JLabel("How many players are playing?"));
+
+        // create a JComboBox to allow user to select the num of players using a dropdown menu and add it to the panel
+        JComboBox<Integer> comboBox = new JComboBox<>();
+        comboBox.addItem(2);
+        comboBox.addItem(3);
+        comboBox.addItem(4);
+        numPanel.add(comboBox);
+
+        // user inputs number of players
         int numOfPlayers = 0;
-        while (!(numOfPlayers > 1 && numOfPlayers <= 4)) {
-            try {
-                numOfPlayers = Integer.parseInt(showInputDialog("How many players are playing?\n2 to 4 " +
-                        "players can play at a time."));
-            } catch (NumberFormatException e) { // if user enters a non-numeric value
-                showMessageDialog(new JFrame(), "Please enter a valid numeric value.", "Alert",
-                        JOptionPane.WARNING_MESSAGE);
-            }
+        int result = showConfirmDialog(null, numPanel, "Number of Players", OK_CANCEL_OPTION);
+        switch (result) {
+            case OK_OPTION -> numOfPlayers = (int) comboBox.getSelectedItem(); // not-editable, never a problem
+            case CANCEL_OPTION -> System.exit(0); // hahahah you don't get to play suckerr
         }
 
         // create a String array to store the player's names
@@ -38,9 +45,10 @@ public class InitController extends JOptionPane {
         }
 
         // update the game
-        System.out.println("here");
-        scrabbleModel.initializePlayers(nameOfPlayers);
-        scrabbleModel.dealLetters();
-        scrabbleModel.initializeBoard();
+        scrabbleModel.initializeGame(nameOfPlayers);
+    }
+
+    public static void main(String[] args) throws IOException {
+        new InitController(new ScrabbleModel());
     }
 }
