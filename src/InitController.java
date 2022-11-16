@@ -38,9 +38,6 @@ public class InitController extends JOptionPane {
         }
 
         // update the game
-        System.out.println("here");
-        game.initializePlayers(nameOfPlayers);
-        game.dealLetters();
-        game.initializeBoard();
+        game.initializeGame(nameOfPlayers);
     }
 }

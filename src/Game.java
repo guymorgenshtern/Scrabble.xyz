@@ -53,15 +53,17 @@ public class Game {
     }
 
     /**
-     * Initializes players with their specified names.
+     * Initializes players with their specified names. Deals letters to each player. Initializes the game board.
      * NOTE: Error checking already in InitController. Users can only enter between two and four players there.
      * @param namesOfPlayers An array of Strings representing the names of the players.
      * @author Emily Tang 101192604
      */
-    public void initializePlayers(String[] namesOfPlayers) {
+    public void initializeGame(String[] namesOfPlayers) {
         for (String name : namesOfPlayers) {
             playerList.add(new Player(name));
         }
+        dealLetters();
+        initializeBoard();
     }
 
     /**

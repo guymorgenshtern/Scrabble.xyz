@@ -14,7 +14,7 @@ public class GameTest {
         assertNull(null); // game has not initialized players yet
 
         String[] playerNames = new String[] {"Guy", "Francisco", "Emily", "Alex"};
-        game.initializePlayers(playerNames);
+        game.initializeGame(playerNames);
 
         ArrayList<Player> initializedPlayerList = game.getPlayerList();
         assertEquals(playerNames.length, initializedPlayerList.size());
