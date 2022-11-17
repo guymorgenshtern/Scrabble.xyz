@@ -1,58 +1,63 @@
 import java.util.HashMap;
 
 /**
- *  Class Player for every play that enters the game
+ *  A Player in the game of Scrabble.
  *  @author Guy Morgenshtern 101151430
  */
 public class Player {
-    /** A hash map for the available letters */
-    private HashMap<String, Integer> availableLetters;
-    /** A score for the player */
+
+    /** A String representing the player's name. */
+    private final String name;
+
+    /** A HashMap representing the player's hand. Stores available letters and their quantities. */
+    private HashMap<String, Integer> hand;
+
+    /** An integer representing the player's score. */
     private int score;
-    /** A name for the player */
-    private String name;
 
     /**
-     * Creates player with a name
-     * @param name String representing the name of the player
+     * Creates a Player with the specified name. Player starts off with an empty hand and a score of zero.
+     * @param name A String representing the name of the Player.
      * @author Guy Morgenshtern 101151430
      */
     public Player(String name) {
-        this.score = 0;
-        this.availableLetters = new HashMap<>();
         this.name = name;
+        this.hand = new HashMap<>();
+        this.score = 0;
     }
 
     /**
-     * @return the name in a string
+     * @return A String representing the name of the Player.
      * @author Guy Morgenshtern 101151430
      */
     public String getName() {
         return name;
     }
+
     /**
-     * @param l string representation of the latter
+     * @param l A String representation of the letter to be added to the player's hand.
      * @author Guy Morgenshtern 101151430
      */
     public void addLetter(String l) {
         l = l.toUpperCase();
-        if (this.availableLetters.containsKey(l)) {
-            this.availableLetters.put(l, this.availableLetters.get(l) + 1);
+        if (this.hand.containsKey(l)) {
+            this.hand.put(l, this.hand.get(l) + 1);
         } else {
-            this.availableLetters.put(l, 1);
+            this.hand.put(l, 1);
         }
     }
+
     /**
-     * checks if the input word from the user has all the letters to make that word
-     * @param input string representation of word that will be checked
-     * @return true if the user has all the letters needed
+     * Determines if the Player has the letters to make the specified word.
+     * @param input A String representation of word that will be checked.
+     * @return True, if Player has all letters needed. False, if not.
      * @author Guy Morgenshtern 101151430
      */
     private boolean hasLettersNeededForWord(String input) {
-        char[] inputAsArray = input.toCharArray();
-
-        for (char c : inputAsArray) {
-            int q = availableLetters.getOrDefault(String.valueOf(c).toUpperCase(), 0);
+        // iterate through the specified word
+        for (char c : input.toCharArray()) {
+            // determine if c is in hand, returns 0 if not in hand
+            int q = hand.getOrDefault(String.valueOf(c).toUpperCase(), 0);
             if (q == 0) {
                 return false;
             }
@@ -60,21 +65,29 @@ public class Player {
         return true;
     }
 
+    /**
+     * Removes the specified letter from the player's hand.
+     * @param l A String representation of the letter to be removed from the hand.
+     * @author Guy Morgenshtern 101151430
+     */
     public void removeLetter(String l) {
-        int amount = availableLetters.getOrDefault(l, -1);
+        int amount = hand.getOrDefault(l, -1);
         if (amount == 1) {
-            availableLetters.remove(l);
-        } else if (amount > 1){
-            availableLetters.put(l, availableLetters.get(l) - 1);
+            hand.remove(l);
+        } else if (amount > 1) {
+            hand.put(l, hand.get(l) - 1);
         }
     }
 
-
-    public String[] getAvailableLetters() {
-        String letters[] = new String[7];
+    /**
+     * @return An array of Strings representing the player's hand.
+     * @author Guy Morgenshtern 101151430
+     */
+    public String[] getHand() {
+        String[] letters = new String[7];
         int count = 0;
-        for (String s : availableLetters.keySet()) {
-            for (int i = 0; i < availableLetters.get(s); i++) {
+        for (String s : hand.keySet()) {
+            for (int i = 0; i < hand.get(s); i++) {
                 letters[count] = s;
                 count++;
             }
@@ -83,7 +96,7 @@ public class Player {
     }
 
     /**
-     * @return the players score
+     * @return An integer representing the player's score.
      * @author Guy Morgenshtern 101151430
      */
     public int getScore() {
@@ -91,7 +104,8 @@ public class Player {
     }
 
     /**
-     * @param score integer for the score
+     * Sets the player's score to the specified integer.
+     * @param score An integer representing the player's score.
      * @author Guy Morgenshtern 101151430
      */
     public void setScore(int score) {
