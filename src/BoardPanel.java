@@ -32,6 +32,11 @@ public class BoardPanel extends JPanel implements ScrabbleView {
                     String selectedLetter = scrabbleModel.getSelectedLetter();
                     l[0] = Integer.parseInt(clickedLocation[0]);
                     l[1] = Integer.parseInt(clickedLocation[1]);
+
+                    /*
+                    should add implementation for blank tile here??
+                     */
+
                     scrabbleModel.getCurrentMove().getCoords().add(new BoardClick(l, selectedLetter));
                     buttons[x][y].setText(selectedLetter);
                     this.textBoard.getScrabbleBoard()[x][y].setLetter(selectedLetter.charAt(0));

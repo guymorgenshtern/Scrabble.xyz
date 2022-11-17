@@ -48,7 +48,4 @@ public class InitController extends JOptionPane {
         scrabbleModel.initializeGame(nameOfPlayers);
     }
 
-    public static void main(String[] args) throws IOException {
-        new InitController(new ScrabbleModel());
-    }
 }

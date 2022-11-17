@@ -9,10 +9,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 /**
- * MAKE THIS CLASS ACTUALLY WORK INSTEAD OF BEING STATIC
- */
-
-/**
  * A text-based playable version of Scrabble.
  * @author Guy Morgenshtern 101151430
  */
@@ -59,7 +55,7 @@ public class ScrabbleModel {
         this.letterBag = new LetterBag();
 
         initializeLetterBag("res/letters_by_quantity");
-        System.out.println(letterBag.bagSize());
+        System.out.println("Letter Bag Size = " + letterBag.bagSize());
     }
 
     public ScrabbleMove getCurrentMove() {
@@ -334,6 +330,5 @@ public class ScrabbleModel {
         gameFrame.attachTextBoard(scrabble.board);
         scrabble.getViews().add(gameFrame);
         InitController initFrame = new InitController(scrabble);
-
     }
 }
