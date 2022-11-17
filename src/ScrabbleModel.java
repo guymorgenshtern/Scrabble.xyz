@@ -38,7 +38,7 @@ public class ScrabbleModel {
      */
     public enum Direction { HORIZONTAL, VERTICAL }
     public enum Status { DONE, NOT_DONE }
-
+    public enum GameStatus {FINISHED, NOT_FINISHED}
     private String selectedLetter;
     private ScrabbleMove currentMove;
     private ScrabbleMove skipMove;
@@ -160,7 +160,7 @@ public class ScrabbleModel {
         ScrabbleMove m = new ScrabbleMove();
         m.setCoords(coordsList);
         for (ScrabbleView v : this.getViews()) {
-            v.update(new ScrabbleEvent(this, m, playerList.get(0), board, Status.NOT_DONE));
+            v.update(new ScrabbleEvent(this, m, playerList.get(0), board, Status.NOT_DONE, GameStatus.NOT_FINISHED));
         }
 
     }
@@ -280,11 +280,12 @@ public class ScrabbleModel {
         return total;
     }
 
-    private void incrementSkipCounter() {
+    private boolean haveAllPlayerSkipped() {
         skipCount++;
         if(skipCount == playerList.size()) {
-            //set board to false, set end frame to true
-            //EndFrame end = new EndFrame();
+            return true;
+        } else{
+            return false;
         }
     }
 
@@ -293,15 +294,28 @@ public class ScrabbleModel {
         boolean horizontal = true;
         boolean vertical = true;
         Direction dir = null;
+
+        //System.out.println(player.getScore());
         //coords is checking letters on the board
        if(move.getCoords().size() == 0) {
-            incrementSkipCounter();
-            playerTurnCounter++;
-            ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.NOT_DONE);
+            if(haveAllPlayerSkipped()) {
+                ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.DONE, GameStatus.FINISHED);
+                for (ScrabbleView v : this.getViews()) {
+                    v.update(event);
+                }
+                //set board to false, set end frame to true
+                //EndFrame end = new EndFrame();
+                //return ;
+            }
+            else {
+                playerTurnCounter++;
+                ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.DONE, GameStatus.NOT_FINISHED);
+                //System.out.println(GameStatus.FINISHED);
 
-            //currentMove = new ScrabbleMove();
-            for (ScrabbleView v : this.getViews()) {
-                v.update(event);
+                //currentMove = new ScrabbleMove();
+                for (ScrabbleView v : this.getViews()) {
+                    v.update(event);
+                }
             }
        } else {
            for (int i = 1; i < move.getCoords().size(); i++) {
@@ -343,7 +357,7 @@ public class ScrabbleModel {
            } else {
                deleteInvalidWordFromBoard(move);
            }
-           ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.NOT_DONE);
+           ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.NOT_DONE, GameStatus.NOT_FINISHED);
 
            //currentMove = new ScrabbleMove();
            for (ScrabbleView v : this.getViews()) {
