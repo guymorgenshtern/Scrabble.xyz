@@ -44,6 +44,8 @@ public class ScrabbleModel {
     private ScrabbleMove skipMove;
     private int skipCount;
 
+    private ArrayList<Integer> usedLetters;
+
     private int playerTurnCounter;
 
     /**
@@ -62,9 +64,14 @@ public class ScrabbleModel {
         this.playerTurnCounter = 0;
         this.currentMove = new ScrabbleMove();
         this.letterBag = new LetterBag();
+        this.usedLetters = new ArrayList<>();
 
         initializeLetterBag("res/letters_by_quantity");
         System.out.println(letterBag.bagSize());
+    }
+
+    public ArrayList<Integer> getUsedLetters() {
+        return usedLetters;
     }
 
     public ScrabbleMove getCurrentMove() {
@@ -108,13 +115,6 @@ public class ScrabbleModel {
         return playerList;
     }
 
-    /**
-     * Prints a legend of the ASCII symbols used to represent the text-based board.
-     */
-    private void printLegend() {
-        System.out.println("+: Triple Word, ~: Double Word, -: Triple Letter, *: Double Letter");
-    }
-
     private int getLetterScore(String l) {
         return this.scorePerLetter.get(l);
     }
@@ -128,9 +128,11 @@ public class ScrabbleModel {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
         String line = br.readLine();
-
         while (line != null) {
+            //letter quantity
             letterBag.addLetter(line.substring(0,1), Integer.parseInt(line.substring(2,line.lastIndexOf("-"))));
+
+            //letter score
             this.scorePerLetter.put(line.substring(0,1), Integer.parseInt(line.substring(line.lastIndexOf("-") + 1)));
             line = br.readLine();
         }
@@ -152,6 +154,8 @@ public class ScrabbleModel {
         int centerSquare = (board.getSize() - 1) / 2;
         board.setSquare(firstLetter.toCharArray()[0], centerSquare, centerSquare);
         ArrayList<BoardClick> coordsList = new ArrayList<>();
+
+        //Game is initialized with a singular letter in the centre of the baord
         int coords[] = new int[2];
         coords[0] = (board.getSize() - 1) / 2;
         coords[1] = (board.getSize() - 1) / 2;
@@ -160,35 +164,50 @@ public class ScrabbleModel {
         ScrabbleMove m = new ScrabbleMove();
         m.setCoords(coordsList);
         m.setValid(true);
+
+        //update the views for the first time
         for (ScrabbleView v : this.getViews()) {
             v.update(new ScrabbleEvent(this, m, playerList.get(0), board, Status.NOT_DONE, GameStatus.NOT_FINISHED));
         }
 
     }
 
+    /**
+     * given a scrabble move, finds the full word on the baord, including all existing adjacent letter
+     * @param scrabbleMove
+     * @return String: final word
+     */
     private String findFullWord(ScrabbleMove scrabbleMove) {
         //this assumes the move array is sorted from first letter->last, we should make sure this is always the case
         System.out.println(scrabbleMove.getCoords());
+
+        //getting the coords of first letter of move
         int x = scrabbleMove.getCoords().get(0).getCoords()[0];
         int y = scrabbleMove.getCoords().get(0).getCoords()[1];
         String word = "";
+
+        //concat all letters to the right
         if(scrabbleMove.getDirection() == Direction.HORIZONTAL) {
             int walkingPointer = x;
             while (walkingPointer < this.board.getSize() && Character.isAlphabetic(this.board.getTileOnBoard(walkingPointer,y).getLetter())) {
                 word += String.valueOf(this.board.getTileOnBoard(walkingPointer,y).getLetter());
                 walkingPointer++;
             }
+
+            //concat all letters to the left
             walkingPointer = x - 1;
             while (walkingPointer >= 0 && Character.isAlphabetic(this.board.getTileOnBoard(walkingPointer,y).getLetter())) {
                 word = this.board.getTileOnBoard(walkingPointer,y).getLetter() + word;
                 walkingPointer--;
             }
+            //concat all letters below
         } else if(scrabbleMove.getDirection() == Direction.VERTICAL) {
             int walkingPointer = y;
             while (walkingPointer < this.board.getSize() && Character.isAlphabetic(this.board.getTileOnBoard(x,walkingPointer).getLetter())) {
                 word += String.valueOf(this.board.getTileOnBoard(x,walkingPointer).getLetter());
                 walkingPointer++;
             }
+            //concat all letters above
             walkingPointer = y - 1;
             while (walkingPointer >= 0 && Character.isAlphabetic(this.board.getTileOnBoard(x,walkingPointer).getLetter())) {
                 word = this.board.getTileOnBoard(x,walkingPointer).getLetter() + word;
@@ -199,6 +218,11 @@ public class ScrabbleModel {
         return word;
     }
 
+    /**
+     * Finds any additional words that were created by the move provided
+     * @param move
+     * @return ArrayList of surrounding words
+     */
     private ArrayList<String> findSurroundingWords(ScrabbleMove move) {
         Direction newDirection = move.getDirection() == Direction.HORIZONTAL ? Direction.VERTICAL : Direction.HORIZONTAL;
         ArrayList<String> surroundingWordList = new ArrayList<>();
@@ -215,6 +239,11 @@ public class ScrabbleModel {
         return surroundingWordList;
     }
 
+    /**
+     * Given a scrabble move, determines its validity according to scrabble rules
+     * @param move
+     * @return boolean of the validity
+     */
     private boolean checkMoveValidity(ScrabbleMove move) {
         boolean adjacentToSquare = false;
         boolean isWord = false;
@@ -232,8 +261,8 @@ public class ScrabbleModel {
 
     private void deleteInvalidWordFromBoard(ScrabbleMove move){
         for (int i = 0; i < move.getCoords().size(); i++) {
-            //move.getPlayer().addLetter(String.valueOf(this.board.getTileOnBoard(move.getCoords().get(i).getCoords()[0], move.getCoords().get(i).getCoords()[1]).getLetter()));
             this.board.getTileOnBoard(move.getCoords().get(i).getCoords()[0], move.getCoords().get(i).getCoords()[1]).setLetter(' ');
+            this.board.printBoard();
         }
     }
 
@@ -245,13 +274,22 @@ public class ScrabbleModel {
         }
 
         ArrayList<Multiplier> wordMultipliers = new ArrayList<>();
+
+        //scoring is split into letters played in the move and any existing adjacent letters
+
+        //letters from move scoring
+        //important to do because we need their coordinates to determine if they lie on a multiplier
         for (int i = 0; i < move.getCoords().size(); i++) {
             Square tile = this.board.getTileOnBoard(move.getCoords().get(i).getCoords()[0], move.getCoords().get(i).getCoords()[1]);
             String letter = String.valueOf(tile.getLetter());
+
+            //remove any letter that has already been scored
             lettersToScore.remove(letter);
+
 
             int value = this.getLetterScore(letter);
 
+            //if letter multiplier, use it right away, if word multiplier store it to be applied at end of scoring
             if (tile.isPremiumSquare()) {
                 if (tile.getMultiplier().getType() == Multiplier.Type.LETTER) { //will be fixed with merge with emily
                     value = tile.getMultiplier().calculateScore(value);
@@ -262,13 +300,17 @@ public class ScrabbleModel {
             total += value;
         }
 
+        //score letters not explicitly placed on board but present in the move
         for (String s : lettersToScore) {
             total += this.getLetterScore(s);
         }
 
+        //score any surrounding words created
         for (String s : this.findSurroundingWords(move)) {
-            System.out.println(s);
-            total += this.scorePerLetter.get(s);
+            for (char c : s.toCharArray()) {
+                total += this.scorePerLetter.get(c + "");
+            }
+
         }
 
         for (Multiplier m : wordMultipliers) {
@@ -278,11 +320,19 @@ public class ScrabbleModel {
         return total;
     }
 
+    /**
+     * determines if all players have skipped their turn in succession
+     * @return boolean
+     */
     private boolean haveAllPlayerSkipped() {
         skipCount++;
         return skipCount == playerList.size();
     }
 
+    /**
+     * Plays a move constructed by a player
+     * @param move
+     */
     public void play(ScrabbleMove move) {
         Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
         boolean horizontal = true;
@@ -292,27 +342,30 @@ public class ScrabbleModel {
         //System.out.println(player.getScore());
         //coords is checking letters on the board
         if (move.getCoords().size() == 0) {
+
+            //if the game has ended (all players have skipped their turn in succession)
             if (haveAllPlayerSkipped()) {
 
+                //create the end game event
                 ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.DONE, GameStatus.FINISHED);
                 for (ScrabbleView v : this.getViews()) {
                     v.update(event);
                 }
-                //set board to false, set end frame to true
-                //EndFrame end = new EndFrame();
-                //return ;
             } else {
+
+                //if the player skipped but the game isn't over, skip to next player
                 playerTurnCounter++;
                 ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.DONE, GameStatus.NOT_FINISHED);
-                //System.out.println(GameStatus.FINISHED);
 
-                //currentMove = new ScrabbleMove();
                 for (ScrabbleView v : this.getViews()) {
                     v.update(event);
                 }
             }
         } else {
+            //reset skip count since a player has played a real turn
             skipCount = 0;
+
+            //determine if the word is horizontal or vertical
             for (int i = 1; i < move.getCoords().size(); i++) {
                 horizontal = horizontal && move.getCoords().get(i).getCoords()[1] == move.getCoords().get(0).getCoords()[1];
                 vertical = vertical && move.getCoords().get(i).getCoords()[0] == move.getCoords().get(0).getCoords()[0];
@@ -339,23 +392,28 @@ public class ScrabbleModel {
                 System.out.println("this is an issue");
             }
 
+            //begin building the rest of the move
             move.setPlayer(currentPlayer);
             move.setWord(findFullWord(move));
             System.out.println(move.getWord());
             move.setValid(checkMoveValidity(move));
 
-
+            //score the move if it is valid
             if (move.isValid()) {
                 //calculate score
                 currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
+
+                //removed played letters
                 for (BoardClick b : move.getCoords()) {
                     currentPlayer.removeLetter(String.valueOf(this.board.getTileOnBoard(b.getCoords()[0], b.getCoords()[1]).getLetter()));
                 }
 
+                //give new letters to player
                 for (int i = 0; i < move.getCoords().size(); i++) {
                     currentPlayer.addLetter(letterBag.getRandomLetter());
                 }
 
+                //next player
                 playerTurnCounter++;
                 System.out.println(currentPlayer.getScore());
                 //UPDATE VIEWS
@@ -364,6 +422,9 @@ public class ScrabbleModel {
                 move.setValid(false);
             }
             //ADD INVALID MOVE BOOLEAN TO EVENT -> USE IT TO WIPE LETTERS ON BOARDPANEL
+            this.getUsedLetters().clear();
+
+            //update views
             ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.NOT_DONE, GameStatus.NOT_FINISHED);
             currentMove = new ScrabbleMove();
             for (ScrabbleView v : this.getViews()) {

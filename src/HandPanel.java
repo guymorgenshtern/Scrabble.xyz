@@ -18,12 +18,14 @@ public class HandPanel extends JPanel implements ScrabbleView{
 
         buttons = new JButton[7];   // Hand Size Again (7)
 
-        for(int i = 0; i < buttons.length; i ++){  // Game.HandSize value (7){
+        for(int i = 0; i < buttons.length; i++){  // Game.HandSize value (7){
             buttons[i] = new JButton();
             buttons[i].setActionCommand("" + i);
             int letter = i;
             buttons[i].addActionListener(e -> {
                 scrabbleModel.setSelectedLetter(buttons[letter].getText());
+                scrabbleModel.getUsedLetters().add(letter);
+                updateVisibility();
            }); // insert controller
             this.add(buttons[i]);
         }
@@ -38,6 +40,15 @@ public class HandPanel extends JPanel implements ScrabbleView{
         }
     }
 
+    private void updateVisibility() {
+        for (JButton b : buttons) {
+            b.setEnabled(true);
+        }
+        for (Integer i : scrabbleModel.getUsedLetters()) {
+            buttons[i].setEnabled(false);
+        }
+    }
+
     public JButton[] getButtons() {
         return buttons;
     }
@@ -48,6 +59,8 @@ public class HandPanel extends JPanel implements ScrabbleView{
          */
     @Override
     public void update(ScrabbleEvent event){ // Use this section to update the Scrabble game model
+
         setHandForTurn(event.getCurrentPlayer());
+        updateVisibility();
     }
 }

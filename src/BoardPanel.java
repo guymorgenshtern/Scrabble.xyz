@@ -51,6 +51,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         if (!letter.equals("")) {
             buttons[x][y].setBackground(Color.GREEN);
             buttons[x][y].setBorderPainted(false);
+            buttons[x][y].setEnabled(false);
         }
         this.buttons[x][y].setText(letter);
 
