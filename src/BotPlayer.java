@@ -28,11 +28,35 @@ public class BotPlayer extends Player {
     public ScrabbleMove play(Board board) {
         // TODO: IMPLEMENTATION FOR PLAYING A TWO LETTER WORD
 
-        // iterate through the board from left-to-right, top-to-bottom looking for a square with a letter
-        for (int i = 0; i < Board.SIZE; i++) {
-            for (int j = 0; j < Board.SIZE; j++) {
-                if (board.getScrabbleBoard()[i][j].getLetter() != null) {
+        Square[][] scrabbleBoard = board.getScrabbleBoard();
 
+        // iterate through the board from left-to-right, top-to-bottom looking for a square with a letter
+        for (int row = 0; row < Board.SIZE; row++) {
+            for (int col = 0; col < Board.SIZE; col++) {
+                if (scrabbleBoard[row][col].getLetter() != ' ') {
+                    // check surrounding squares for empty spaces
+                    int numOfSurroundingEmptySpaces = 0;
+                    // check to the left of the square
+                    if (col != 0 && scrabbleBoard[row][col].getLetter() == ' ') {
+                        numOfSurroundingEmptySpaces++;
+                    }
+                    // check to the right of the square
+                    if (col != Board.SIZE - 1 && scrabbleBoard[row][col].getLetter() == ' ') {
+                        numOfSurroundingEmptySpaces++;
+                    }
+                    // check to the top of the square
+                    if (row != 0 && scrabbleBoard[row][col].getLetter() == ' ') {
+                        numOfSurroundingEmptySpaces++;
+                    }
+                    // check to the bottom of the square
+                    if (row != Board.SIZE - 1 && scrabbleBoard[row][col].getLetter() == ' ') {
+                        numOfSurroundingEmptySpaces++;
+                    }
+
+                    // beginning of the game
+                    if (numOfSurroundingEmptySpaces == 4) {
+
+                    }
                 }
             }
         }
@@ -45,7 +69,8 @@ public class BotPlayer extends Player {
     * start small, need to be able to fit bot moves in while board keeps expanding *
 
     1. find a spot to put words... scrabblemodel can pass in board
-    2. find a word to put in... probably need a library
-    3. plop in a word... what a daunting task
+    2. determine if the word is horizontal or vertical
+    3. find a word to put in... probably need a library
+    4. plop in a word... what a daunting task
      */
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class BoardPanel extends JPanel implements ScrabbleView {
 
+    // FIXME: don't need two Boards
     private Board textBoard;
     private JButton [][] buttons;
 
@@ -39,8 +40,11 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
                     scrabbleModel.getCurrentMove().getCoords().add(new BoardClick(l, selectedLetter));
                     buttons[x][y].setText(selectedLetter);
+                    /*
+                    Gets the state of Scrabble board and sets letter at
+                     */
                     this.textBoard.getScrabbleBoard()[x][y].setLetter(selectedLetter.charAt(0));
-                    scrabbleModel.setSelectedLetter("");
+                    scrabbleModel.setSelectedLetter(""); //
                 });
                 this.add(buttons[i][j]);
 

@@ -50,4 +50,20 @@ public class Multiplier {
         return score; // multiplier has been used already, do not multiply the score
     }
 
+    /**
+     * Sets the multiplier to used.
+     * @author Emily Tang 101192604
+     */
+    public void setUsed() {
+        used = true;
+    }
+
+    /**
+     * @return True, if the Multiplier has been used. False, if not.
+     * @author Emily Tang 101192604
+     */
+    public boolean getUsed() {
+        return used;
+    }
+
 }
