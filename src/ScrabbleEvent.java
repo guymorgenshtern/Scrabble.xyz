@@ -5,6 +5,7 @@ public class ScrabbleEvent extends EventObject {
     private ScrabbleModel.Status status;
     private Board board;
     private ScrabbleMove move;
+    private boolean validMove;
 
     public ScrabbleEvent(ScrabbleModel scrabbleModel, ScrabbleMove move, Player currentPlayer, Board board, ScrabbleModel.Status status) {
         super(scrabbleModel);
@@ -12,6 +13,7 @@ public class ScrabbleEvent extends EventObject {
         this.currentPlayer = currentPlayer;
         this.board = board;
         this.move = move;
+        this.validMove = false;
     }
 
     public Board getBoard() {
@@ -28,5 +30,13 @@ public class ScrabbleEvent extends EventObject {
 
     public ScrabbleModel.Status getStatus() {
         return status;
+    }
+
+    public boolean isValidMove() {
+        return validMove;
+    }
+
+    public void setValidMove(boolean validMove) {
+        this.validMove = validMove;
     }
 }

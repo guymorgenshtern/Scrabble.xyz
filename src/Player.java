@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -70,13 +71,11 @@ public class Player {
     }
 
 
-    public String[] getAvailableLetters() {
-        String letters[] = new String[7];
-        int count = 0;
+    public ArrayList<String> getAvailableLetters() {
+        ArrayList<String> letters = new ArrayList<>();
         for (String s : availableLetters.keySet()) {
             for (int i = 0; i < availableLetters.get(s); i++) {
-                letters[count] = s;
-                count++;
+                letters.add(s);
             }
         }
         return letters;

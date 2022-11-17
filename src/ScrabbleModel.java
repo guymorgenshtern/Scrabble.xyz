@@ -42,6 +42,8 @@ public class ScrabbleModel {
     private String selectedLetter;
     private ScrabbleMove currentMove;
 
+    private int playerTurnCounter;
+
     /**
      * Runs a text-based playable version of Scrabble.
      * @throws IOException If an I/O error occurs.
@@ -55,6 +57,7 @@ public class ScrabbleModel {
         playerList = new ArrayList<>();
         // TODO: initialize InitController here instead??
         // initializePlayers();
+        this.playerTurnCounter = 0;
         this.currentMove = new ScrabbleMove();
         this.letterBag = new LetterBag();
 
@@ -150,6 +153,7 @@ public class ScrabbleModel {
         coordsList.add(b);
         ScrabbleMove m = new ScrabbleMove();
         m.setCoords(coordsList);
+        m.setValid(true);
         for (ScrabbleView v : this.getViews()) {
             v.update(new ScrabbleEvent(this, m, playerList.get(0), board, Status.NOT_DONE));
         }
@@ -222,14 +226,10 @@ public class ScrabbleModel {
 
     private void deleteInvalidWordFromBoard(ScrabbleMove move){
         for (int i = 0; i < move.getCoords().size(); i++) {
+            //move.getPlayer().addLetter(String.valueOf(this.board.getTileOnBoard(move.getCoords().get(i).getCoords()[0], move.getCoords().get(i).getCoords()[1]).getLetter()));
             this.board.getTileOnBoard(move.getCoords().get(i).getCoords()[0], move.getCoords().get(i).getCoords()[1]).setLetter(' ');
-            move.getPlayer().addLetter(String.valueOf( this.board.getTileOnBoard(move.getCoords().get(i).getCoords()[0], move.getCoords().get(i).getCoords()[1])));
         }
     }
-
-//    private int calculateSurroundingWordsScore(int coords[][]) {
-//        for (this.findSurroundingWords())
-//    }
 
     private int calculateMoveScore(ScrabbleMove move) {
         int total = 0;
@@ -261,6 +261,7 @@ public class ScrabbleModel {
         }
 
         for (String s : this.findSurroundingWords(move)) {
+            System.out.println(s);
             total += this.scorePerLetter.get(s);
         }
 
@@ -272,7 +273,6 @@ public class ScrabbleModel {
     }
 
     public void play(ScrabbleMove move) {
-        int playerTurnCounter = 0;
         Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
         boolean horizontal = true;
         boolean vertical = true;
@@ -282,30 +282,38 @@ public class ScrabbleModel {
             vertical = vertical && move.getCoords().get(i).getCoords()[0] == move.getCoords().get(0).getCoords()[0];
         }
 
-        if ((horizontal) && (vertical)) {
-            System.out.println("decide what to do here");
+        if ((horizontal) && (vertical) && move.getCoords().size() == 1) {
+            move.setDirection(Direction.HORIZONTAL);
+            String horizontalCheck = findFullWord(move);
+            move.setDirection(Direction.VERTICAL);
+            String verticalCheck = findFullWord(move);
+
+            if (verticalCheck.length() > move.getCoords().size()) {
+                move.setWord(verticalCheck);
+                move.setDirection(Direction.VERTICAL);
+            } else {
+                move.setWord(horizontalCheck);
+                move.setDirection(Direction.HORIZONTAL);
+            }
         } else if (vertical) {
-            dir = Direction.VERTICAL;
-            System.out.println("here");
+            move.setDirection(Direction.VERTICAL);
         } else if (horizontal) {
-            dir = Direction.HORIZONTAL;
+            move.setDirection(Direction.HORIZONTAL);
         } else {
             System.out.println("this is an issue");
         }
 
-        move.setDirection(dir);
         move.setPlayer(currentPlayer);
         move.setWord(findFullWord(move));
         System.out.println(move.getWord());
-        boolean validMove = checkMoveValidity(move);
-        System.out.println(validMove);
+        move.setValid(checkMoveValidity(move));
 
 
-        if (validMove) {
+        if (move.isValid()) {
             //calculate score
             currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
             for (BoardClick b : move.getCoords()) {
-                currentPlayer.removeLetter(b.getLetter());
+                currentPlayer.removeLetter(String.valueOf(this.board.getTileOnBoard(b.getCoords()[0], b.getCoords()[1]).getLetter()));
             }
 
             for (int i = 0; i < move.getCoords().size(); i++) {
@@ -317,9 +325,11 @@ public class ScrabbleModel {
             //UPDATE VIEWS
         } else {
             deleteInvalidWordFromBoard(move);
+            move.setValid(false);
         }
+        //ADD INVALID MOVE BOOLEAN TO EVENT -> USE IT TO WIPE LETTERS ON BOARDPANEL
         ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.NOT_DONE);
-        //currentMove = new ScrabbleMove();
+        currentMove = new ScrabbleMove();
         for (ScrabbleView v: this.getViews()) {
             v.update(event);
         }
