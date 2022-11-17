@@ -14,7 +14,7 @@ public class Square {
      * @author Emily Tang 101192604
      */
     public Square() {
-
+        letter = ' ';
     }
 
     /**
@@ -23,6 +23,7 @@ public class Square {
      * @author Emily Tang 101192604
      */
     public Square(Multiplier multiplier) {
+        letter = ' ';
         this.multiplier = multiplier;
     }
 
@@ -55,6 +56,10 @@ public class Square {
         return multiplier != null;
     }
 
+    /**
+     * @return A Letter/Word Multiplier that is associated with the Square.
+     * @author Emily Tang 101192604
+     */
     public Multiplier getMultiplier() {
         return multiplier;
     }

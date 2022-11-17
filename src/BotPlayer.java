@@ -28,7 +28,14 @@ public class BotPlayer extends Player {
     public ScrabbleMove play(Board board) {
         // TODO: IMPLEMENTATION FOR PLAYING A TWO LETTER WORD
 
+        // iterate through the board from left-to-right, top-to-bottom looking for a square with a letter
+        for (int i = 0; i < Board.SIZE; i++) {
+            for (int j = 0; j < Board.SIZE; j++) {
+                if (board.getScrabbleBoard()[i][j].getLetter() != null) {
 
+                }
+            }
+        }
     }
 
     /*
