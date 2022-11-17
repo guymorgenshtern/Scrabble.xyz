@@ -4,9 +4,13 @@ import javax.swing.*;
  * EndFrame for when the scrabble game ends and displays the leaderboard
  */
 public class EndFrame extends JFrame implements EndView {
+    private String message;
     public EndFrame() {
-    }
 
+    }
+    public void showEndFrame() {
+        JOptionPane.showMessageDialog(this, message);
+    }
     /**
      * Updates the GameEvent
      * @param e event for the game

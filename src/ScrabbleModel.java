@@ -38,9 +38,13 @@ public class ScrabbleModel {
      */
     public enum Direction { HORIZONTAL, VERTICAL }
     public enum Status { DONE, NOT_DONE }
-
+    public enum GameStatus {FINISHED, NOT_FINISHED}
     private String selectedLetter;
     private ScrabbleMove currentMove;
+    private ScrabbleMove skipMove;
+    private int skipCount;
+
+    private int playerTurnCounter;
 
     private int playerTurnCounter;
 
@@ -60,6 +64,7 @@ public class ScrabbleModel {
         this.playerTurnCounter = 0;
         this.currentMove = new ScrabbleMove();
         this.letterBag = new LetterBag();
+        this.playerTurnCounter = 0;
 
         initializeLetterBag("res/letters_by_quantity");
         System.out.println(letterBag.bagSize());
@@ -67,6 +72,10 @@ public class ScrabbleModel {
 
     public ScrabbleMove getCurrentMove() {
         return currentMove;
+    }
+
+    public ScrabbleMove getSkipMove() {
+        return skipMove;
     }
 
     public String getSelectedLetter() {
@@ -155,7 +164,7 @@ public class ScrabbleModel {
         m.setCoords(coordsList);
         m.setValid(true);
         for (ScrabbleView v : this.getViews()) {
-            v.update(new ScrabbleEvent(this, m, playerList.get(0), board, Status.NOT_DONE));
+            v.update(new ScrabbleEvent(this, m, playerList.get(0), board, Status.NOT_DONE, GameStatus.NOT_FINISHED));
         }
 
     }
@@ -272,15 +281,48 @@ public class ScrabbleModel {
         return total;
     }
 
+    private boolean haveAllPlayerSkipped() {
+        skipCount++;
+        if(skipCount == playerList.size()) {
+            return true;
+        } else{
+            return false;
+        }
+    }
+
     public void play(ScrabbleMove move) {
         Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
         boolean horizontal = true;
         boolean vertical = true;
         Direction dir = null;
-        for (int i = 1; i < move.getCoords().size(); i++) {
-            horizontal = horizontal && move.getCoords().get(i).getCoords()[1] == move.getCoords().get(0).getCoords()[1];
-            vertical = vertical && move.getCoords().get(i).getCoords()[0] == move.getCoords().get(0).getCoords()[0];
-        }
+
+        //System.out.println(player.getScore());
+        //coords is checking letters on the board
+       if(move.getCoords().size() == 0) {
+            if(haveAllPlayerSkipped()) {
+                ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.DONE, GameStatus.FINISHED);
+                for (ScrabbleView v : this.getViews()) {
+                    v.update(event);
+                }
+                //set board to false, set end frame to true
+                //EndFrame end = new EndFrame();
+                //return ;
+            }
+            else {
+                playerTurnCounter++;
+                ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.DONE, GameStatus.NOT_FINISHED);
+                //System.out.println(GameStatus.FINISHED);
+
+                //currentMove = new ScrabbleMove();
+                for (ScrabbleView v : this.getViews()) {
+                    v.update(event);
+                }
+            }
+       } else {
+           for (int i = 1; i < move.getCoords().size(); i++) {
+               horizontal = horizontal && move.getCoords().get(i).getCoords()[1] == move.getCoords().get(0).getCoords()[1];
+               vertical = vertical && move.getCoords().get(i).getCoords()[0] == move.getCoords().get(0).getCoords()[0];
+           }
 
         if ((horizontal) && (vertical) && move.getCoords().size() == 1) {
             move.setDirection(Direction.HORIZONTAL);
