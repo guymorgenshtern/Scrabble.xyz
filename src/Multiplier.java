@@ -51,7 +51,7 @@ public class Multiplier {
     }
 
     /**
-     * Sets the multiplier to used.
+     * Sets the Multiplier to used.
      * @author Emily Tang 101192604
      */
     public void setUsed() {
