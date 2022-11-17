@@ -138,12 +138,12 @@ public class ScrabbleModel {
 
     public void initializeBoard() {
         String firstLetter = letterBag.getRandomLetter();
-        int centerSquare = (board.getSize() - 1) / 2;
+        int centerSquare = (Board.SIZE - 1) / 2;
         board.setSquare(firstLetter.toCharArray()[0], centerSquare, centerSquare);
         ArrayList<BoardClick> coordsList = new ArrayList<>();
         int coords[] = new int[2];
-        coords[0] = (board.getSize() - 1) / 2;
-        coords[1] = (board.getSize() - 1) / 2;
+        coords[0] = (Board.SIZE - 1) / 2;
+        coords[1] = (Board.SIZE - 1) / 2;
         BoardClick b = new BoardClick(coords, firstLetter);
         coordsList.add(b);
         ScrabbleMove m = new ScrabbleMove();
@@ -162,7 +162,7 @@ public class ScrabbleModel {
         String word = "";
         if(scrabbleMove.getDirection() == Direction.HORIZONTAL) {
             int walkingPointer = x;
-            while (walkingPointer < this.board.getSize() && Character.isAlphabetic(this.board.getTileOnBoard(walkingPointer,y).getLetter())) {
+            while (walkingPointer < Board.SIZE && Character.isAlphabetic(this.board.getTileOnBoard(walkingPointer,y).getLetter())) {
                 word += String.valueOf(this.board.getTileOnBoard(walkingPointer,y).getLetter());
                 walkingPointer++;
             }
@@ -173,7 +173,7 @@ public class ScrabbleModel {
             }
         } else if(scrabbleMove.getDirection() == Direction.VERTICAL) {
             int walkingPointer = y;
-            while (walkingPointer < this.board.getSize() && Character.isAlphabetic(this.board.getTileOnBoard(x,walkingPointer).getLetter())) {
+            while (walkingPointer < Board.SIZE && Character.isAlphabetic(this.board.getTileOnBoard(x,walkingPointer).getLetter())) {
                 word += String.valueOf(this.board.getTileOnBoard(x,walkingPointer).getLetter());
                 walkingPointer++;
             }

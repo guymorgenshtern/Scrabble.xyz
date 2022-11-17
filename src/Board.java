@@ -26,9 +26,10 @@ import java.util.HashMap;
  */
 public class Board {
 
+    public static int SIZE = 15;
+
     /** A 2D array of squares to represent the board. */
     private Square [][] scrabbleBoard;
-    private int size;
 
     private static HashMap<String, Multiplier> boardScore;
 
@@ -39,13 +40,8 @@ public class Board {
      */
     public Board(String fileName) throws IOException {
         this.scrabbleBoard = new Square[15][15];
-        this.size = 15;
         Board.boardScore = new HashMap<>();
         this.initBoard(fileName);
-    }
-
-    public int getSize() {
-        return this.size;
     }
 
     /**
