@@ -1,15 +1,34 @@
+import com.zetcode.Library;
+
+import java.io.IOException;
+
 /**
  * A BotPlayer in the game of Scrabble.
  */
 public class BotPlayer extends Player {
 
+    /** A Library to use to create valid words. */
+    private final Library library;
+
     /**
      * Creates a BotPlayer with the specified name. BotPlayer starts off with an empty hand and a score of zero.
      * @param name A String representing the name of the BotPlayer.
+     * @throws IOException If an I/O error occurs.
      * @author Emily Tang 101192604
      */
-    public BotPlayer(String name) {
+    public BotPlayer(String name) throws IOException {
         super(name);
+        library = new Library();
+    }
+
+    /**
+     * @param board The Board that is currently in play.
+     * @return A ScrabbleMove that the BotPlayer can make. Returns null if the BotPlayer cannot make a move.
+     */
+    public ScrabbleMove play(Board board) {
+        // TODO: IMPLEMENTATION FOR PLAYING A TWO LETTER WORD
+
+
     }
 
     /*

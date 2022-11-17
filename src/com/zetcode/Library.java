@@ -20,13 +20,12 @@ public class Library {
      * @author Alexander Hum 101180821
      */
     public Library() throws IOException {
-        validWords = new ArrayList<>();
-
         URL url = new URL("https://www.mit.edu/~ecprice/wordlist.10000");
         BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
 
+        // read in list of words one line at a time and add it to the list of valid words
         String word;
-
+        validWords = new ArrayList<>();
         while ((word = br.readLine()) != null) {
             validWords.add(word);
         }
@@ -40,4 +39,5 @@ public class Library {
     public boolean isValidWord(String word) {
         return this.validWords.contains(word);
     }
+
 }

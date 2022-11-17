@@ -45,6 +45,15 @@ public class Board {
     }
 
     /**
+     * Creates a 15x15 Board with only regular squares.
+     * @author Emily Tang 101192604
+     */
+    public Board() {
+        scrabbleBoard = new Square[Board.SIZE][Board.SIZE];
+        initBoard();
+    }
+
+    /**
      * Initializes the 15x15 Board with only regular squares (no premium squares).
      */
     private void initBoard() {
