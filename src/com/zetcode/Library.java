@@ -6,21 +6,21 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Has all allowable words for the validation checking
- * @author Alexander Hum 101180821
- * @edited Guy Morgenshtern 101151430
+ * A Library to store all valid words for validity checking.
+ * @author Alexander Hum 101180821. Edited by Guy Morgenshtern 101151430.
  */
 public class Library {
-    /** An array list for the words */
-    private ArrayList<String> acceptableWords;
+
+    /** An ArrayList of Strings to store all valid words. */
+    private ArrayList<String> validWords;
 
     /**
-     * Creates a Library with all acceptable words
-     * @throws IOException
+     * Creates a Library with all valid words.
+     * @throws IOException If an I/O error occurs.
      * @author Alexander Hum 101180821
      */
     public Library() throws IOException {
-        acceptableWords = new ArrayList<>();
+        validWords = new ArrayList<>();
 
         URL url = new URL("https://www.mit.edu/~ecprice/wordlist.10000");
         BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -28,16 +28,16 @@ public class Library {
         String word;
 
         while ((word = br.readLine()) != null) {
-            acceptableWords.add(word);
+            validWords.add(word);
         }
     }
 
     /**
-     * checks if the word is valid
-     * @param word String representing the word
-     * @return True if the word is valid
+     * @param word A String representing the word to be checked.
+     * @return True, if the specified word is valid. False, if not.
+     * @author Alexander Hum 101180821
      */
     public boolean isValidWord(String word) {
-        return this.acceptableWords.contains(word);
+        return this.validWords.contains(word);
     }
 }
