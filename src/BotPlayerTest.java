@@ -1,6 +1,4 @@
 import java.io.IOException;
-import java.util.ArrayList;
-
 import static org.junit.Assert.*;
 
 public class BotPlayerTest {
@@ -41,12 +39,12 @@ public class BotPlayerTest {
         }
         assertEquals(7, bot.getAvailableLetters().size());
 
-        ScrabbleMove scrabbleMove = bot.play(board);
-        assertEquals(ScrabbleModel.Direction.HORIZONTAL, scrabbleMove.getDirection());
-        assertEquals(bot, scrabbleMove.getPlayer());
+        ScrabbleMove actualMove = bot.play(board);
+        assertEquals(ScrabbleModel.Direction.HORIZONTAL, actualMove.getDirection());
+        assertEquals(bot, actualMove.getPlayer());
         String expectedWord = "aberdeen";
         for (int i = 0; i < 8; i++) {
-            BoardClick boardClick = scrabbleMove.getCoords().get(i);
+            BoardClick boardClick = actualMove.getCoords().get(i);
             assertEquals(i + 3, boardClick.getCoords()[0]);
             assertEquals(7, boardClick.getCoords()[1]);
             assertEquals(expectedWord.charAt(i) + "", boardClick.getLetter());
@@ -58,7 +56,7 @@ public class BotPlayerTest {
      * @author Emily Tang 101192604
      */
     @org.junit.Test
-    public void testPlayTwoLetterWord() {
+    public void testPlayTwoLetterWord() throws IOException {
         // create and initialize a Board
         Board board = new Board();
         board.getScrabbleBoard()[7][5].setLetter('B');
@@ -70,6 +68,17 @@ public class BotPlayerTest {
         board.getScrabbleBoard()[6][6].setLetter('B');
         board.getScrabbleBoard()[8][6].setLetter('T');
         board.printBoard();
+
+        // create a BotPlayer and add letters to its hand
+        BotPlayer bot = new BotPlayer("Dennis the Menace");
+        assertEquals(0, bot.getAvailableLetters().size());
+        String[] lettersToAdd = new String[] { "A", "B", "C", "D", "E", "F", "G" };
+        for (String s : lettersToAdd) {
+            bot.addLetter(s);
+        }
+        assertEquals(7, bot.getAvailableLetters().size());
+
+        ScrabbleMove actualMove = bot.play(board);
     }
 
 }

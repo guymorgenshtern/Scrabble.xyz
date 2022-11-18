@@ -91,9 +91,10 @@ public class BotPlayer extends Player {
                         String boardLetter = scrabbleBoard[row][col].getLetter() + ""; // getLetter() returns char
                         addLetter(boardLetter);
 
-                        // find a valid word that fits on the board
+                        // find a valid two-letter word that fits on the board
                         String validWord = "";
                         while (validWord.equals("")) {
+                            // iterate through the list of words provided by the dictionary
 
                         }
                     }
