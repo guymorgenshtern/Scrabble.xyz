@@ -34,11 +34,14 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
                     // support for blank tile
                     if (selectedLetter.equals(" ")) {
-                        String blankTileInput = JOptionPane.showInputDialog("Please enter a valid alphabetical character you would like to use.");
-                        if (blankTileInput.matches("[a-zA-Z]+")) {
-                            selectedLetter = blankTileInput.toUpperCase(); // TODO: ask guy if i should be using uppercase or lowercase here
-                        } else {
-                            // TODO: backtrack if it's not a valid letter???
+                        String blankTileInput = "";
+                        while (blankTileInput.equals("")) {
+                            blankTileInput = JOptionPane.showInputDialog("Please enter a valid alphabetical character.");
+                            if (blankTileInput.matches("[a-zA-Z+]") && blankTileInput.length() == 1) {
+                                selectedLetter = blankTileInput.toUpperCase();
+                            } else {
+                                blankTileInput = "";
+                            }
                         }
                     }
 
