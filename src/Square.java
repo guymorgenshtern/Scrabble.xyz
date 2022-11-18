@@ -41,11 +41,8 @@ public class Square {
      * @author Emily Tang 101192604
      */
     public boolean setLetter(char letter) {
-        if (letter != ' ') {
-            this.letter = letter;
-            return true;
-        }
-        return false;
+        this.letter = letter;
+        return true;
     }
 
     /**

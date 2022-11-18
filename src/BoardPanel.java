@@ -57,9 +57,13 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     }
 
     private void updateButton(int x, int y, String letter) {
+        if (!letter.equals("")) {
+            buttons[x][y].setBackground(Color.GREEN);
+            buttons[x][y].setBorderPainted(false);
+            buttons[x][y].setEnabled(false);
+        }
         this.buttons[x][y].setText(letter);
-        buttons[x][y].setBackground(Color.GREEN);
-        buttons[x][y].setBorderPainted(false);
+
     }
 
     public void attachTextBoard(Board board) {
@@ -68,10 +72,19 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
     @Override
     public void update(ScrabbleEvent event) { // Update Game Model
-        for (int i = 0; i < event.getMove().getCoords().size(); i++) {
-            int x = event.getMove().getCoords().get(i).getCoords()[0];
-            int y = event.getMove().getCoords().get(i).getCoords()[1];
-            updateButton(x, y, String.valueOf(event.getBoard().getTileOnBoard(x,y).getLetter()));
+        if (event.getMove().isValid()) {
+            for (int i = 0; i < event.getMove().getCoords().size(); i++) {
+                int x = event.getMove().getCoords().get(i).getCoords()[0];
+                int y = event.getMove().getCoords().get(i).getCoords()[1];
+                updateButton(x, y, String.valueOf(event.getBoard().getTileOnBoard(x,y).getLetter()));
+            }
+        } else {
+            for (int i = 0; i < event.getMove().getCoords().size(); i++) {
+                int x = event.getMove().getCoords().get(i).getCoords()[0];
+                int y = event.getMove().getCoords().get(i).getCoords()[1];
+                updateButton(x, y, "");
+            }
         }
+
     }
 }

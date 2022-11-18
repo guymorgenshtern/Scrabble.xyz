@@ -188,25 +188,4 @@ public class Board {
         return scrabbleBoard;
     }
 
-    //    public ArrayList<String> surroundingWords(ScrabbleMove move) {
-//        ArrayList<String> surroundingWords = new ArrayList<>();
-//        String foundWord = move.getWord();
-//        int count = 1;
-//        if (move.getDirection() == Game.Direction.HORIZONTAL) {
-//            while ((move.getColumn() - count >= 0) && isSquareFilled(move.getRow(), move.getColumn() - count)) {
-//                foundWord = (this.scrabbleBoard[move.getRow()][move.getColumn() - count].getLetter())
-//                        + foundWord;
-//                System.out.println(this.scrabbleBoard[move.getRow()][move.getColumn() - count]);
-//                count++;
-//            }
-//            count = 1;
-//            while (isSquareFilled(move.getRow(), move.getColumn() + move.getWord().length() + count)) {
-//                foundWord = foundWord + (this.scrabbleBoard[move.getRow()][move.getColumn() - count].getLetter());
-//                count++;
-//
-//            }
-//            surroundingWords.add(foundWord);
-//        }
-//    }
-
 }

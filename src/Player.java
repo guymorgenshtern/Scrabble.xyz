@@ -79,17 +79,12 @@ public class Player {
         }
     }
 
-    /**
-     * @return An array of Strings representing the player's hand.
-     * @author Guy Morgenshtern 101151430
-     */
-    public String[] getHand() {
-        String[] letters = new String[7];
-        int count = 0;
-        for (String s : hand.keySet()) {
-            for (int i = 0; i < hand.get(s); i++) {
-                letters[count] = s;
-                count++;
+
+    public ArrayList<String> getAvailableLetters() {
+        ArrayList<String> letters = new ArrayList<>();
+        for (String s : availableLetters.keySet()) {
+            for (int i = 0; i < availableLetters.get(s); i++) {
+                letters.add(s);
             }
         }
         return letters;
