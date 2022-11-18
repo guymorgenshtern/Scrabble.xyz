@@ -6,6 +6,21 @@ import static org.junit.Assert.*;
 public class BotPlayerTest {
 
     /**
+     * Test lettersNeededForInput().
+     * @author Emily Tang 101192604
+     */
+    @org.junit.Test
+    public void testLettersNeededForInput() {
+        // create a Player and add letters to its hand
+        Player player = new Player("Lightning Mcqueen");
+        String[] lettersToAdd = new String[] {"R", "E", "B", "A", "E", "N", "E", "D"};
+        for (String s : lettersToAdd) {
+            player.addLetter(s);
+        }
+        assertTrue(player.hasLettersNeededForWord("aberdeen"));
+    }
+
+    /**
      * Test adding a two-letter word to the Board.
      * @author Emily Tang 101192604
      */
@@ -36,7 +51,15 @@ public class BotPlayerTest {
         boardClicks.add(new BoardClick(new int[] {8, 7}, "e"));
         boardClicks.add(new BoardClick(new int[] {9, 7}, "e"));
         boardClicks.add(new BoardClick(new int[] {10, 7}, "n"));
-        assertEquals(new ScrabbleMove(boardClicks, ScrabbleModel.Direction.HORIZONTAL, bot), bot.play(board));
+
+        ScrabbleMove scrabbleMove = bot.play(board);
+        String expectedWord = "aberdeen";
+        for (int i = 0; i < 8; i++) {
+            BoardClick boardClick = scrabbleMove.getCoords().get(i);
+            assertEquals(i + 3, boardClick.getCoords()[0]);
+            assertEquals(7, boardClick.getCoords()[1]);
+            assertEquals(expectedWord.charAt(i) + "", boardClick.getLetter());
+        }
     }
 
 }
