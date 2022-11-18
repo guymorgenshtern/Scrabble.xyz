@@ -41,18 +41,9 @@ public class BotPlayerTest {
         }
         assertEquals(7, bot.getAvailableLetters().size());
 
-        // create expected ScrabbleMove
-        ArrayList<BoardClick> boardClicks = new ArrayList<>();
-        boardClicks.add(new BoardClick(new int[] {3, 7}, "a"));
-        boardClicks.add(new BoardClick(new int[] {4, 7}, "b"));
-        boardClicks.add(new BoardClick(new int[] {5, 7}, "e"));
-        boardClicks.add(new BoardClick(new int[] {6, 7}, "r"));
-        boardClicks.add(new BoardClick(new int[] {7, 7}, "d"));
-        boardClicks.add(new BoardClick(new int[] {8, 7}, "e"));
-        boardClicks.add(new BoardClick(new int[] {9, 7}, "e"));
-        boardClicks.add(new BoardClick(new int[] {10, 7}, "n"));
-
         ScrabbleMove scrabbleMove = bot.play(board);
+        assertEquals(ScrabbleModel.Direction.HORIZONTAL, scrabbleMove.getDirection());
+        assertEquals(bot, scrabbleMove.getPlayer());
         String expectedWord = "aberdeen";
         for (int i = 0; i < 8; i++) {
             BoardClick boardClick = scrabbleMove.getCoords().get(i);

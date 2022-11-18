@@ -85,6 +85,8 @@ public class BotPlayer extends Player {
                         }
 
                         return new ScrabbleMove(boardClicks, ScrabbleModel.Direction.HORIZONTAL, this);
+                    } else if (numOfSurroundingEmptySpaces == 3) {
+
                     }
                 }
             }
