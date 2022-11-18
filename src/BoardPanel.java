@@ -32,9 +32,15 @@ public class BoardPanel extends JPanel implements ScrabbleView {
                     l[0] = Integer.parseInt(clickedLocation[0]);
                     l[1] = Integer.parseInt(clickedLocation[1]);
 
-                    /*
-                    should add implementation for blank tile here??
-                     */
+                    // support for blank tile
+                    if (selectedLetter.equals(" ")) {
+                        String blankTileInput = JOptionPane.showInputDialog("Please enter a valid alphabetical character you would like to use.");
+                        if (blankTileInput.matches("[a-zA-Z]+")) {
+                            selectedLetter = blankTileInput.toUpperCase(); // TODO: ask guy if i should be using uppercase or lowercase here
+                        } else {
+                            // TODO: backtrack if it's not a valid letter???
+                        }
+                    }
 
                     scrabbleModel.getCurrentMove().getCoords().add(new BoardClick(l, selectedLetter));
                     buttons[x][y].setText(selectedLetter);
