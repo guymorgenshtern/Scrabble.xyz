@@ -21,7 +21,7 @@ public class BotPlayerTest {
     }
 
     /**
-     * Test adding a two-letter word to the Board.
+     * Test adding a word to the Board at the very beginning of a Scrabble game.
      * @author Emily Tang 101192604
      */
     @org.junit.Test
@@ -51,6 +51,25 @@ public class BotPlayerTest {
             assertEquals(7, boardClick.getCoords()[1]);
             assertEquals(expectedWord.charAt(i) + "", boardClick.getLetter());
         }
+    }
+
+    /**
+     * Test adding a two-letter word to the Board.
+     * @author Emily Tang 101192604
+     */
+    @org.junit.Test
+    public void testPlayTwoLetterWord() {
+        // create and initialize a Board
+        Board board = new Board();
+        board.getScrabbleBoard()[7][5].setLetter('B');
+        board.getScrabbleBoard()[7][6].setLetter('A');
+        board.getScrabbleBoard()[7][7].setLetter('N');
+        board.getScrabbleBoard()[7][8].setLetter('A');
+        board.getScrabbleBoard()[7][9].setLetter('N');
+        board.getScrabbleBoard()[7][10].setLetter('A');
+        board.getScrabbleBoard()[6][6].setLetter('B');
+        board.getScrabbleBoard()[8][6].setLetter('T');
+        board.printBoard();
     }
 
 }

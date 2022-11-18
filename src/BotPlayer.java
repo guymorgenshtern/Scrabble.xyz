@@ -1,5 +1,4 @@
 import com.zetcode.Library;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -85,8 +84,18 @@ public class BotPlayer extends Player {
                         }
 
                         return new ScrabbleMove(boardClicks, ScrabbleModel.Direction.HORIZONTAL, this);
-                    } else if (numOfSurroundingEmptySpaces == 3) {
 
+                    } else if (numOfSurroundingEmptySpaces == 2 || numOfSurroundingEmptySpaces == 3) {
+                        // temporarily add the letter from the board to the hand
+                        // this letter will be removed once the move is validated in ScrabbleModel
+                        String boardLetter = scrabbleBoard[row][col].getLetter() + ""; // getLetter() returns char
+                        addLetter(boardLetter);
+
+                        // find a valid word that fits on the board
+                        String validWord = "";
+                        while (validWord.equals("")) {
+
+                        }
                     }
                 }
             }
