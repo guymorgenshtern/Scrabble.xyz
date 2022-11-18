@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -53,7 +54,7 @@ public class Player {
      * @return True, if Player has all letters needed. False, if not.
      * @author Guy Morgenshtern 101151430
      */
-    private boolean hasLettersNeededForWord(String input) {
+    public boolean hasLettersNeededForWord(String input) {
         // iterate through the specified word
         for (char c : input.toCharArray()) {
             // determine if c is in hand, returns 0 if not in hand
@@ -79,11 +80,14 @@ public class Player {
         }
     }
 
-
+    /**
+     * @return An ArrayList of Strings representing the player's hand.
+     * @author Guy Morgenshtern 101151430
+     */
     public ArrayList<String> getAvailableLetters() {
         ArrayList<String> letters = new ArrayList<>();
-        for (String s : availableLetters.keySet()) {
-            for (int i = 0; i < availableLetters.get(s); i++) {
+        for (String s : hand.keySet()) {
+            for (int i = 0; i < hand.get(s); i++) {
                 letters.add(s);
             }
         }

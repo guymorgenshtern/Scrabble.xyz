@@ -40,4 +40,12 @@ public class Library {
         return this.validWords.contains(word);
     }
 
+    /**
+     * @return An ArrayList of valid words.
+     * @author Emily Tang 101192604
+     */
+    public ArrayList<String> getValidWords() {
+        return validWords;
+    }
+
 }
