@@ -1,4 +1,7 @@
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 public class BotPlayerTest {
@@ -39,16 +42,29 @@ public class BotPlayerTest {
         }
         assertEquals(7, bot.getAvailableLetters().size());
 
-        ScrabbleMove actualMove = bot.play(board);
-        assertEquals(ScrabbleModel.Direction.HORIZONTAL, actualMove.getDirection());
-        assertEquals(bot, actualMove.getPlayer());
-        String expectedWord = "aberdeen";
-        for (int i = 0; i < 8; i++) {
-            BoardClick boardClick = actualMove.getCoords().get(i);
-            assertEquals(i + 3, boardClick.getCoords()[0]);
-            assertEquals(7, boardClick.getCoords()[1]);
-            assertEquals(expectedWord.charAt(i) + "", boardClick.getLetter());
+        ScrabbleMove actualScrabbleMove = bot.play(board);
+        assertEquals(ScrabbleModel.Direction.HORIZONTAL, actualScrabbleMove.getDirection());
+        assertEquals(bot, actualScrabbleMove.getPlayer());
+
+        // test board clicks
+        ArrayList<BoardClick> actualBoardClicks = actualScrabbleMove.getCoords();
+        for (int i = 0; i < actualBoardClicks.size(); i++) {
+            assertEquals(7, actualBoardClicks.get(i).getCoords()[1]);
         }
+        assertEquals(3, actualBoardClicks.get(0).getCoords()[0]);
+        assertEquals(4, actualBoardClicks.get(1).getCoords()[0]);
+        assertEquals(5, actualBoardClicks.get(2).getCoords()[0]);
+        assertEquals(6, actualBoardClicks.get(3).getCoords()[0]);
+        assertEquals(8, actualBoardClicks.get(4).getCoords()[0]);
+        assertEquals(9, actualBoardClicks.get(5).getCoords()[0]);
+        assertEquals(10, actualBoardClicks.get(6).getCoords()[0]);
+        assertEquals("A", actualBoardClicks.get(0).getLetter());
+        assertEquals("B", actualBoardClicks.get(1).getLetter());
+        assertEquals("E", actualBoardClicks.get(2).getLetter());
+        assertEquals("R", actualBoardClicks.get(3).getLetter());
+        assertEquals("E", actualBoardClicks.get(4).getLetter());
+        assertEquals("E", actualBoardClicks.get(5).getLetter());
+        assertEquals("N", actualBoardClicks.get(6).getLetter());
     }
 
     /**
@@ -67,7 +83,6 @@ public class BotPlayerTest {
         board.getScrabbleBoard()[7][10].setLetter('A');
         board.getScrabbleBoard()[6][6].setLetter('B');
         board.getScrabbleBoard()[8][6].setLetter('T');
-        board.printBoard();
 
         // create a BotPlayer and add letters to its hand
         BotPlayer bot = new BotPlayer("Dennis the Menace");

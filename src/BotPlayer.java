@@ -7,6 +7,13 @@ import java.util.ArrayList;
  */
 public class BotPlayer extends Player {
 
+    private static final int LEFT = 0;
+    private static final int RIGHT = 1;
+    private static final int TOP = 2;
+    private static final int BOTTOM = 3;
+
+    public enum SquareStatus { EMPTY, NOT_EMPTY, DOES_NOT_EXIST };
+
     /** A Library to use to create valid words. */
     private final Library library;
 
@@ -22,39 +29,77 @@ public class BotPlayer extends Player {
     }
 
     /**
+     * @param board A 2D array of squares representing the Scrabble board.
+     * @param row An integer representing the row of the Square to check the surroundings of.
+     * @param col An integer representing the column of the Square to check the surroundings of.
+     * @return A SquareStatus array representing the status of the surrounding squares.
+     * @author Emily Tang 101192604
+     */
+    private SquareStatus[] getStatusOfSurroundingSquares(Square[][] board, int row, int col) {
+        // create a SquareStatus array and initialize all indices as NOT_EMPTY
+        SquareStatus[] statusOfSurroundingSquares = new SquareStatus[4];
+        for (SquareStatus s : statusOfSurroundingSquares) {
+            s = SquareStatus.NOT_EMPTY;
+        }
+        // check to the left of the square
+        if (col == 0) {
+            statusOfSurroundingSquares[LEFT] = SquareStatus.DOES_NOT_EXIST;
+        } else if (board[row][col - 1].getLetter() == ' ') {
+            statusOfSurroundingSquares[LEFT] = SquareStatus.EMPTY;
+        }
+        // check to the right of the square
+        if (col == Board.SIZE - 1) {
+            statusOfSurroundingSquares[RIGHT] = SquareStatus.DOES_NOT_EXIST;
+        } else if (board[row][col + 1].getLetter() == ' ') {
+            statusOfSurroundingSquares[RIGHT] = SquareStatus.EMPTY;
+        }
+        // check to the top of the square
+        if (row == 0) {
+            statusOfSurroundingSquares[TOP] = SquareStatus.DOES_NOT_EXIST;
+        } else if (board[row + 1][col].getLetter() == ' ') {
+            statusOfSurroundingSquares[TOP] = SquareStatus.EMPTY;
+        }
+        // check to the bottom of the square
+        if (row == Board.SIZE - 1) {
+            statusOfSurroundingSquares[BOTTOM] = SquareStatus.DOES_NOT_EXIST;
+        } else if (board[row - 1][col].getLetter() == ' ') {
+            statusOfSurroundingSquares[BOTTOM] = SquareStatus.EMPTY;
+        }
+        return statusOfSurroundingSquares;
+    }
+
+    /**
+     * @param statusOfSurroundingSquares A SquareStatus array representing the status of the surrounding spaces.
+     * @return An integer representing the number of surrounding empty spaces.
+     * @author Emily Tang 101192604
+     */
+    private int getNumSurroundingEmptySquares(SquareStatus[] statusOfSurroundingSquares) {
+        int numOfSurroundingEmptySpaces = 0;
+        for (SquareStatus s : statusOfSurroundingSquares) {
+            if (s == SquareStatus.EMPTY) {
+                numOfSurroundingEmptySpaces++;
+            }
+        }
+        return numOfSurroundingEmptySpaces;
+    }
+
+    /**
      * @param board The Board that is currently in play.
      * @return A ScrabbleMove that the BotPlayer can make. Returns null if the BotPlayer cannot make a move.
      */
     public ScrabbleMove play(Board board) {
-        // TODO: IMPLEMENTATION FOR PLAYING A TWO LETTER WORD
-
         Square[][] scrabbleBoard = board.getScrabbleBoard();
 
         // iterate through the board from left-to-right, top-to-bottom looking for a square with a letter
         for (int row = 0; row < Board.SIZE; row++) {
             for (int col = 0; col < Board.SIZE; col++) {
-                if (scrabbleBoard[row][col].getLetter() != ' ') {
-                    // check surrounding squares for empty spaces
-                    int numOfSurroundingEmptySpaces = 0;
-                    // check to the left of the square
-                    if (col != 0 && scrabbleBoard[row][col - 1].getLetter() == ' ') {
-                        numOfSurroundingEmptySpaces++;
-                    }
-                    // check to the right of the square
-                    if (col != Board.SIZE - 1 && scrabbleBoard[row][col + 1].getLetter() == ' ') {
-                        numOfSurroundingEmptySpaces++;
-                    }
-                    // check to the top of the square
-                    if (row != 0 && scrabbleBoard[row + 1][col].getLetter() == ' ') {
-                        numOfSurroundingEmptySpaces++;
-                    }
-                    // check to the bottom of the square
-                    if (row != Board.SIZE - 1 && scrabbleBoard[row - 1][col].getLetter() == ' ') {
-                        numOfSurroundingEmptySpaces++;
-                    }
+                if (scrabbleBoard[row][col].getLetter() != ' ') { // found a square with a letter
+                    // check the status of the surrounding squares and determine the number of surrounding empty squares
+                    SquareStatus[] statusOfSurroundingSquares = getStatusOfSurroundingSquares(scrabbleBoard, row, col);
+                    int numOfSurroundingEmptySquares = getNumSurroundingEmptySquares(statusOfSurroundingSquares);
 
                     // at the beginning of the game
-                    if (numOfSurroundingEmptySpaces == 4) {
+                    if (numOfSurroundingEmptySquares == 4) {
                         // temporarily add the letter from the board to the hand
                         // this letter will be removed once the move is validated in ScrabbleModel
                         String boardLetter = scrabbleBoard[row][col].getLetter() + ""; // getLetter() returns char
@@ -65,7 +110,7 @@ public class BotPlayer extends Player {
                         for (int i = 0; i < library.getValidWords().size() && validWord.equals(""); i++) {
                             String s = library.getValidWords().get(i);
                             if (hasLettersNeededForWord(s) && s.length() > 1 && s.contains(boardLetter.toLowerCase())) {
-                                validWord = s;
+                                validWord = s.toUpperCase(); // letters are displayed as uppercase on the board
                             }
                         }
 
@@ -80,28 +125,32 @@ public class BotPlayer extends Player {
                         // create an ArrayList of BoardClicks
                         ArrayList<BoardClick> boardClicks = new ArrayList<>();
                         for (int i = 0; i < validWord.length(); i++) {
-                            boardClicks.add(new BoardClick(new int[] { Board.SIZE / 2 - index + i, Board.SIZE / 2 }, validWord.charAt(i) + ""));
+                            if (i != index) { // do not add the pre-existing letter into ScrabbleMove
+                                boardClicks.add(new BoardClick(new int[]{Board.SIZE / 2 - index + i, Board.SIZE / 2}, validWord.charAt(i) + ""));
+                            }
                         }
 
                         return new ScrabbleMove(boardClicks, ScrabbleModel.Direction.HORIZONTAL, this);
 
-                    } else if (numOfSurroundingEmptySpaces == 2 || numOfSurroundingEmptySpaces == 3) {
+                    } else if (numOfSurroundingEmptySquares == 2 || numOfSurroundingEmptySquares == 3) {
                         // temporarily add the letter from the board to the hand
                         // this letter will be removed once the move is validated in ScrabbleModel
                         String boardLetter = scrabbleBoard[row][col].getLetter() + ""; // getLetter() returns char
                         addLetter(boardLetter);
 
-                        // find a valid two-letter word that fits on the board
-                        String validWord = "";
-                        while (validWord.equals("")) {
-                            // iterate through the list of words provided by the dictionary
+                        // determine if the letter is horizontally-placed or vertically-placed
+                        ScrabbleModel.Direction direction = null; // the direction of the word the Bot will place
 
-                        }
+                        // determine if the spaces next to the letter-to-be-placed are empty
+
+                        // find a valid two-letter word that fits on the board, that starts with the board letter
+
+
                     }
                 }
             }
         }
-        return null;
+        return null; // couldn't find a word to place, so mr. bitty bot is going to pass his turn
     }
 
     /*
