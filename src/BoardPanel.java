@@ -37,6 +37,9 @@ public class BoardPanel extends JPanel implements ScrabbleView {
                         String blankTileInput = "";
                         while (blankTileInput.equals("")) {
                             blankTileInput = JOptionPane.showInputDialog("Please enter a valid alphabetical character.");
+                            if (blankTileInput == null) { // if user enters nothing
+                                blankTileInput = "";
+                            }
                             if (blankTileInput.matches("[a-zA-Z+]") && blankTileInput.length() == 1) {
                                 selectedLetter = blankTileInput.toUpperCase();
                             } else {
