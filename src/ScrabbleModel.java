@@ -345,7 +345,7 @@ public class ScrabbleModel {
             if (haveAllPlayerSkipped()) {
 
                 //create the end game event
-                ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.DONE, GameStatus.FINISHED);
+                ScrabbleEvent event = new ScrabbleEvent(this, move, currentPlayer, this.board, Status.DONE, GameStatus.FINISHED);
                 for (ScrabbleView v : this.getViews()) {
                     v.update(event);
                 }
@@ -353,7 +353,7 @@ public class ScrabbleModel {
 
                 //if the player skipped but the game isn't over, skip to next player
                 playerTurnCounter++;
-                ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.DONE, GameStatus.NOT_FINISHED);
+                ScrabbleEvent event = new ScrabbleEvent(this, move, currentPlayer, this.board, Status.DONE, GameStatus.NOT_FINISHED);
 
                 for (ScrabbleView v : this.getViews()) {
                     v.update(event);
