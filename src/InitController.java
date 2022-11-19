@@ -2,29 +2,35 @@ import javax.swing.*;
 import java.io.IOException;
 
 /**
- * Initializes players in a game of Scrabble using JOptionPanes. The first JOptionPane asks the user for the number of
- * players. The following JOptionPanes asks the user to input the names of the players.
+ * Initializes players in a game of Scrabble using JOptionPanes.
+ *
+ * The first JOptionPane asks the user for the total number of players. The second JOption asks the user how many bot
+ * players they would like to play with. The following JOptionPanes asks the user to input the names of the real
+ * players.
  */
 public class InitController extends JOptionPane {
+
+    /** A JPanel to ask the user how many players are playing in total. */
+    private JPanel numPlayersPanel;
+
+    /** A JPanel to ask the user how many bot players they would like to play with. */
+    private JPanel numBotsPanel;
+
+    /** A JComboBox to store options for the number of players in total. */
+    private JComboBox<Integer> numPlayersComboBox;
+
+    /** A JComboBox to store options for the number of bot players in total. */
+    private JComboBox<Integer> numBotsComboBox;
 
     /**
      * Initializes players in a game of Scrabble.
      * @param scrabbleModel The Game of Scrabble to update.
+     * @throws IOException If an I/O error occurs.
      * @author Emily Tang 101192604
      */
     public InitController(ScrabbleModel scrabbleModel) throws IOException {
-        // create a JPanel to ask user how many players are playing
-        JPanel numPlayersPanel = new JPanel();
-        numPlayersPanel.add(new JLabel("How many players are playing?"));
-
-        // create a JComboBox to allow user to select the num of players using a dropdown menu and add it to the panel
-        JComboBox<Integer> numPlayersComboBox = new JComboBox<>();
-        numPlayersComboBox.addItem(2);
-        numPlayersComboBox.addItem(3);
-        numPlayersComboBox.addItem(4);
-        numPlayersPanel.add(numPlayersComboBox);
-
         // user inputs number of total players
+        createNumPlayersPanel();
         int numOfTotalPlayers = 0;
         int result = showConfirmDialog(null, numPlayersPanel, "Number of Players", YES_NO_OPTION);
         switch (result) {
@@ -32,19 +38,8 @@ public class InitController extends JOptionPane {
             case NO_OPTION, CLOSED_OPTION -> System.exit(0); // end the game
         }
 
-        // create a JPanel to ask user if they would like to play with BotPlayers
-        JPanel numBotsPanel = new JPanel();
-        numBotsPanel.add(new JLabel("Would you like to play with bots?\nIf yes, how many?"));
-
-        // create a JComboBox to allow user to select the num of bots using a dropdown menu and add it to the panel
-        // must have at least one real player
-        JComboBox<Integer> numBotsComboBox = new JComboBox<>();
-        for (int i = 0; i < numOfTotalPlayers; i++) {
-            numBotsComboBox.addItem(i);
-        }
-        numBotsPanel.add(numBotsComboBox);
-
         // user inputs number of bots
+        createNumBotsPanel(numOfTotalPlayers);
         int numOfBots = 0;
         result = showConfirmDialog(null, numBotsPanel, "Number of Bots", YES_NO_OPTION);
         switch (result) {
@@ -70,6 +65,42 @@ public class InitController extends JOptionPane {
 
         // update the game
         scrabbleModel.initializeGame(numOfBots, namesOfRealPlayers);
+    }
+
+    /**
+     * Creates a JPanel to ask the user how many players are playing in total.
+     * @author Emily Tang 101192604
+     */
+    private void createNumPlayersPanel() {
+        // create a JPanel to ask user how many players are playing
+        numPlayersPanel = new JPanel();
+        numPlayersPanel.add(new JLabel("How many players are playing?"));
+
+        // create a JComboBox to allow user to select the num of players using a dropdown menu and add it to the panel
+        numPlayersComboBox = new JComboBox<>();
+        for (int i = 2; i <= 4; i++) {
+            numPlayersComboBox.addItem(i);
+        }
+        numPlayersPanel.add(numPlayersComboBox);
+    }
+
+    /**
+     * Creates a JPanel to ask the user how many bot players they would like to play with.
+     * @param numOfTotalPlayers An integer representing the number of players in total.
+     * @author Emily Tang 101192604
+     */
+    private void createNumBotsPanel(int numOfTotalPlayers) {
+        // create a JPanel to ask user if they would like to play with BotPlayers
+        numBotsPanel = new JPanel();
+        numBotsPanel.add(new JLabel("Would you like to play with bots?\nIf yes, how many?"));
+
+        // create a JComboBox to allow user to select the num of bots using a dropdown menu and add it to the panel
+        // must have at least one real player
+        numBotsComboBox = new JComboBox<>();
+        for (int i = 0; i < numOfTotalPlayers; i++) {
+            numBotsComboBox.addItem(i);
+        }
+        numBotsPanel.add(numBotsComboBox);
     }
 
 }
