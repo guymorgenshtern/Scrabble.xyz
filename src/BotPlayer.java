@@ -1,6 +1,7 @@
 import com.zetcode.Library;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A BotPlayer in the game of Scrabble.
@@ -38,9 +39,8 @@ public class BotPlayer extends Player {
     private SquareStatus[] getStatusOfSurroundingSquares(Square[][] board, int row, int col) {
         // create a SquareStatus array and initialize all indices as NOT_EMPTY
         SquareStatus[] statusOfSurroundingSquares = new SquareStatus[4];
-        for (SquareStatus s : statusOfSurroundingSquares) {
-            s = SquareStatus.NOT_EMPTY;
-        }
+        Arrays.fill(statusOfSurroundingSquares, SquareStatus.NOT_EMPTY);
+
         // check to the left of the square
         if (col == 0) {
             statusOfSurroundingSquares[LEFT] = SquareStatus.DOES_NOT_EXIST;
@@ -65,6 +65,7 @@ public class BotPlayer extends Player {
         } else if (board[row - 1][col].getLetter() == ' ') {
             statusOfSurroundingSquares[BOTTOM] = SquareStatus.EMPTY;
         }
+
         return statusOfSurroundingSquares;
     }
 
@@ -130,6 +131,8 @@ public class BotPlayer extends Player {
                             }
                         }
 
+                        // TODO: remove board letter from hand if its not used in the word
+
                         return new ScrabbleMove(boardClicks, ScrabbleModel.Direction.HORIZONTAL, this);
 
                     } else if (numOfSurroundingEmptySquares == 2 || numOfSurroundingEmptySquares == 3) {
@@ -138,14 +141,43 @@ public class BotPlayer extends Player {
                         String boardLetter = scrabbleBoard[row][col].getLetter() + ""; // getLetter() returns char
                         addLetter(boardLetter);
 
-                        // determine if the letter is horizontally-placed or vertically-placed
+                        // determine if the letter part of a horizontally-placed or vertically-placed word
                         ScrabbleModel.Direction direction = null; // the direction of the word the Bot will place
+                        if (statusOfSurroundingSquares[LEFT] == SquareStatus.NOT_EMPTY
+                            || statusOfSurroundingSquares[RIGHT] == SquareStatus.NOT_EMPTY) {
+                            direction = ScrabbleModel.Direction.VERTICAL;
+                        } else {
+                            direction = ScrabbleModel.Direction.HORIZONTAL;
+                        }
 
-                        // determine if the spaces next to the letter-to-be-placed are empty
+                        // find a two-letter word that begins with the board letter
+                        String validTwoLetterWord = "";
+                        for (int i = 0; i < library.getValidWords().size() && validTwoLetterWord.equals(""); i++) {
+                            String s = library.getValidWords().get(i);
+                            if (hasLettersNeededForWord(s) && s.length() == 2
+                                    && s.substring(0, 1).toUpperCase().equals(boardLetter)
+                                    && !s.substring(1).toUpperCase().equals(boardLetter)) { // second letter used cannot be the board letter
+                                validTwoLetterWord = s.toUpperCase(); // letters are displayed as uppercase on the board
+                            }
+                        }
 
-                        // find a valid two-letter word that fits on the board, that starts with the board letter
+                        // if a word is found, determine if the spaces next to the letter-to-be-placed are empty
+                        if (direction == ScrabbleModel.Direction.HORIZONTAL && !validTwoLetterWord.equals("")
+                                && getNumSurroundingEmptySquares(getStatusOfSurroundingSquares(scrabbleBoard, row, col + 1)) == 3) {
+                            // create an ArrayList of BoardClicks to add to a new ScrabbleMove
+                            ArrayList<BoardClick> boardClicks = new ArrayList<>();
+                            boardClicks.add(new BoardClick(new int[] { row, col + 1 }, validTwoLetterWord.charAt(1) + ""));
+                            return new ScrabbleMove(boardClicks, direction, this);
+                        } else if (direction == ScrabbleModel.Direction.VERTICAL && !validTwoLetterWord.equals("")
+                                && getNumSurroundingEmptySquares(getStatusOfSurroundingSquares(scrabbleBoard, row + 1, col)) == 3) {
+                            // create an ArrayList of BoardClicks to add to a new ScrabbleMove
+                            ArrayList<BoardClick> boardClicks = new ArrayList<>();
+                            boardClicks.add(new BoardClick(new int[] { row + 1, col }, validTwoLetterWord.charAt(1) + ""));
+                            return new ScrabbleMove(boardClicks, direction, this);
+                        }
 
-
+                        // could not find a valid word to add to the board, remove the board letter from the hand
+                        removeLetter(boardLetter);
                     }
                 }
             }

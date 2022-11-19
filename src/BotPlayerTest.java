@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -68,11 +67,11 @@ public class BotPlayerTest {
     }
 
     /**
-     * Test adding a two-letter word to the Board.
+     * Test adding a vertical two-letter word to the Board.
      * @author Emily Tang 101192604
      */
     @org.junit.Test
-    public void testPlayTwoLetterWord() throws IOException {
+    public void testPlayVerticalTwoLetterWord() throws IOException {
         // create and initialize a Board
         Board board = new Board();
         board.getScrabbleBoard()[7][5].setLetter('B');
@@ -81,19 +80,52 @@ public class BotPlayerTest {
         board.getScrabbleBoard()[7][8].setLetter('A');
         board.getScrabbleBoard()[7][9].setLetter('N');
         board.getScrabbleBoard()[7][10].setLetter('A');
-        board.getScrabbleBoard()[6][6].setLetter('B');
-        board.getScrabbleBoard()[8][6].setLetter('T');
 
         // create a BotPlayer and add letters to its hand
         BotPlayer bot = new BotPlayer("Dennis the Menace");
         assertEquals(0, bot.getAvailableLetters().size());
-        String[] lettersToAdd = new String[] { "A", "B", "C", "D", "E", "F", "G" };
+        String[] lettersToAdd = new String[] { "O", "O", "O", "O", "O", "O", "O" };
         for (String s : lettersToAdd) {
             bot.addLetter(s);
         }
         assertEquals(7, bot.getAvailableLetters().size());
 
         ScrabbleMove actualMove = bot.play(board);
+        assertEquals(8, actualMove.getCoords().get(0).getCoords()[0]);
+        assertEquals(5, actualMove.getCoords().get(0).getCoords()[1]);
+        assertEquals("O", actualMove.getCoords().get(0).getLetter());
+        assertEquals(ScrabbleModel.Direction.VERTICAL, actualMove.getDirection());
+        assertEquals(bot, actualMove.getPlayer());
+    }
+
+    /**
+     * Test adding a horizontal two-letter word to the Board.
+     * @author Emily Tang 101192604
+     */
+    @org.junit.Test
+    public void testPlayHorizontalTwoLetterWord() throws IOException {
+        // create and initialize a Board
+        Board board = new Board();
+        board.getScrabbleBoard()[5][7].setLetter('A');
+        board.getScrabbleBoard()[6][7].setLetter('P');
+        board.getScrabbleBoard()[7][7].setLetter('P');
+        board.getScrabbleBoard()[8][7].setLetter('L');
+        board.getScrabbleBoard()[9][7].setLetter('E');
+
+        // create a BotPlayer and add letters to its hana
+        BotPlayer bot = new BotPlayer("Kirby");
+        String[] lettersToAdd = new String[] { "A", "A", "A" };
+        for (String s : lettersToAdd) {
+            bot.addLetter(s);
+        }
+        assertEquals(3, bot.getAvailableLetters().size());
+
+        ScrabbleMove actualMove = bot.play(board);
+        assertEquals(6, actualMove.getCoords().get(0).getCoords()[0]);
+        assertEquals(8, actualMove.getCoords().get(0).getCoords()[1]);
+        assertEquals("A", actualMove.getCoords().get(0).getLetter());
+        assertEquals(ScrabbleModel.Direction.HORIZONTAL, actualMove.getDirection());
+        assertEquals(bot, actualMove.getPlayer());
     }
 
 }
