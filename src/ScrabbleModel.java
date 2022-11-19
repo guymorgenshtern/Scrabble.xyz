@@ -343,24 +343,19 @@ public class ScrabbleModel {
         boolean vertical = true;
         Direction dir = null;
 
-        //System.out.println(player.getScore());
-        //coords is checking letters on the board
+        // coords is checking letters on the board
         if (move.getCoords().size() == 0) {
-
             //if the game has ended (all players have skipped their turn in succession)
             if (haveAllPlayerSkipped()) {
-
                 //create the end game event
                 ScrabbleEvent event = new ScrabbleEvent(this, move, currentPlayer, this.board, Status.DONE, GameStatus.FINISHED);
                 for (ScrabbleView v : this.getViews()) {
                     v.update(event);
                 }
             } else {
-
                 //if the player skipped but the game isn't over, skip to next player
                 playerTurnCounter++;
                 ScrabbleEvent event = new ScrabbleEvent(this, move, currentPlayer, this.board, Status.DONE, GameStatus.NOT_FINISHED);
-
                 for (ScrabbleView v : this.getViews()) {
                     v.update(event);
                 }
