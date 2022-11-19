@@ -183,15 +183,4 @@ public class BotPlayer extends Player {
         return null; // couldn't find a word to place, so mr. bitty bot is going to pass his turn
     }
 
-    /*
-    private boolean hasLettersNeededForWord(String input)
-    - could be helpful to create legal words... would need to temporarily pass in an additional letter to my hand
-
-    * start small, need to be able to fit bot moves in while board keeps expanding *
-
-    1. find a spot to put words... scrabblemodel can pass in board
-    2. determine if the word is horizontal or vertical
-    3. find a word to put in... probably need a library
-    4. plop in a word... what a daunting task
-     */
 }
