@@ -13,14 +13,18 @@ public class ScrabbleModelTest {
         ScrabbleModel scrabbleModel = new ScrabbleModel();
         assertNull(null); // game has not initialized players yet
 
-        String[] playerNames = new String[] {"Guy", "Francisco", "Emily", "Alex"};
-        scrabbleModel.initializeGame(playerNames);
+        String[] playerNames = new String[] { "Guy", "Francisco", "Emily" };
+        scrabbleModel.initializeGame(1, playerNames);
 
         ArrayList<Player> initializedPlayerList = scrabbleModel.getPlayerList();
-        assertEquals(playerNames.length, initializedPlayerList.size());
-        for (int i = 0; i < initializedPlayerList.size(); i++) {
-            assertEquals(playerNames[i], initializedPlayerList.get(i).getName()); // checks that name is the same
-            assertEquals(0, initializedPlayerList.get(i).getScore());    // checks that score is zero
+        assertEquals(4, initializedPlayerList.size());
+        assertTrue(initializedPlayerList.get(0) instanceof BotPlayer);
+        assertEquals("Dumb Dumpling", initializedPlayerList.get(0).getName());
+        assertEquals(0, initializedPlayerList.get(0).getScore());
+        for (int i = 0; i < playerNames.length; i++) {
+            assertTrue(initializedPlayerList.get(i + 1) instanceof Player);
+            assertEquals(playerNames[i], initializedPlayerList.get(i + 1).getName()); // checks that name is the same
+            assertEquals(0, initializedPlayerList.get(i + 1).getScore());    // checks that score is zero
         }
     }
 }

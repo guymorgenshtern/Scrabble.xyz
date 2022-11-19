@@ -91,14 +91,20 @@ public class ScrabbleModel {
     }
 
     /**
-     * Initializes players with their specified names. Deal letters to players. Initialize the game board.
+     * Initializes BotPlayers. Initializes real players with their specified names. Deal letters to players. Initialize
+     * the game board.
      * NOTE: Error checking already in InitController. Users can only enter between two and four players there.
-     * @param namesOfPlayers An array of Strings representing the names of the players.
+     * @param numOfBots An integer representing the amount of BotPlayers the user would like to play Scrabble with.
+     * @param namesOfRealPlayers An array of Strings representing the names of the real players.
+     * @throws IOException If an I/O error occurs.
      * @author Emily Tang 101192604
      */
-    public void initializeGame(String[] namesOfPlayers) {
-        for (String name : namesOfPlayers) {
-            System.out.println(name);
+    public void initializeGame(int numOfBots, String[] namesOfRealPlayers) throws IOException {
+        String[] namesOfBotPlayers = new String[] { "Dumb Dumpling", "Stupid Spaghetti", "Incompetent Iguana" };
+        for (int i = 0; i < numOfBots; i++) {
+            playerList.add(new BotPlayer(namesOfBotPlayers[i]));
+        }
+        for (String name : namesOfRealPlayers) {
             playerList.add(new Player(name));
         }
         dealLetters();

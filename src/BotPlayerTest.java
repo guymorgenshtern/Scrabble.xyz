@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.util.ArrayList;
-
 import static org.junit.Assert.*;
 
 public class BotPlayerTest {
