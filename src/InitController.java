@@ -26,10 +26,10 @@ public class InitController extends JOptionPane {
 
         // user inputs number of total players
         int numOfTotalPlayers = 0;
-        int result = showConfirmDialog(null, numPlayersPanel, "Number of Players", OK_CANCEL_OPTION);
+        int result = showConfirmDialog(null, numPlayersPanel, "Number of Players", YES_NO_OPTION);
         switch (result) {
             case OK_OPTION -> numOfTotalPlayers = (int) numPlayersComboBox.getSelectedItem();
-            case CANCEL_OPTION -> System.exit(0);
+            case NO_OPTION, CLOSED_OPTION -> System.exit(0); // end the game
         }
 
         // create a JPanel to ask user if they would like to play with BotPlayers
@@ -39,17 +39,17 @@ public class InitController extends JOptionPane {
         // create a JComboBox to allow user to select the num of bots using a dropdown menu and add it to the panel
         // must have at least one real player
         JComboBox<Integer> numBotsComboBox = new JComboBox<>();
-        for (int i = 0; i < numOfTotalPlayers - 1; i++) {
-            numBotsComboBox.addItem(i + 1);
+        for (int i = 0; i < numOfTotalPlayers; i++) {
+            numBotsComboBox.addItem(i);
         }
         numBotsPanel.add(numBotsComboBox);
 
         // user inputs number of bots
         int numOfBots = 0;
-        result = showConfirmDialog(null, numBotsPanel, "Number of Bots", OK_CANCEL_OPTION);
+        result = showConfirmDialog(null, numBotsPanel, "Number of Bots", YES_NO_OPTION);
         switch (result) {
             case OK_OPTION -> numOfBots = (int) numBotsComboBox.getSelectedItem();
-            case CANCEL_OPTION -> System.exit(0);
+            case NO_OPTION, CLOSED_OPTION -> System.exit(0); // end the game
         }
 
         // create a String array to store the real player's names
@@ -61,16 +61,15 @@ public class InitController extends JOptionPane {
             String name = "";
             while (name.equals("")) { // player's name must not be empty
                 name = showInputDialog("What is Player " + (i + 1) + "'s name?");
+                if (name == null) { // user hit the close window button
+                    System.exit(0); // end the game
+                }
             }
             namesOfRealPlayers[i] = name;
         }
 
         // update the game
         scrabbleModel.initializeGame(numOfBots, namesOfRealPlayers);
-    }
-
-    public static void main(String[] args) throws IOException {
-        new InitController(new ScrabbleModel());
     }
 
 }
