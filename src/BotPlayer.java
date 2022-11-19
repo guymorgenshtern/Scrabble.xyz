@@ -131,8 +131,6 @@ public class BotPlayer extends Player {
                             }
                         }
 
-                        // TODO: remove board letter from hand if its not used in the word
-
                         return new ScrabbleMove(boardClicks, ScrabbleModel.Direction.HORIZONTAL, this);
 
                     } else if (numOfSurroundingEmptySquares == 2 || numOfSurroundingEmptySquares == 3) {
