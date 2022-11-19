@@ -111,8 +111,9 @@ public class BotPlayerTest {
         board.getScrabbleBoard()[7][7].setLetter('P');
         board.getScrabbleBoard()[8][7].setLetter('L');
         board.getScrabbleBoard()[9][7].setLetter('E');
+        board.getScrabbleBoard()[6][8].setLetter('A');
 
-        // create a BotPlayer and add letters to its hana
+        // create a BotPlayer and add letters to its hand
         BotPlayer bot = new BotPlayer("Kirby");
         String[] lettersToAdd = new String[] { "A", "A", "A" };
         for (String s : lettersToAdd) {
@@ -121,7 +122,7 @@ public class BotPlayerTest {
         assertEquals(3, bot.getAvailableLetters().size());
 
         ScrabbleMove actualMove = bot.play(board);
-        assertEquals(6, actualMove.getCoords().get(0).getCoords()[0]);
+        assertEquals(8, actualMove.getCoords().get(0).getCoords()[0]);
         assertEquals(8, actualMove.getCoords().get(0).getCoords()[1]);
         assertEquals("A", actualMove.getCoords().get(0).getLetter());
         assertEquals(ScrabbleModel.Direction.HORIZONTAL, actualMove.getDirection());
