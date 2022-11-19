@@ -1,10 +1,15 @@
 import com.zetcode.Library;
 import java.io.IOException;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * A BotPlayer in the game of Scrabble.
+ *
+ * If the BotPlayer goes first, it will play the first valid word it can make.
+ * During any other turn, the BotPlayer will play the first valid two-letter word it can make. The first letter of the
+ * valid word will always be a pre-existing letter on the board.
  */
 public class BotPlayer extends Player {
 
@@ -13,6 +18,8 @@ public class BotPlayer extends Player {
     private static final int TOP = 2;
     private static final int BOTTOM = 3;
 
+    /** A Square can either be empty (has a letter), not empty (does not have a letter), or does not exist (out of
+     * bounds). */
     public enum SquareStatus { EMPTY, NOT_EMPTY, DOES_NOT_EXIST };
 
     /** A Library to use to create valid words. */
@@ -85,8 +92,37 @@ public class BotPlayer extends Player {
     }
 
     /**
+     * Adds the pre-existing letter from the board to the BotPlayer's hand. This letter will be removed once the move is
+     * validated in ScrabbleModel.
+     * @param boardLetter A character representation of the letter to add to the hand.
+     * @return A String representation of the letter that was added to the hand.
+     * @author Emily Tang 101192604
+     */
+    private String addBoardLetterToHand(char boardLetter) {
+        String letter = boardLetter + "";
+        addLetter(letter);
+        return letter;
+    }
+
+    /**
+     * @param row An integer representing the row on the board that the BotPlayer is adding the letter to.
+     * @param col An integer representing the column on the board that the BotPlayer is adding the letter to.
+     * @param letter A character representing the letter that the BotPlayer is adding to the board.
+     * @param direction A Direction representing the orientation of the word that the BotPlayer is adding.
+     * @return A ScrabbleMove to represent that the BotPlayer adding a two-letter word to the board.
+     * @author Emily Tang 101192604
+     */
+    private ScrabbleMove createScrabbleMoveToAddTwoLetterWord(int row, int col, char letter, ScrabbleModel.Direction direction) {
+        // create an ArrayList of BoardClicks to add to a new ScrabbleMove
+        ArrayList<BoardClick> boardClicks = new ArrayList<>();
+        boardClicks.add(new BoardClick(new int[] { row, col }, letter + ""));
+        return new ScrabbleMove(boardClicks, direction, this);
+    }
+
+    /**
      * @param board The Board that is currently in play.
      * @return A ScrabbleMove that the BotPlayer can make. Returns null if the BotPlayer cannot make a move.
+     * @author Emily Tang 101192604
      */
     public ScrabbleMove play(Board board) {
         Square[][] scrabbleBoard = board.getScrabbleBoard();
@@ -101,10 +137,7 @@ public class BotPlayer extends Player {
 
                     // at the beginning of the game
                     if (numOfSurroundingEmptySquares == 4) {
-                        // temporarily add the letter from the board to the hand
-                        // this letter will be removed once the move is validated in ScrabbleModel
-                        String boardLetter = scrabbleBoard[row][col].getLetter() + ""; // getLetter() returns char
-                        addLetter(boardLetter);
+                        String boardLetter = addBoardLetterToHand(scrabbleBoard[row][col].getLetter());
 
                         // iterate through the list of valid words provided by the dictionary
                         String validWord = "";
@@ -134,10 +167,7 @@ public class BotPlayer extends Player {
                         return new ScrabbleMove(boardClicks, ScrabbleModel.Direction.HORIZONTAL, this);
 
                     } else if (numOfSurroundingEmptySquares == 2 || numOfSurroundingEmptySquares == 3) {
-                        // temporarily add the letter from the board to the hand
-                        // this letter will be removed once the move is validated in ScrabbleModel
-                        String boardLetter = scrabbleBoard[row][col].getLetter() + ""; // getLetter() returns char
-                        addLetter(boardLetter);
+                        String boardLetter = addBoardLetterToHand(scrabbleBoard[row][col].getLetter());
 
                         // determine if the letter part of a horizontally-placed or vertically-placed word
                         ScrabbleModel.Direction direction = null; // the direction of the word the Bot will place
@@ -162,16 +192,10 @@ public class BotPlayer extends Player {
                         // if a word is found, determine if the spaces next to the letter-to-be-placed are empty
                         if (direction == ScrabbleModel.Direction.HORIZONTAL && !validTwoLetterWord.equals("")
                                 && getNumSurroundingEmptySquares(getStatusOfSurroundingSquares(scrabbleBoard, row, col + 1)) == 3) {
-                            // create an ArrayList of BoardClicks to add to a new ScrabbleMove
-                            ArrayList<BoardClick> boardClicks = new ArrayList<>();
-                            boardClicks.add(new BoardClick(new int[] { row, col + 1 }, validTwoLetterWord.charAt(1) + ""));
-                            return new ScrabbleMove(boardClicks, direction, this);
+                            return createScrabbleMoveToAddTwoLetterWord(row, col + 1, validTwoLetterWord.charAt(1), direction);
                         } else if (direction == ScrabbleModel.Direction.VERTICAL && !validTwoLetterWord.equals("")
                                 && getNumSurroundingEmptySquares(getStatusOfSurroundingSquares(scrabbleBoard, row + 1, col)) == 3) {
-                            // create an ArrayList of BoardClicks to add to a new ScrabbleMove
-                            ArrayList<BoardClick> boardClicks = new ArrayList<>();
-                            boardClicks.add(new BoardClick(new int[] { row + 1, col }, validTwoLetterWord.charAt(1) + ""));
-                            return new ScrabbleMove(boardClicks, direction, this);
+                            return createScrabbleMoveToAddTwoLetterWord(row + 1, col, validTwoLetterWord.charAt(1), direction);
                         }
 
                         // could not find a valid word to add to the board, remove the board letter from the hand
