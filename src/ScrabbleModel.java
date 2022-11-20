@@ -86,7 +86,6 @@ public class ScrabbleModel {
     public ArrayList<ScrabbleView> getViews() {
         return this.views;
     }
-
     /**
      * Initializes players with their specified names.
      * NOTE: Error checking already in InitController. Users can only enter between two and four players there.

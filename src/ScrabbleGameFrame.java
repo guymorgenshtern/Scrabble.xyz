@@ -7,6 +7,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
     private ArrayList<Integer> onBoard;
     private BoardPanel boardPanel;
     private HandPanel handPanel;
+    private InfoPanel infoPanel;
 
     private ScrabbleModel model;
 
@@ -20,31 +21,15 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         this.setLayout(new BorderLayout(5, 5));
         this.panels = new ArrayList<>();
         this.model = model;
+        this.infoPanel = new InfoPanel(model);
+        infoPanel.setBackground(new Color(187, 252, 249));
         this.handPanel = new HandPanel(model);
         this.boardPanel = new BoardPanel(model);
-        JButton endTurn = new JButton();
-        endTurn.setText("End Turn");
-        endTurn.addActionListener(e -> {
-            model.play(model.getCurrentMove());
-        });
-        JLabel score = new JLabel();
-        score.setText("Score:    \n");
-        score.setSize(350,100);
-
-//        panels.add(handPanel);
-//        panels.add(boardPanel);
-
-
-
 
         this.add(boardPanel, BorderLayout.CENTER);
         this.add(handPanel, BorderLayout.SOUTH);
-        this.add(endTurn, BorderLayout.NORTH);
-        this.add(score, BorderLayout.LINE_END);
+        this.add(infoPanel, BorderLayout.NORTH);
         model.getViews().add(this);
-
-
-        //TicTacToeController controller = new TicTacToeController(model, this);
 
         this.setSize(850, 750);
         this.setVisible(true);
@@ -63,7 +48,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
     public void update(ScrabbleEvent event) {
         boardPanel.update(event);
         handPanel.update(event);
-        System.out.println("test");
+        infoPanel.update(event);
         if(event.getGameStatus() == ScrabbleModel.GameStatus.FINISHED) {
             ArrayList<Player> listPlayers = event.getScrabbleModel().getPlayerList();
             String message = "Congratulations " + listPlayers.get(0).getName() + "!\nLeaderboard";
