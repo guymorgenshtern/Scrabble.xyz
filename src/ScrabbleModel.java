@@ -29,12 +29,13 @@ public class ScrabbleModel {
     private HashMap<String, Integer> scorePerLetter;
 
     private ArrayList<ScrabbleView> views;
+
     /**
      * A word can either be horizontally, or vertically placed onto the board.
      */
     public enum Direction { HORIZONTAL, VERTICAL }
     public enum Status { DONE, NOT_DONE }
-    public enum GameStatus {FINISHED, NOT_FINISHED}
+    public enum GameStatus { FINISHED, NOT_FINISHED }
     private String selectedLetter;
     private ScrabbleMove currentMove;
     private ScrabbleMove skipMove;
