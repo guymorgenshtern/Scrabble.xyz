@@ -89,7 +89,6 @@ public class ScrabbleModel {
     public ArrayList<ScrabbleView> getViews() {
         return this.views;
     }
-
     /**
      * Initializes BotPlayers. Initializes real players with their specified names. Deal letters to players. Initialize
      * the game board.
