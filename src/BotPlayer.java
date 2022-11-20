@@ -129,7 +129,6 @@ public class BotPlayer extends Player {
         // iterate through the board from left-to-right, top-to-bottom looking for a square with a letter
         for (int row = 0; row < Board.SIZE; row++) {
             for (int col = 0; col < Board.SIZE; col++) {
-                System.out.println("Checking " + row + " " + col + "...");
                 if (scrabbleBoard[row][col].getLetter() != ' ') { // found a square with a letter
                     // check the status of the surrounding squares and determine the number of surrounding empty squares
                     SquareStatus[] statusOfSurroundingSquares = getStatusOfSurroundingSquares(scrabbleBoard, row, col);
