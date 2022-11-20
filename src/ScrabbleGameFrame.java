@@ -62,6 +62,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         if(event.getGameStatus() == ScrabbleModel.GameStatus.FINISHED) {
             ArrayList<Player> listPlayers = event.getScrabbleModel().getPlayerList();
             listPlayers.sort(playerComparator);
+
             String message = "Congratulations " + listPlayers.get(listPlayers.size() - 1).getName() + "!\nLeaderboard";
             for (int i=listPlayers.size() - 1; i >= 0; i--) {
                 message += "\n" + listPlayers.get(i).getName() + " " + listPlayers.get(i).getScore();
@@ -71,7 +72,6 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
             final JDialog dialog = optionPane.createDialog(null, "Game Over!");
             dialog.setDefaultCloseOperation(HIDE_ON_CLOSE);
             dialog.setVisible(true);
-            //JOptionPane.showMessageDialog(this, message);
         }
     }
 }

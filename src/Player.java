@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  *  A Player in the game of Scrabble.
@@ -11,7 +10,7 @@ public class Player {
     private final String name;
 
     /** A HashMap representing the player's hand. Stores available letters and their quantities. */
-    private HashMap<String, Integer> hand;
+    private ArrayList<String> hand;
 
     /** An integer representing the player's score. */
     private int score;
@@ -23,7 +22,7 @@ public class Player {
      */
     public Player(String name) {
         this.name = name;
-        this.hand = new HashMap<>();
+        this.hand = new ArrayList<>();
         this.score = 0;
     }
 
@@ -40,12 +39,7 @@ public class Player {
      * @author Guy Morgenshtern 101151430
      */
     public void addLetter(String l) {
-        l = l.toUpperCase();
-        if (this.hand.containsKey(l)) {
-            this.hand.put(l, this.hand.get(l) + 1);
-        } else {
-            this.hand.put(l, 1);
-        }
+        this.hand.add(l);
     }
 
     /**
@@ -58,8 +52,8 @@ public class Player {
         // iterate through the specified word
         for (char c : input.toCharArray()) {
             // determine if c is in hand, returns 0 if not in hand
-            int q = hand.getOrDefault(String.valueOf(c).toUpperCase(), 0);
-            if (q == 0) {
+            boolean q = hand.contains(String.valueOf(c).toUpperCase());
+            if (!q) {
                 return false;
             }
         }
@@ -72,12 +66,11 @@ public class Player {
      * @author Guy Morgenshtern 101151430
      */
     public void removeLetter(String l) {
-        int amount = hand.getOrDefault(l, -1);
-        if (amount == 1) {
-            hand.remove(l);
-        } else if (amount > 1) {
-            hand.put(l, hand.get(l) - 1);
-        }
+        this.hand.remove(l);
+    }
+
+    public void removeLetter(Integer i) {
+        this.hand.remove(i.intValue());
     }
 
     /**
@@ -85,13 +78,7 @@ public class Player {
      * @author Guy Morgenshtern 101151430
      */
     public ArrayList<String> getAvailableLetters() {
-        ArrayList<String> letters = new ArrayList<>();
-        for (String s : hand.keySet()) {
-            for (int i = 0; i < hand.get(s); i++) {
-                letters.add(s);
-            }
-        }
-        return letters;
+        return this.hand;
     }
 
     /**

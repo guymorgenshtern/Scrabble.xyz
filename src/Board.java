@@ -124,7 +124,7 @@ public class Board {
             case '-':
                 this.scrabbleBoard[row][column] = new Square(new Multiplier(Multiplier.Type.LETTER, 3));
         }
-        this.scrabbleBoard[row][column].setLetter(type);
+        this.scrabbleBoard[row][column].setLetter(' ');
     }
 
     /**

@@ -62,13 +62,13 @@ public class BotPlayer extends Player {
         // check to the top of the square
         if (row == 0) {
             statusOfSurroundingSquares[TOP] = SquareStatus.DOES_NOT_EXIST;
-        } else if (board[row + 1][col].getLetter() == ' ') {
+        } else if (board[row - 1][col].getLetter() == ' ') {
             statusOfSurroundingSquares[TOP] = SquareStatus.EMPTY;
         }
         // check to the bottom of the square
         if (row == Board.SIZE - 1) {
             statusOfSurroundingSquares[BOTTOM] = SquareStatus.DOES_NOT_EXIST;
-        } else if (board[row - 1][col].getLetter() == ' ') {
+        } else if (board[row + 1][col].getLetter() == ' ') {
             statusOfSurroundingSquares[BOTTOM] = SquareStatus.EMPTY;
         }
 
@@ -130,7 +130,8 @@ public class BotPlayer extends Player {
         for (int row = 0; row < Board.SIZE; row++) {
             for (int col = 0; col < Board.SIZE; col++) {
                 System.out.println("Checking " + row + " " + col + "...");
-                if (scrabbleBoard[row][col].getLetter() != ' ') { // found a square with a letter
+                if (Character.isAlphabetic(scrabbleBoard[row][col].getLetter())) { // found a square with a letter
+                    System.out.println(scrabbleBoard[row][col].getLetter());
                     // check the status of the surrounding squares and determine the number of surrounding empty squares
                     SquareStatus[] statusOfSurroundingSquares = getStatusOfSurroundingSquares(scrabbleBoard, row, col);
                     int numOfSurroundingEmptySquares = getNumSurroundingEmptySquares(statusOfSurroundingSquares);
