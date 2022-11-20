@@ -10,7 +10,7 @@ public class Square {
     private Multiplier multiplier;
 
     /**
-     * Creates a Square.
+     * Creates a Square with a blank letter.
      * @author Emily Tang 101192604
      */
     public Square() {
@@ -18,7 +18,7 @@ public class Square {
     }
 
     /**
-     * Creates a Premium Letter/Word Square with the specified multiplier.
+     * Creates a Premium Letter/Word Square with a blank letter and the specified multiplier.
      * @param multiplier A Multiplier to add to the Square.
      * @author Emily Tang 101192604
      */
@@ -37,12 +37,10 @@ public class Square {
 
     /**
      * @param letter A Letter to be placed on the Square.
-     * @return True, if the Letter was placed on the Square successfully. False, if not.
      * @author Emily Tang 101192604
      */
-    public boolean setLetter(char letter) {
+    public void setLetter(char letter) {
         this.letter = letter;
-        return true;
     }
 
     /**

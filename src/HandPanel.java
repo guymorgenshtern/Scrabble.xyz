@@ -4,7 +4,7 @@ import java.awt.*;
 /*
     Following Class will represent the users Hand/Rack
  */
-public class HandPanel extends JPanel implements ScrabbleView{
+public class HandPanel extends JPanel implements ScrabbleView {
     private JButton [] buttons;
     private ScrabbleModel scrabbleModel;
 

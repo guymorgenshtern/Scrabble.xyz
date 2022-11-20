@@ -26,23 +26,13 @@ import java.util.HashMap;
  */
 public class Board {
 
+    /** An integer representing the size of the board. */
     public static int SIZE = 15;
 
     /** A 2D array of squares to represent the board. */
-    private Square [][] scrabbleBoard;
+    private final Square[][] scrabbleBoard;
 
     private static HashMap<String, Multiplier> boardScore;
-
-    /**
-     * Creates a Board using the specified file.
-     * @param fileName A String representing the name of the file that contains the orientation of the Scrabble board.
-     * @throws IOException If an I/O error occurs.
-     */
-    public Board(String fileName) throws IOException {
-        this.scrabbleBoard = new Square[15][15];
-        Board.boardScore = new HashMap<>();
-        this.initBoard(fileName);
-    }
 
     /**
      * Creates a 15x15 Board with only regular squares.
@@ -50,18 +40,22 @@ public class Board {
      */
     public Board() {
         scrabbleBoard = new Square[Board.SIZE][Board.SIZE];
-        initBoard();
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                this.scrabbleBoard[row][col] = new Square();
+            }
+        }
     }
 
     /**
-     * Initializes the 15x15 Board with only regular squares (no premium squares).
+     * Creates a Board using the specified file.
+     * @param fileName A String representing the name of the file that contains the layout of a 15x15 Scrabble board.
+     * @throws IOException If an I/O error occurs.
      */
-    private void initBoard() {
-        for (int i = 14; i >= 0; i--) {
-            for (int j = 0; j < 15; j++) {
-                this.scrabbleBoard[i][j] = new Square();
-            }
-        }
+    public Board(String fileName) throws IOException {
+        scrabbleBoard = new Square[SIZE][SIZE];
+        Board.boardScore = new HashMap<>();
+        initBoard(fileName);
     }
 
     /**
@@ -97,7 +91,7 @@ public class Board {
 
     /**
      * Initializes a Premium Square on the Board using a specified ASCII character, a row, and a column.
-     * @param type A char representing a Premium Square.
+     * @param type A character representing a Premium Square.
      * @param row An integer representing a row on the Board.
      * @param column An integer representing a column on the Board.
      */
@@ -167,7 +161,7 @@ public class Board {
     }
 
     /**
-     * Prints a text-based representation of the Board.›
+     * Prints a text-based representation of the Board.
      */
     public void printBoard() {
         System.out.printf("%7d", 0);
@@ -184,6 +178,9 @@ public class Board {
         }
     }
 
+    /**
+     * @return A 2D array of squares representing the Board.
+     */
     public Square[][] getScrabbleBoard() {
         return scrabbleBoard;
     }
