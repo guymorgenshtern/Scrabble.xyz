@@ -1,12 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
     private ArrayList<ScrabbleView> panels;
     private ArrayList<Integer> onBoard;
     private BoardPanel boardPanel;
     private HandPanel handPanel;
+    private PlayerComparator playerComparator;
 
     private ScrabbleModel model;
 
@@ -15,7 +17,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         super("Scrabble.xyz");
 
         this.onBoard = new ArrayList<>();
-
+        this.playerComparator = new PlayerComparator();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout(5, 5));
         this.panels = new ArrayList<>();
@@ -30,12 +32,6 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         JLabel score = new JLabel();
         score.setText("Score:    \n");
         score.setSize(350,100);
-
-//        panels.add(handPanel);
-//        panels.add(boardPanel);
-
-
-
 
         this.add(boardPanel, BorderLayout.CENTER);
         this.add(handPanel, BorderLayout.SOUTH);
@@ -66,11 +62,17 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         System.out.println("test");
         if (event.getGameStatus() == ScrabbleModel.GameStatus.FINISHED) {
             ArrayList<Player> listPlayers = event.getScrabbleModel().getPlayerList();
-            String message = "Congratulations " + listPlayers.get(0).getName() + "!\nLeaderboard";
-            for (int i=0; i < listPlayers.size(); i++) {
+            listPlayers.sort(playerComparator);
+            String message = "Congratulations " + listPlayers.get(listPlayers.size() - 1).getName() + "!\nLeaderboard";
+            for (int i=listPlayers.size() - 1; i >= 0; i--) {
                 message += "\n" + listPlayers.get(i).getName() + " " + listPlayers.get(i).getScore();
             }
-            JOptionPane.showMessageDialog(this, message);
+            JOptionPane optionPane= new JOptionPane(message);
+
+            final JDialog dialog = optionPane.createDialog(null, "Game Over!");
+            dialog.setDefaultCloseOperation(HIDE_ON_CLOSE);
+            dialog.setVisible(true);
+            //JOptionPane.showMessageDialog(this, message);
         }
     }
 }

@@ -396,6 +396,7 @@ public class ScrabbleModel {
             move.setWord(findFullWord(move));
             System.out.println(move.getWord());
             move.setValid(checkMoveValidity(move));
+            System.out.println(move.isValid());
 
             //score the move if it is valid
             if (move.isValid()) {
@@ -420,7 +421,6 @@ public class ScrabbleModel {
                 deleteInvalidWordFromBoard(move);
                 move.setValid(false);
             }
-            //ADD INVALID MOVE BOOLEAN TO EVENT -> USE IT TO WIPE LETTERS ON BOARDPANEL
             this.getUsedLetters().clear();
 
             //update views
