@@ -437,7 +437,8 @@ public class ScrabbleModel {
             }
         }
     }
-    public static void main (String args[]) throws IOException {
+
+    public static void main (String[] args) throws IOException {
         ScrabbleModel scrabble = new ScrabbleModel();
         ScrabbleGameFrame gameFrame = new ScrabbleGameFrame(scrabble);
         gameFrame.attachTextBoard(scrabble.board);

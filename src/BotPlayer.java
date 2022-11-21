@@ -129,21 +129,13 @@ public class BotPlayer extends Player {
         // iterate through the board from left-to-right, top-to-bottom looking for a square with a letter
         for (int row = 0; row < Board.SIZE; row++) {
             for (int col = 0; col < Board.SIZE; col++) {
-                System.out.println("Checking " + row + " " + col + "...");
-                if (Character.isAlphabetic(scrabbleBoard[row][col].getLetter())) { // found a square with a letter
+                if (scrabbleBoard[row][col].getLetter() != ' ') { // found a square with a letter
                     System.out.println(scrabbleBoard[row][col].getLetter());
                     // check the status of the surrounding squares and determine the number of surrounding empty squares
                     SquareStatus[] statusOfSurroundingSquares = getStatusOfSurroundingSquares(scrabbleBoard, row, col);
                     int numOfSurroundingEmptySquares = getNumSurroundingEmptySquares(statusOfSurroundingSquares);
 
-                    System.out.print("Surrounding Spaces: ");
-                    System.out.print(scrabbleBoard[row][col - 1].getLetter() + " ");
-                    System.out.print(scrabbleBoard[row][col + 1].getLetter() + " ");
-                    System.out.print(scrabbleBoard[row + 1][col].getLetter() + " ");
-                    System.out.println(scrabbleBoard[row - 1][col].getLetter() + " ");
-
-                    // at the beginning of the game
-                    if (numOfSurroundingEmptySquares == 4) {
+                    if (numOfSurroundingEmptySquares == 4) { // this means we're at the beginning of the game
                         String boardLetter = addBoardLetterToHand(scrabbleBoard[row][col].getLetter());
 
                         // iterate through the list of valid words provided by the dictionary
@@ -167,7 +159,7 @@ public class BotPlayer extends Player {
                         ArrayList<BoardClick> boardClicks = new ArrayList<>();
                         for (int i = 0; i < validWord.length(); i++) {
                             if (i != index) { // do not add the pre-existing letter into ScrabbleMove
-                                boardClicks.add(new BoardClick(new int[]{Board.SIZE / 2 - index + i, Board.SIZE / 2}, validWord.charAt(i) + ""));
+                                boardClicks.add(new BoardClick(new int[] { Board.SIZE / 2 - index + i, Board.SIZE / 2 }, validWord.charAt(i) + ""));
                             }
                         }
 
@@ -187,7 +179,18 @@ public class BotPlayer extends Player {
 
                         // find a two-letter word that begins with the board letter
                         String validTwoLetterWord = "";
-                        for (int i = 0; i < library.getValidWords().size() && validTwoLetterWord.equals(""); i++) {
+                        // start reading through the library at a random place
+                        int randomIndex = (int) (Math.random() * library.getValidWords().size() - 1);
+                        for (int i = randomIndex; i < library.getValidWords().size() && validTwoLetterWord.equals(""); i++) {
+                            String s = library.getValidWords().get(i);
+                            if (hasLettersNeededForWord(s) && s.length() == 2
+                                    && s.substring(0, 1).toUpperCase().equals(boardLetter)
+                                    && !s.substring(1).toUpperCase().equals(boardLetter)) { // second letter used cannot be the board letter
+                                validTwoLetterWord = s.toUpperCase(); // letters are displayed as uppercase on the board
+                            }
+                        }
+                        // reading through the library from the start until you reach the random index
+                        for (int i = 0; i < randomIndex && validTwoLetterWord.equals(""); i++) {
                             String s = library.getValidWords().get(i);
                             if (hasLettersNeededForWord(s) && s.length() == 2
                                     && s.substring(0, 1).toUpperCase().equals(boardLetter)
