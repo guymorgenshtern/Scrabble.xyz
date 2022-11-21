@@ -1,19 +1,3 @@
-/*
-    -- Notes -- Francisco De Grano
-
-        - Decide on Data Structure to use -> Hashmap + Hashset? https://www.w3schools.com/java/java_hashset.asp
-        - Board is 15 x 15
-
-
-        MULTIPLIERS
-        - 2 Word Multipliers Separate from Board.java -> doubleWord, tripleWord
-        - 2 Letter Multipliers Separate from Board.java -> doubleLetter, tripleLetter
-
-        - BLANK TILES           -> M3
-        - PREMIUM SQUARES       -> M3
-
- */
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -75,7 +59,7 @@ public class Board {
                     column++;
                     if (c != '.') {
                         // create a Square with a Multiplier
-                        scrabbleBoard[row][column] = new Square(addMultiplier(c));
+                        scrabbleBoard[row][column] = new Square(initMultiplier(c));
                     } else {
                         // create a Square with a blank letter
                         scrabbleBoard[row][column] = new Square();
@@ -88,12 +72,11 @@ public class Board {
     }
 
     /**
-     * Creates a Multiplier based on the specified ASCII character.
      * @param type An ASCII character representing the type of Multiplier to create.
-     * @return A Multiplier based on the specified ASCII character.
+     * @return A new Multiplier based on the specified ASCII character.
      * @author Emily Tang 101192604
      */
-    private Multiplier addMultiplier(char type) {
+    private Multiplier initMultiplier(char type) {
         return switch (type) {
             case '+' -> new Multiplier(Multiplier.Type.WORD, 2);
             case '~' -> new Multiplier(Multiplier.Type.WORD, 3);

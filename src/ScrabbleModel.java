@@ -85,6 +85,7 @@ public class ScrabbleModel {
     public ArrayList<ScrabbleView> getViews() {
         return this.views;
     }
+
     /**
      * Initializes BotPlayers. Initializes real players with their specified names. Deal letters to players. Initialize
      * the game board.
@@ -416,8 +417,6 @@ public class ScrabbleModel {
 
                     //next player
                     playerTurnCounter++;
-
-                    //UPDATE VIEWS
                 } else {
                     deleteInvalidWordFromBoard(move);
                     move.setValid(false);
@@ -431,17 +430,17 @@ public class ScrabbleModel {
                     v.update(event);
                 }
             }
+
             if (playerList.get(playerTurnCounter % playerList.size()) instanceof BotPlayer) {
-                this.play(((BotPlayer)playerList.get(playerTurnCounter % playerList.size())).play(board));
+                this.play(((BotPlayer) playerList.get(playerTurnCounter % playerList.size())).play(board));
+                playerTurnCounter++;
             }
         }
     }
     public static void main (String args[]) throws IOException {
         ScrabbleModel scrabble = new ScrabbleModel();
-
         ScrabbleGameFrame gameFrame = new ScrabbleGameFrame(scrabble);
         gameFrame.attachTextBoard(scrabble.board);
         scrabble.getViews().add(gameFrame);
-        InitController initFrame = new InitController(scrabble);
     }
 }

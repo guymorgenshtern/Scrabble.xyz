@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -14,7 +15,8 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
     private ScrabbleModel model;
 
     private Board textBoard;
-    public ScrabbleGameFrame(ScrabbleModel model) {
+
+    public ScrabbleGameFrame(ScrabbleModel model) throws IOException {
         super("Scrabble.xyz");
 
         this.onBoard = new ArrayList<>();
@@ -43,6 +45,9 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
 
         this.setSize(850, 750);
         this.setVisible(true);
+
+        // initialize the model
+        new InitController(model);
     }
 
     public void attachTextBoard(Board b) {
