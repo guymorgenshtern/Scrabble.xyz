@@ -16,20 +16,20 @@ import java.util.HashMap;
 public class ScrabbleModel {
 
     /** A Scrabble board. */
-    private Board board;
+    private final Board board;
 
     /** An ArrayList of players. */
-    private ArrayList<Player> playerList;
+    private final ArrayList<Player> playerList;
 
     /** A LetterBag containing the letter tiles. */
-    private LetterBag letterBag;
+    private final LetterBag letterBag;
 
     /** A Library for word validation checking. */
-    private Library lib;
+    private final Library lib;
 
-    private HashMap<String, Integer> scorePerLetter;
+    private final HashMap<String, Integer> scorePerLetter;
 
-    private ArrayList<ScrabbleView> views;
+    private final ArrayList<ScrabbleView> views;
 
     /**
      * A word can either be horizontally, or vertically placed onto the board.
@@ -42,7 +42,7 @@ public class ScrabbleModel {
     private int skipCount;
     private GameStatus status;
 
-    private ArrayList<Integer> usedLetters;
+    private final ArrayList<Integer> usedLetters;
 
     private int playerTurnCounter;
 
@@ -57,8 +57,6 @@ public class ScrabbleModel {
         this.views = new ArrayList<>();
         this.selectedLetter = "";
         playerList = new ArrayList<>();
-        // TODO: initialize InitController here instead??
-        // initializePlayers();
         this.playerTurnCounter = 0;
         this.currentMove = new ScrabbleMove();
         this.letterBag = new LetterBag();
@@ -109,18 +107,6 @@ public class ScrabbleModel {
     }
 
     /**
-     * @return An ArrayList of Players
-     * @author Emily Tang 101192604
-     */
-    public ArrayList<Player> getPlayerList() {
-        return playerList;
-    }
-
-    private int getLetterScore(String l) {
-        return this.scorePerLetter.get(l);
-    }
-
-    /**
      * Initializes the LetterBag using the specified file.
      * @param fileName A String representing the name of the file that contains the specific quantity of letters.
      * @throws IOException If an I/O error occurs.
@@ -137,6 +123,18 @@ public class ScrabbleModel {
             this.scorePerLetter.put(line.substring(0,1), Integer.parseInt(line.substring(line.lastIndexOf("-") + 1)));
             line = br.readLine();
         }
+    }
+
+    /**
+     * @return An ArrayList of Players
+     * @author Emily Tang 101192604
+     */
+    public ArrayList<Player> getPlayerList() {
+        return playerList;
+    }
+
+    private int getLetterScore(String l) {
+        return this.scorePerLetter.get(l);
     }
 
     /**

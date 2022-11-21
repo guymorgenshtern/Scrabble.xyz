@@ -17,12 +17,10 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 
 /**
  * A Board in the game of Scrabble.
- * @author Francisco DeGrano 101147447
- * @author Guy Morgenshtern 101151430
+ * @author Francisco DeGrano 101147447. Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
  */
 public class Board {
 
@@ -31,8 +29,6 @@ public class Board {
 
     /** A 2D array of squares to represent the board. */
     private final Square[][] scrabbleBoard;
-
-    private static HashMap<String, Multiplier> boardScore;
 
     /**
      * Creates a 15x15 Board with only regular squares.
@@ -54,7 +50,6 @@ public class Board {
      */
     public Board(String fileName) throws IOException {
         scrabbleBoard = new Square[SIZE][SIZE];
-        Board.boardScore = new HashMap<>();
         initBoard(fileName);
     }
 
@@ -62,72 +57,57 @@ public class Board {
      * Initializes the 15x15 Board using the specified file.
      * @param fileName A String representing the name of the file that contains the orientation of the Scrabble board.
      * @throws IOException If an I/O error occurs.
+     * @author Edited by Emily Tang 101192604.
      */
-    public void initBoard (String fileName) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-
-        try {
-            String line = br.readLine();
+    private void initBoard(String fileName) throws IOException {
+        // read in the board layout
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line = br.readLine(); // get the first row of the board layout
             int row = -1;
             int column;
 
+            // read until the end of the file is found
             while (line != null) {
                 column = -1;
                 row++;
+                // iterate through the row
                 for (char c : line.toCharArray()) {
                     column++;
-                    this.scrabbleBoard[row][column] = new Square();
-                    scrabbleBoard[row][column].setLetter(c);
                     if (c != '.') {
-                        this.addBoardScore(c, row, column);
+                        // create a Square with a Multiplier
+                        scrabbleBoard[row][column] = new Square(addMultiplier(c));
+                    } else {
+                        // create a Square with a blank letter
+                        scrabbleBoard[row][column] = new Square();
                     }
+
                 }
                 line = br.readLine();
             }
-        } finally {
-            br.close();
         }
     }
 
     /**
-     * Initializes a Premium Square on the Board using a specified ASCII character, a row, and a column.
-     * @param type A character representing a Premium Square.
-     * @param row An integer representing a row on the Board.
-     * @param column An integer representing a column on the Board.
+     * Creates a Multiplier based on the specified ASCII character.
+     * @param type An ASCII character representing the type of Multiplier to create.
+     * @return A Multiplier based on the specified ASCII character.
+     * @author Emily Tang 101192604
      */
-    private void addBoardScore(char type, int row, int column){
-        /*
-        In this case not sure if multiplier classes (Word + Letter) should be called/used here in the Map with a
-        put ie:
-
-                Land on triple word -> Mapping is; board.Score.put("00", "3W")
-
-         - Initialize Squares that are effected by multipliers in this class
-         */
-
-        /*
-        Add word and letter multipliers here
-         */
-        switch (type) {
-            case '+':
-                this.scrabbleBoard[row][column] = new Square(new Multiplier(Multiplier.Type.WORD, 2));
-            case '~':
-                this.scrabbleBoard[row][column] = new Square(new Multiplier(Multiplier.Type.WORD, 3));
-            case '*':
-                this.scrabbleBoard[row][column] = new Square(new Multiplier(Multiplier.Type.LETTER, 2));
-            case '-':
-                this.scrabbleBoard[row][column] = new Square(new Multiplier(Multiplier.Type.LETTER, 3));
-        }
-        this.scrabbleBoard[row][column].setLetter(' ');
+    private Multiplier addMultiplier(char type) {
+        return switch (type) {
+            case '+' -> new Multiplier(Multiplier.Type.WORD, 2);
+            case '~' -> new Multiplier(Multiplier.Type.WORD, 3);
+            case '*' -> new Multiplier(Multiplier.Type.LETTER, 2);
+            case '-' -> new Multiplier(Multiplier.Type.LETTER, 3);
+            default -> null;
+        };
     }
 
     /**
-     * NOTE: This may not be needed as we can just keep score in the game class later on post implementation of Board.
-     * @param ref A String representing a reference.
-     * @return A Multiplier representing an Object key.
+     * @return A 2D array of squares representing the Board.
      */
-    public static Multiplier getTileBoardScore(String ref) {
-        return Board.boardScore.getOrDefault(ref, null); // ref Object Key
+    public Square[][] getScrabbleBoard() {
+        return scrabbleBoard;
     }
 
     /**
@@ -149,18 +129,6 @@ public class Board {
     }
 
     /**
-     * @param row An integer representing a row on the Board.
-     * @param column An integer representing a column on the Board.
-     * @return True, if the Square has a Letter on it. False, if not.
-     */
-    public boolean isSquareFilled(int row, int column) {
-        Square s = this.scrabbleBoard[row][column];
-        System.out.println(s.getLetter());
-        return !(s.getLetter() == '.' || s.getLetter() == '+' || s.getLetter() == '*' || s.getLetter() == '~'
-                || s.getLetter() == '-');
-    }
-
-    /**
      * Prints a text-based representation of the Board.
      */
     public void printBoard() {
@@ -176,13 +144,6 @@ public class Board {
             }
             System.out.println(" ");
         }
-    }
-
-    /**
-     * @return A 2D array of squares representing the Board.
-     */
-    public Square[][] getScrabbleBoard() {
-        return scrabbleBoard;
     }
 
 }

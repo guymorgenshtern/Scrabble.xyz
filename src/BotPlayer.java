@@ -136,6 +136,12 @@ public class BotPlayer extends Player {
                     SquareStatus[] statusOfSurroundingSquares = getStatusOfSurroundingSquares(scrabbleBoard, row, col);
                     int numOfSurroundingEmptySquares = getNumSurroundingEmptySquares(statusOfSurroundingSquares);
 
+                    System.out.print("Surrounding Spaces: ");
+                    System.out.print(scrabbleBoard[row][col - 1].getLetter() + " ");
+                    System.out.print(scrabbleBoard[row][col + 1].getLetter() + " ");
+                    System.out.print(scrabbleBoard[row + 1][col].getLetter() + " ");
+                    System.out.println(scrabbleBoard[row - 1][col].getLetter() + " ");
+
                     // at the beginning of the game
                     if (numOfSurroundingEmptySquares == 4) {
                         String boardLetter = addBoardLetterToHand(scrabbleBoard[row][col].getLetter());
@@ -189,6 +195,7 @@ public class BotPlayer extends Player {
                                 validTwoLetterWord = s.toUpperCase(); // letters are displayed as uppercase on the board
                             }
                         }
+                        System.out.println("Found a valid word! " + validTwoLetterWord);
 
                         // if a word is found, determine if the spaces next to the letter-to-be-placed are empty
                         if (direction == ScrabbleModel.Direction.HORIZONTAL && !validTwoLetterWord.equals("")
