@@ -111,10 +111,11 @@ public class BotPlayer extends Player {
      * @return A ScrabbleMove to represent that the BotPlayer adding a two-letter word to the board.
      * @author Emily Tang 101192604
      */
-    private ScrabbleMove createScrabbleMoveToAddTwoLetterWord(int row, int col, char letter, ScrabbleModel.Direction direction) {
+    private ScrabbleMove createScrabbleMoveToAddTwoLetterWord(int row, int col, char letter, ScrabbleModel.Direction direction, Board board) {
         // create an ArrayList of BoardClicks to add to a new ScrabbleMove
         ArrayList<BoardClick> boardClicks = new ArrayList<>();
         boardClicks.add(new BoardClick(new int[] { row, col }, letter + ""));
+        board.getTileOnBoard(row, col).setLetter(letter);
         return new ScrabbleMove(boardClicks, direction, this);
     }
 
@@ -137,10 +138,10 @@ public class BotPlayer extends Player {
                     int numOfSurroundingEmptySquares = getNumSurroundingEmptySquares(statusOfSurroundingSquares);
 
                     System.out.print("Surrounding Spaces: ");
-                    System.out.print(scrabbleBoard[row][col - 1].getLetter() + " ");
-                    System.out.print(scrabbleBoard[row][col + 1].getLetter() + " ");
-                    System.out.print(scrabbleBoard[row + 1][col].getLetter() + " ");
-                    System.out.println(scrabbleBoard[row - 1][col].getLetter() + " ");
+//                    System.out.print(scrabbleBoard[row][col - 1].getLetter() + " ");
+//                    System.out.print(scrabbleBoard[row][col + 1].getLetter() + " ");
+//                    System.out.print(scrabbleBoard[row + 1][col].getLetter() + " ");
+//                    System.out.println(scrabbleBoard[row - 1][col].getLetter() + " ");
 
                     // at the beginning of the game
                     if (numOfSurroundingEmptySquares == 4) {
@@ -168,6 +169,7 @@ public class BotPlayer extends Player {
                         for (int i = 0; i < validWord.length(); i++) {
                             if (i != index) { // do not add the pre-existing letter into ScrabbleMove
                                 boardClicks.add(new BoardClick(new int[]{Board.SIZE / 2 - index + i, Board.SIZE / 2}, validWord.charAt(i) + ""));
+                                board.getTileOnBoard(Board.SIZE / 2 - index + i, Board.SIZE / 2).setLetter(validWord.charAt(i));
                             }
                         }
 
@@ -200,10 +202,10 @@ public class BotPlayer extends Player {
                         // if a word is found, determine if the spaces next to the letter-to-be-placed are empty
                         if (direction == ScrabbleModel.Direction.HORIZONTAL && !validTwoLetterWord.equals("")
                                 && getNumSurroundingEmptySquares(getStatusOfSurroundingSquares(scrabbleBoard, row, col + 1)) == 3) {
-                            return createScrabbleMoveToAddTwoLetterWord(row, col + 1, validTwoLetterWord.charAt(1), direction);
+                            return createScrabbleMoveToAddTwoLetterWord(row, col + 1, validTwoLetterWord.charAt(1), direction, board);
                         } else if (direction == ScrabbleModel.Direction.VERTICAL && !validTwoLetterWord.equals("")
                                 && getNumSurroundingEmptySquares(getStatusOfSurroundingSquares(scrabbleBoard, row + 1, col)) == 3) {
-                            return createScrabbleMoveToAddTwoLetterWord(row + 1, col, validTwoLetterWord.charAt(1), direction);
+                            return createScrabbleMoveToAddTwoLetterWord(row + 1, col, validTwoLetterWord.charAt(1), direction, board);
                         }
 
                         // could not find a valid word to add to the board, remove the board letter from the hand
@@ -213,6 +215,7 @@ public class BotPlayer extends Player {
             }
         }
         // return an empty ScrabbleMove
+        System.out.println("BOT SKIPPED TURN");
         return new ScrabbleMove(new ArrayList<>(), ScrabbleModel.Direction.VERTICAL, this);
     }
 

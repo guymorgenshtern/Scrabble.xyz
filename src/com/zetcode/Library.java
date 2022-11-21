@@ -20,7 +20,7 @@ public class Library {
      * @author Alexander Hum 101180821
      */
     public Library() throws IOException {
-        URL url = new URL("https://www.mit.edu/~ecprice/wordlist.10000");
+        URL url = new URL("https://www.mit.edu/~ecprice/wordlist.100000");
         BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
 
         // read in list of words one line at a time and add it to the list of valid words

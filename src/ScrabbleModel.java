@@ -178,7 +178,6 @@ public class ScrabbleModel {
      * @return String: final word
      */
     private String findFullWord(ScrabbleMove scrabbleMove) {
-        //this assumes the move array is sorted from first letter->last, we should make sure this is always the case
 
         //getting the coords of first letter of move
         int x = scrabbleMove.getCoords().get(0).getCoords()[0];
@@ -404,7 +403,6 @@ public class ScrabbleModel {
                     currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
 
                     //removed played letters
-                    ArrayList<String> toRemove  = new ArrayList<>();
                     usedLetters.sort(Collections.reverseOrder());
                     for (Integer index : usedLetters) {
                         currentPlayer.removeLetter(index);
@@ -433,7 +431,6 @@ public class ScrabbleModel {
 
             if (playerList.get(playerTurnCounter % playerList.size()) instanceof BotPlayer) {
                 this.play(((BotPlayer) playerList.get(playerTurnCounter % playerList.size())).play(board));
-                playerTurnCounter++;
             }
         }
     }
