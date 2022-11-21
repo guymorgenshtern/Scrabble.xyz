@@ -7,14 +7,11 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     private Board textBoard;
     private JButton [][] buttons;
 
-    private ScrabbleModel scrabbleModel;
-
     public BoardPanel(ScrabbleModel scrabbleModel) {
         super();
 
         this.setLayout(new GridLayout(15, 15)); // Need to define size within board
         this.setSize(900,900);
-        this.scrabbleModel = scrabbleModel;
         this.buttons = new JButton[15][15]; // Place board size in place. Call Board Size Directly
 
         for (int i= 0; i < 15; i++){          // Place board size.

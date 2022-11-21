@@ -64,12 +64,12 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         boardPanel.update(event);
         handPanel.update(event);
         infoPanel.update(event);
-        if(event.getGameStatus() == ScrabbleModel.GameStatus.FINISHED) {
+        if (event.getGameStatus() == ScrabbleModel.GameStatus.FINISHED) {
             ArrayList<Player> listPlayers = event.getScrabbleModel().getPlayerList();
             listPlayers.sort(playerComparator);
 
             String message = "Congratulations " + listPlayers.get(listPlayers.size() - 1).getName() + "!\nLeaderboard";
-            for (int i=listPlayers.size() - 1; i >= 0; i--) {
+            for (int i = listPlayers.size() - 1; i >= 0; i--) {
                 message += "\n" + listPlayers.get(i).getName() + " " + listPlayers.get(i).getScore();
             }
             JOptionPane optionPane= new JOptionPane(message);

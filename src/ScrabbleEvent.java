@@ -1,11 +1,11 @@
 import java.util.EventObject;
 
 public class ScrabbleEvent extends EventObject {
-    private Player currentPlayer;
-    private ScrabbleModel.Status status;
-    private ScrabbleModel.GameStatus gameStatus;
-    private Board board;
-    private ScrabbleMove move;
+    private final Player currentPlayer;
+    private final ScrabbleModel.Status status;
+    private final ScrabbleModel.GameStatus gameStatus;
+    private final Board board;
+    private final ScrabbleMove move;
     private boolean validMove;
 
     public ScrabbleEvent(ScrabbleModel scrabbleModel, ScrabbleMove move, Player currentPlayer, Board board, ScrabbleModel.Status status, ScrabbleModel.GameStatus gameStatus) {
