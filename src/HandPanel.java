@@ -5,8 +5,8 @@ import java.awt.*;
     Following Class will represent the users Hand/Rack
  */
 public class HandPanel extends JPanel implements ScrabbleView {
-    private JButton [] buttons;
-    private ScrabbleModel scrabbleModel;
+    private final JButton [] buttons;
+    private final ScrabbleModel scrabbleModel;
 
     public HandPanel(ScrabbleModel scrabbleModel){
         super();
