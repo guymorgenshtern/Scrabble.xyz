@@ -78,7 +78,9 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
             - Tried implementing conditional statements to save time -> did not work
 
-            - Need to clean code smell
+            - Need to clean code smell (Duplicated Code)
+                - After general code modules are created refactor
+                - Group everything in terms of "i" and create generalized for-loops
 
          */
 
