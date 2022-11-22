@@ -70,42 +70,15 @@ public class BoardPanel extends JPanel implements ScrabbleView {
             }
         }
 
-        /*
-
-            Initialize Button Colors here after mapping board in Figma
-            @Francisco
-
-            - No need to add any updates to view as we are accessing the buttons directly,
-            after the fact that we are accessing the "formed" buttons on the board once the for loop is done
-            formatting them.
-
-            - Board is set as [Y, X], this is fine as long as associated buttons are mapped with proper ui + multipliers [Arbitrary]
-
-            - Tried implementing conditional statements to save time -> did not work
-
-            - Need to clean code smell (Duplicated Code)
-                - After general code modules are created refactor -> COMPLETED 600+ lines to less than 360 Lines
-                - Group everything in terms of "i" and create generalized for-loops -> COMPLETED
-                - have less than 15 or exactly 15 for loops for each row/column -> COMPLETED
-
-                Group Code with Relation to Color and Perform Method Extract
-
-         */
-
-
-        /*
-            In this scenario row and column can be interchanged since the board is symmetric about the scrabble
-            board axis.
-         */
-
         changeButtonColor(TWRed, DWRed, TLBlue, DLBlue);
-
 
         this.setVisible(true);
 
     }
 
     /**
+     * Method Extract, changes color of buttons on board to coordinate with designated multiplier.
+     *
      * @param TWRed     rgb value for Triple Word Score Squares on board
      * @param DWRed     rgb value for Double Word Score Squares on Board
      * @param TLBlue    rgb value for Triple Letter Score Squares on Board
