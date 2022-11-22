@@ -27,7 +27,9 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         playerName = new JLabel("", SwingConstants.CENTER);
         playerScore = new JLabel();
         JLabel currentNameLabel = new JLabel("Current Player Name:", SwingConstants.RIGHT);
+        currentNameLabel.setForeground(Color.WHITE);
         JLabel currentScoreLabel = new JLabel("Score: ", SwingConstants.RIGHT);
+        currentScoreLabel.setForeground(Color.WHITE);
         JButton endTurn = new JButton("End Turn");
         // action listener for what happens when the user clicks on the end turn button
         endTurn.addActionListener(e -> {
@@ -37,8 +39,10 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         //adds labels and buttons to the panel
         this.add(currentNameLabel);
         this.add(playerName);
+        playerName.setForeground(Color.WHITE);
         this.add(currentScoreLabel);
         this.add(playerScore);
+        playerScore.setForeground(Color.WHITE);
         this.add(endTurn);
         this.setVisible(true);
     }
