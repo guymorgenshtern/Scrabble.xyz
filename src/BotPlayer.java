@@ -131,7 +131,7 @@ public class BotPlayer extends Player {
         for (int row = 0; row < Board.SIZE; row++) {
             for (int col = 0; col < Board.SIZE; col++) {
                 if (scrabbleBoard[row][col].getLetter() != ' ') { // found a square with a letter
-                    System.out.println(scrabbleBoard[row][col].getLetter());
+                    System.out.println("Found " + scrabbleBoard[row][col].getLetter() + " at " + row + " " + col + "!");
                     // check the status of the surrounding squares and determine the number of surrounding empty squares
                     SquareStatus[] statusOfSurroundingSquares = getStatusOfSurroundingSquares(scrabbleBoard, row, col);
                     int numOfSurroundingEmptySquares = getNumSurroundingEmptySquares(statusOfSurroundingSquares);
@@ -187,8 +187,10 @@ public class BotPlayer extends Player {
 
                         // determine the number of surrounding empty spaces there are around the letter to place
                         int numSurroundingEmptySquaresAtNewSquare = getNumSurroundingEmptySquares(getStatusOfSurroundingSquares(scrabbleBoard, rowToPlaceLetter, colToPlaceLetter));
-                        if ((direction == ScrabbleModel.Direction.HORIZONTAL && numSurroundingEmptySquaresAtNewSquare == 3)
-                                || (direction == ScrabbleModel.Direction.VERTICAL && numSurroundingEmptySquaresAtNewSquare == 3)) {
+                        System.out.println("Num of surrounding empty spaces at " + rowToPlaceLetter + " " + colToPlaceLetter + " is " + numSurroundingEmptySquaresAtNewSquare + "!");
+                        if (scrabbleBoard[rowToPlaceLetter][colToPlaceLetter].getLetter() == ' '
+                                && ((direction == ScrabbleModel.Direction.HORIZONTAL && numSurroundingEmptySquaresAtNewSquare == 3)
+                                || (direction == ScrabbleModel.Direction.VERTICAL && numSurroundingEmptySquaresAtNewSquare == 3))) {
                             // find a two-letter word that begins with the board letter
                             String validTwoLetterWord = "";
                             // start reading through the library at a random place
