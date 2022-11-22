@@ -99,6 +99,14 @@ public class BoardPanel extends JPanel implements ScrabbleView {
             board axis.
          */
 
+        //  Triple Word Red Extract Method
+
+        //  Double Word Red Extract Method
+
+        //  Triple Letter Blue Extract Method
+
+        //  Double Letter Blue Extract Method
+
         // 0 th Row Grouping
         for (int i = 0; i <= 14; i += 7) {
             buttons[0][i].setBackground(TWRed);
