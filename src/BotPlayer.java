@@ -213,7 +213,7 @@ public class BotPlayer extends Player {
                             System.out.println("Found a valid word! " + validTwoLetterWord);
 
                             if (!validTwoLetterWord.equals("")) {
-                                return createScrabbleMoveToAddTwoLetterWord(rowToPlaceLetter, colToPlaceLetter, validTwoLetterWord.charAt(1), direction);
+                                return createScrabbleMoveToAddTwoLetterWord(rowToPlaceLetter, colToPlaceLetter, validTwoLetterWord.charAt(1), direction, board);
                             }
                         }
 
