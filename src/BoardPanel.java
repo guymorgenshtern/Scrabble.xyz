@@ -81,13 +81,16 @@ public class BoardPanel extends JPanel implements ScrabbleView {
             - Need to clean code smell (Duplicated Code)
                 - After general code modules are created refactor
                 - Group everything in terms of "i" and create generalized for-loops
+                - have less than 15 or exactly 15 for loops for each row/column
 
          */
 
 
         Color TWRed = new Color(179,0, 0);      // Color; Triple Word Squares WebSafe #B30000
         Color DWRed = new Color(255,128, 128);  // Color; Double Word Squares WebSafe #FF8080
-        Color TLBlue = new Color(77, 77, 255);   // Color; Triple Word Squares WebSafe #4D4DFF
+
+        Color TLBlue = new Color(77, 77, 255);   // Color; Triple Letter Squares WebSafe #4D4DFF
+        Color DLBlue = new Color(204, 204, 255); // Color; Double Letter Squares WebSafe #CCCCFF
 
         // TRIPLE WORD SQUARES
         buttons[0][0].setBackground(TWRed);
@@ -336,7 +339,145 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         buttons[13][9].setOpaque(true);
         buttons[13][9].setBorderPainted(false);
 
+        // Double Letter Score Squares
 
+        buttons[0][3].setBackground(DLBlue);
+        buttons[0][3].setForeground(Color.WHITE);
+        buttons[0][3].setText("DL");
+        buttons[0][3].setOpaque(true);
+        buttons[0][3].setBorderPainted(false);
+
+        buttons[0][11].setBackground(DLBlue);
+        buttons[0][11].setForeground(Color.WHITE);
+        buttons[0][11].setText("DL");
+        buttons[0][11].setOpaque(true);
+        buttons[0][11].setBorderPainted(false);
+
+        buttons[2][6].setBackground(DLBlue);
+        buttons[2][6].setForeground(Color.WHITE);
+        buttons[2][6].setText("DL");
+        buttons[2][6].setOpaque(true);
+        buttons[2][6].setBorderPainted(false);
+
+        buttons[2][8].setBackground(DLBlue);
+        buttons[2][8].setForeground(Color.WHITE);
+        buttons[2][8].setText("DL");
+        buttons[2][8].setOpaque(true);
+        buttons[2][8].setBorderPainted(false);
+
+        buttons[3][0].setBackground(DLBlue);
+        buttons[3][0].setForeground(Color.WHITE);
+        buttons[3][0].setText("DL");
+        buttons[3][0].setOpaque(true);
+        buttons[3][0].setBorderPainted(false);
+
+        buttons[3][7].setBackground(DLBlue);
+        buttons[3][7].setForeground(Color.WHITE);
+        buttons[3][7].setText("DL");
+        buttons[3][7].setOpaque(true);
+        buttons[3][7].setBorderPainted(false);
+
+        buttons[3][14].setBackground(DLBlue);
+        buttons[3][14].setForeground(Color.WHITE);
+        buttons[3][14].setText("DL");
+        buttons[3][14].setOpaque(true);
+        buttons[3][14].setBorderPainted(false);
+
+        buttons[6][2].setBackground(DLBlue);
+        buttons[6][2].setForeground(Color.WHITE);
+        buttons[6][2].setText("DL");
+        buttons[6][2].setOpaque(true);
+        buttons[6][2].setBorderPainted(false);
+
+        buttons[6][6].setBackground(DLBlue);
+        buttons[6][6].setForeground(Color.WHITE);
+        buttons[6][6].setText("DL");
+        buttons[6][6].setOpaque(true);
+        buttons[6][6].setBorderPainted(false);
+
+        buttons[6][8].setBackground(DLBlue);
+        buttons[6][8].setForeground(Color.WHITE);
+        buttons[6][8].setText("DL");
+        buttons[6][8].setOpaque(true);
+        buttons[6][8].setBorderPainted(false);
+
+        buttons[6][12].setBackground(DLBlue);
+        buttons[6][12].setForeground(Color.WHITE);
+        buttons[6][12].setText("DL");
+        buttons[6][12].setOpaque(true);
+        buttons[6][12].setBorderPainted(false);
+
+        buttons[7][4].setBackground(DLBlue);
+        buttons[7][4].setForeground(Color.WHITE);
+        buttons[7][4].setText("DL");
+        buttons[7][4].setOpaque(true);
+        buttons[7][4].setBorderPainted(false);
+
+        buttons[7][11].setBackground(DLBlue);
+        buttons[7][11].setForeground(Color.WHITE);
+        buttons[7][11].setText("DL");
+        buttons[7][11].setOpaque(true);
+        buttons[7][11].setBorderPainted(false);
+
+        buttons[8][2].setBackground(DLBlue);
+        buttons[8][2].setForeground(Color.WHITE);
+        buttons[8][2].setText("DL");
+        buttons[8][2].setOpaque(true);
+        buttons[8][2].setBorderPainted(false);
+
+        buttons[8][6].setBackground(DLBlue);
+        buttons[8][6].setForeground(Color.WHITE);
+        buttons[8][6].setText("DL");
+        buttons[8][6].setOpaque(true);
+        buttons[8][6].setBorderPainted(false);
+
+        buttons[8][8].setBackground(DLBlue);
+        buttons[8][8].setForeground(Color.WHITE);
+        buttons[8][8].setText("DL");
+        buttons[8][8].setOpaque(true);
+        buttons[8][8].setBorderPainted(false);
+
+        buttons[11][0].setBackground(DLBlue);
+        buttons[11][0].setForeground(Color.WHITE);
+        buttons[11][0].setText("DL");
+        buttons[11][0].setOpaque(true);
+        buttons[11][0].setBorderPainted(false);
+
+        buttons[11][7].setBackground(DLBlue);
+        buttons[11][7].setForeground(Color.WHITE);
+        buttons[11][7].setText("DL");
+        buttons[11][7].setOpaque(true);
+        buttons[11][7].setBorderPainted(false);
+
+        buttons[11][14].setBackground(DLBlue);
+        buttons[11][14].setForeground(Color.WHITE);
+        buttons[11][14].setText("DL");
+        buttons[11][14].setOpaque(true);
+        buttons[11][14].setBorderPainted(false);
+
+        buttons[12][6].setBackground(DLBlue);
+        buttons[12][6].setForeground(Color.WHITE);
+        buttons[12][6].setText("DL");
+        buttons[12][6].setOpaque(true);
+        buttons[12][6].setBorderPainted(false);
+
+        buttons[12][8].setBackground(DLBlue);
+        buttons[12][8].setForeground(Color.WHITE);
+        buttons[12][8].setText("DL");
+        buttons[12][8].setOpaque(true);
+        buttons[12][8].setBorderPainted(false);
+
+        buttons[14][3].setBackground(DLBlue);
+        buttons[14][3].setForeground(Color.WHITE);
+        buttons[14][3].setText("DL");
+        buttons[14][3].setOpaque(true);
+        buttons[14][3].setBorderPainted(false);
+
+        buttons[14][11].setBackground(DLBlue);
+        buttons[14][11].setForeground(Color.WHITE);
+        buttons[14][11].setText("DL");
+        buttons[14][11].setOpaque(true);
+        buttons[14][11].setBorderPainted(false);
 
 
         this.setVisible(true);
