@@ -171,44 +171,50 @@ public class BotPlayer extends Player {
                         String boardLetter = addBoardLetterToHand(scrabbleBoard[row][col].getLetter());
 
                         // determine if the letter part of a horizontally-placed or vertically-placed word
+                        int rowToPlaceLetter;
+                        int colToPlaceLetter;
                         ScrabbleModel.Direction direction = null; // the direction of the word the Bot will place
                         if (statusOfSurroundingSquares[LEFT] == SquareStatus.NOT_EMPTY
                             || statusOfSurroundingSquares[RIGHT] == SquareStatus.NOT_EMPTY) {
                             direction = ScrabbleModel.Direction.VERTICAL;
+                            rowToPlaceLetter = row + 1;
+                            colToPlaceLetter = col;
                         } else {
                             direction = ScrabbleModel.Direction.HORIZONTAL;
+                            rowToPlaceLetter = row;
+                            colToPlaceLetter = col + 1;
                         }
 
-                        // find a two-letter word that begins with the board letter
-                        String validTwoLetterWord = "";
-                        // start reading through the library at a random place
-                        int randomIndex = (int) (Math.random() * library.getValidWords().size() - 1);
-                        for (int i = randomIndex; i < library.getValidWords().size() && validTwoLetterWord.equals(""); i++) {
-                            String s = library.getValidWords().get(i);
-                            if (hasLettersNeededForWord(s) && s.length() == 2
-                                    && s.substring(0, 1).toUpperCase().equals(boardLetter)
-                                    && !s.substring(1).toUpperCase().equals(boardLetter)) { // second letter used cannot be the board letter
-                                validTwoLetterWord = s.toUpperCase(); // letters are displayed as uppercase on the board
+                        // determine the number of surrounding empty spaces there are around the letter to place
+                        int numSurroundingEmptySquaresAtNewSquare = getNumSurroundingEmptySquares(getStatusOfSurroundingSquares(scrabbleBoard, rowToPlaceLetter, colToPlaceLetter));
+                        if ((direction == ScrabbleModel.Direction.HORIZONTAL && numSurroundingEmptySquaresAtNewSquare == 3)
+                                || (direction == ScrabbleModel.Direction.VERTICAL && numSurroundingEmptySquaresAtNewSquare == 3)) {
+                            // find a two-letter word that begins with the board letter
+                            String validTwoLetterWord = "";
+                            // start reading through the library at a random place
+                            int randomIndex = (int) (Math.random() * library.getValidWords().size() - 1);
+                            for (int i = randomIndex; i < library.getValidWords().size() && validTwoLetterWord.equals(""); i++) {
+                                String s = library.getValidWords().get(i);
+                                if (hasLettersNeededForWord(s) && s.length() == 2
+                                        && s.substring(0, 1).toUpperCase().equals(boardLetter)
+                                        && !s.substring(1).toUpperCase().equals(boardLetter)) { // second letter used cannot be the board letter
+                                    validTwoLetterWord = s.toUpperCase(); // letters are displayed as uppercase on the board
+                                }
                             }
-                        }
-                        // reading through the library from the start until you reach the random index
-                        for (int i = 0; i < randomIndex && validTwoLetterWord.equals(""); i++) {
-                            String s = library.getValidWords().get(i);
-                            if (hasLettersNeededForWord(s) && s.length() == 2
-                                    && s.substring(0, 1).toUpperCase().equals(boardLetter)
-                                    && !s.substring(1).toUpperCase().equals(boardLetter)) { // second letter used cannot be the board letter
-                                validTwoLetterWord = s.toUpperCase(); // letters are displayed as uppercase on the board
+                            // reading through the library from the start until you reach the random index
+                            for (int i = 0; i < randomIndex && validTwoLetterWord.equals(""); i++) {
+                                String s = library.getValidWords().get(i);
+                                if (hasLettersNeededForWord(s) && s.length() == 2
+                                        && s.substring(0, 1).toUpperCase().equals(boardLetter)
+                                        && !s.substring(1).toUpperCase().equals(boardLetter)) { // second letter used cannot be the board letter
+                                    validTwoLetterWord = s.toUpperCase(); // letters are displayed as uppercase on the board
+                                }
                             }
-                        }
-                        System.out.println("Found a valid word! " + validTwoLetterWord);
+                            System.out.println("Found a valid word! " + validTwoLetterWord);
 
-                        // if a word is found, determine if the spaces next to the letter-to-be-placed are empty
-                        if (direction == ScrabbleModel.Direction.HORIZONTAL && !validTwoLetterWord.equals("")
-                                && getNumSurroundingEmptySquares(getStatusOfSurroundingSquares(scrabbleBoard, row, col + 1)) == 3) {
-                            return createScrabbleMoveToAddTwoLetterWord(row, col + 1, validTwoLetterWord.charAt(1), direction, board);
-                        } else if (direction == ScrabbleModel.Direction.VERTICAL && !validTwoLetterWord.equals("")
-                                && getNumSurroundingEmptySquares(getStatusOfSurroundingSquares(scrabbleBoard, row + 1, col)) == 3) {
-                            return createScrabbleMoveToAddTwoLetterWord(row + 1, col, validTwoLetterWord.charAt(1), direction, board);
+                            if (!validTwoLetterWord.equals("")) {
+                                return createScrabbleMoveToAddTwoLetterWord(rowToPlaceLetter, colToPlaceLetter, validTwoLetterWord.charAt(1), direction);
+                            }
                         }
 
                         // could not find a valid word to add to the board, remove the board letter from the hand

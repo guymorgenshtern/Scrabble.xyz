@@ -82,14 +82,14 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     public void update(ScrabbleEvent event) { // Update Game Model
         if (event.getMove().isValid()) {
             for (int i = 0; i < event.getMove().getCoords().size(); i++) {
-                int x = event.getMove().getCoords().get(i).getCoords()[0];
-                int y = event.getMove().getCoords().get(i).getCoords()[1];
+                int x = event.getMove().getCoords().get(i).coords()[0];
+                int y = event.getMove().getCoords().get(i).coords()[1];
                 updateButton(x, y, String.valueOf(event.getBoard().getTileOnBoard(x,y).getLetter()));
             }
         } else {
             for (int i = 0; i < event.getMove().getCoords().size(); i++) {
-                int x = event.getMove().getCoords().get(i).getCoords()[0];
-                int y = event.getMove().getCoords().get(i).getCoords()[1];
+                int x = event.getMove().getCoords().get(i).coords()[0];
+                int y = event.getMove().getCoords().get(i).coords()[1];
                 updateButton(x, y, "");
             }
         }
