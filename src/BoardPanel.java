@@ -8,6 +8,11 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     private JButton [][] buttons;
 
     // Set Colors for Multipliers On Board
+    Color TWRed = new Color(179,0, 0);      // Color; Triple Word Squares WebSafe #B30000
+    Color DWRed = new Color(255,128, 128);  // Color; Double Word Squares WebSafe #FF8080
+
+    Color TLBlue = new Color(77, 77, 255);   // Color; Triple Letter Squares WebSafe #4D4DFF
+    Color DLBlue = new Color(204, 204, 255); // Color; Double Letter Squares WebSafe #CCCCFF
 
 
     public BoardPanel(ScrabbleModel scrabbleModel) {
@@ -88,17 +93,27 @@ public class BoardPanel extends JPanel implements ScrabbleView {
          */
 
 
-        Color TWRed = new Color(179,0, 0);      // Color; Triple Word Squares WebSafe #B30000
-        Color DWRed = new Color(255,128, 128);  // Color; Double Word Squares WebSafe #FF8080
-
-        Color TLBlue = new Color(77, 77, 255);   // Color; Triple Letter Squares WebSafe #4D4DFF
-        Color DLBlue = new Color(204, 204, 255); // Color; Double Letter Squares WebSafe #CCCCFF
-
         /*
             In this scenario row and column can be interchanged since the board is symmetric about the scrabble
             board axis.
          */
 
+        changeButtonColor(TWRed, DWRed, TLBlue, DLBlue);
+
+
+        this.setVisible(true);
+
+    }
+
+    /**
+     * @param TWRed     rgb value for Triple Word Score Squares on board
+     * @param DWRed     rgb value for Double Word Score Squares on Board
+     * @param TLBlue    rgb value for Triple Letter Score Squares on Board
+     * @param DLBlue    rgb value for Double Letter Score Squares on Board
+     *
+     * @author Created + Refactored By: Francisco De Grano, 101147447
+     */
+    private void changeButtonColor(Color TWRed, Color DWRed, Color TLBlue, Color DLBlue) {
         //  Triple Word Red Extract Method
         for (int i = 0; i <= 14; i += 7) {
             buttons[0][i].setBackground(TWRed);
@@ -224,8 +239,6 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         }
 
 
-
-
         //  Double Letter Blue Extract Method
         for (int i : new int[]{3, 11}) {
             buttons[0][i].setBackground(DLBlue);
@@ -298,10 +311,6 @@ public class BoardPanel extends JPanel implements ScrabbleView {
             buttons[14][i].setOpaque(true);
             buttons[14][i].setBorderPainted(false);
         }
-
-
-        this.setVisible(true);
-
     }
 
     private void updateButton(int x, int y, String letter) {
