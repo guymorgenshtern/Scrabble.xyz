@@ -69,17 +69,17 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         after the fact that we are accessing the "formed" buttons on the board once the for loop is done
         formatting them.
 
-        - Y, X
+        - Board is set as [Y, X], this is fine as long as associated buttons are mapped with proper ui + multipliers
 
          */
 
 
         Color TWRed = new Color(179,0, 0);
-        buttons[8][6].setOpaque(true);
-        buttons[8][6].setBackground(TWRed);
-        buttons[8][6].setForeground(Color.WHITE);
-        buttons[8][6].setText("TW");
-        buttons[8][6].setBorderPainted(false); // Need to add to change entire button color
+        buttons[7][0].setOpaque(true);
+        buttons[7][0].setBackground(TWRed);
+        buttons[7][0].setForeground(Color.WHITE);
+        buttons[7][0].setText("TW");
+        buttons[7][0].setBorderPainted(false); // Need to add to change entire button color
 
         this.setVisible(true);
 
