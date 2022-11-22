@@ -13,6 +13,9 @@ import java.util.HashMap;
  */
 public class ScrabbleModel {
 
+    //boardSize squared
+    private final int MAX_ATTEMPTS = 100;
+
     /** A Scrabble board. */
     private final Board board;
 
@@ -28,6 +31,8 @@ public class ScrabbleModel {
     private final HashMap<String, Integer> scorePerLetter;
 
     private final ArrayList<ScrabbleView> views;
+
+    private int numberOfTries;
 
     /**
      * A word can either be horizontally, or vertically placed onto the board.
@@ -60,6 +65,7 @@ public class ScrabbleModel {
         this.letterBag = new LetterBag();
         this.usedLetters = new ArrayList<>();
         status = GameStatus.NOT_FINISHED;
+        this.numberOfTries = 0;
 
         initializeLetterBag("res/letters_by_quantity");
     }
@@ -336,6 +342,7 @@ public class ScrabbleModel {
         boolean horizontal = true;
         boolean vertical = true;
         Direction dir = null;
+        this.numberOfTries++;
 
         // coords is checking letters on the board
 
@@ -399,6 +406,7 @@ public class ScrabbleModel {
 
                 //score the move if it is valid
                 if (move.isValid()) {
+                    this.numberOfTries = 0;
                     //calculate score
                     currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
 
@@ -416,10 +424,18 @@ public class ScrabbleModel {
                     //next player
                     playerTurnCounter++;
                 } else {
+
                     deleteInvalidWordFromBoard(move);
                     move.setValid(false);
+                    if (this.numberOfTries == MAX_ATTEMPTS) {
+                        playerTurnCounter++;
+                        haveAllPlayerSkipped();
+                        this.numberOfTries = 0;
+                        System.out.println("Player attempted too many turns");
+                    }
                 }
                 this.getUsedLetters().clear();
+
 
                 //update views
                 ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.NOT_DONE, GameStatus.NOT_FINISHED);
