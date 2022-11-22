@@ -1,11 +1,9 @@
 import com.zetcode.Library;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -121,7 +119,7 @@ public class ScrabbleModel {
             letterBag.addLetter(line.substring(0,1), Integer.parseInt(line.substring(2,line.lastIndexOf("-"))));
 
             //letter score
-            this.scorePerLetter.put(line.substring(0,1), Integer.parseInt(line.substring(line.lastIndexOf("-") + 1)));
+            scorePerLetter.put(line.substring(0,1), Integer.parseInt(line.substring(line.lastIndexOf("-") + 1)));
             line = br.readLine();
         }
     }
@@ -181,8 +179,8 @@ public class ScrabbleModel {
         //this assumes the move array is sorted from first letter->last, we should make sure this is always the case
 
         //getting the coords of first letter of move
-        int x = scrabbleMove.getCoords().get(0).getCoords()[0];
-        int y = scrabbleMove.getCoords().get(0).getCoords()[1];
+        int x = scrabbleMove.getCoords().get(0).coords()[0];
+        int y = scrabbleMove.getCoords().get(0).coords()[1];
         String word = "";
 
         //concat all letters to the right
@@ -260,7 +258,7 @@ public class ScrabbleModel {
 
     private void deleteInvalidWordFromBoard(ScrabbleMove move){
         for (int i = 0; i < move.getCoords().size(); i++) {
-            this.board.getTileOnBoard(move.getCoords().get(i).getCoords()[0], move.getCoords().get(i).getCoords()[1]).setLetter(' ');
+            this.board.getTileOnBoard(move.getCoords().get(i).coords()[0], move.getCoords().get(i).coords()[1]).setLetter(' ');
             this.board.printBoard();
         }
     }
@@ -279,7 +277,7 @@ public class ScrabbleModel {
         //letters from move scoring
         //important to do because we need their coordinates to determine if they lie on a multiplier
         for (int i = 0; i < move.getCoords().size(); i++) {
-            Square tile = this.board.getTileOnBoard(move.getCoords().get(i).getCoords()[0], move.getCoords().get(i).getCoords()[1]);
+            Square tile = this.board.getTileOnBoard(move.getCoords().get(i).coords()[0], move.getCoords().get(i).coords()[1]);
             String letter = String.valueOf(tile.getLetter());
 
             //remove any letter that has already been scored
@@ -367,8 +365,8 @@ public class ScrabbleModel {
 
                 //determine if the word is horizontal or vertical
                 for (int i = 1; i < move.getCoords().size(); i++) {
-                    horizontal = horizontal && move.getCoords().get(i).getCoords()[1] == move.getCoords().get(0).getCoords()[1];
-                    vertical = vertical && move.getCoords().get(i).getCoords()[0] == move.getCoords().get(0).getCoords()[0];
+                    horizontal = horizontal && move.getCoords().get(i).coords()[1] == move.getCoords().get(0).coords()[1];
+                    vertical = vertical && move.getCoords().get(i).coords()[0] == move.getCoords().get(0).coords()[0];
                 }
 
                 if ((horizontal) && (vertical) && move.getCoords().size() == 1) {

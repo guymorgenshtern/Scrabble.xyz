@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -6,7 +7,7 @@ import java.util.HashMap;
 public class LetterBag  {
 
     /** A HashMap for the letter map */
-    private HashMap<String, Integer> letterMap;
+    private HashMap<String, Integer> letterBag;
 
     /** size of the bag */
     private int size;
@@ -17,7 +18,7 @@ public class LetterBag  {
      */
     public LetterBag() {
         size = 0;
-        letterMap = new HashMap<>();
+        letterBag = new HashMap<>();
     }
 
     /**
@@ -27,7 +28,7 @@ public class LetterBag  {
      * @author Alexander Hum 101180821. Edited by Guy Morgenshtern 101151430.
      */
     public void addLetter(String letter, int quantity) {
-        letterMap.put(letter, quantity);
+        letterBag.put(letter, quantity);
         this.size += quantity;
     }
 
@@ -39,10 +40,10 @@ public class LetterBag  {
     public void removeLetter(String letter) {
         letter = letter.toUpperCase();
         if (this.size > 0) {
-            if (letterMap.get(letter) > 1) {
-                letterMap.put(letter, letterMap.get(letter) - 1);
+            if (letterBag.get(letter) > 1) {
+                letterBag.put(letter, letterBag.get(letter) - 1);
             } else {
-                letterMap.remove(letter);
+                letterBag.remove(letter);
             }
             this.size--;
         }
@@ -57,8 +58,8 @@ public class LetterBag  {
          int random = (int) ((Math.random() * (this.size)));
          String[] availableLetters = new String[this.size];
          int count = 0;
-         for (String k : letterMap.keySet()) {
-             for (int i = 0; i < letterMap.get(k); i++) {
+         for (String k : letterBag.keySet()) {
+             for (int i = 0; i < letterBag.get(k); i++) {
                  if (count == random) {
                      removeLetter(k);
                      return k;
