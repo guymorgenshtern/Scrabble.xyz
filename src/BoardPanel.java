@@ -64,21 +64,22 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
         /*
 
-        Initialize Button Colors here after mapping board in Figma
-        @Francisco
+            Initialize Button Colors here after mapping board in Figma
+            @Francisco
 
-        - No need to add any updates to view as we are accessing the buttons directly,
-        after the fact that we are accessing the "formed" buttons on the board once the for loop is done
-        formatting them.
+            - No need to add any updates to view as we are accessing the buttons directly,
+            after the fact that we are accessing the "formed" buttons on the board once the for loop is done
+            formatting them.
 
-        - Board is set as [Y, X], this is fine as long as associated buttons are mapped with proper ui + multipliers
+            - Board is set as [Y, X], this is fine as long as associated buttons are mapped with proper ui + multipliers
 
-        - Tried implementing conditional statements to save time -> did not work
+            - Tried implementing conditional statements to save time -> did not work
 
          */
 
         Color TWRed = new Color(179,0, 0);      // Color; Triple Word Squares WebSafe #B30000
         Color DWRed = new Color(255,128, 128);  // Color; Double Word Squares WebSafe #FF8080
+        Color TLBlue = new Color(77, 77, 255);   // Color; Triple Word Squares WebSafe #4D4DFF
 
         // TRIPLE WORD SQUARES
         buttons[0][0].setBackground(TWRed);
@@ -128,6 +129,132 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         buttons[14][14].setText("TW");
         buttons[14][14].setOpaque(true);
         buttons[14][14].setBorderPainted(false);
+
+
+        /*
+            Double Word Squares -
+
+                Fill order. First Quadrant, Second Quadrant, Third Quadrant, Fourth Quadrant
+         */
+
+        buttons[1][1].setBackground(DWRed);
+        buttons[1][1].setForeground(Color.WHITE);
+        buttons[1][1].setText("DW");
+        buttons[1][1].setOpaque(true);
+        buttons[1][1].setBorderPainted(false);
+
+        buttons[2][2].setBackground(DWRed);
+        buttons[2][2].setForeground(Color.WHITE);
+        buttons[2][2].setText("DW");
+        buttons[2][2].setOpaque(true);
+        buttons[2][2].setBorderPainted(false);
+
+        buttons[3][3].setBackground(DWRed);
+        buttons[3][3].setForeground(Color.WHITE);
+        buttons[3][3].setText("DW");
+        buttons[3][3].setOpaque(true);
+        buttons[3][3].setBorderPainted(false);
+
+        buttons[4][4].setBackground(DWRed);
+        buttons[4][4].setForeground(Color.WHITE);
+        buttons[4][4].setText("DW");
+        buttons[4][4].setOpaque(true);
+        buttons[4][4].setBorderPainted(false);
+
+        // SECOND QUADRANT
+        buttons[1][13].setBackground(DWRed);
+        buttons[1][13].setForeground(Color.WHITE);
+        buttons[1][13].setText("DW");
+        buttons[1][13].setOpaque(true);
+        buttons[1][13].setBorderPainted(false);
+
+        buttons[2][12].setBackground(DWRed);
+        buttons[2][12].setForeground(Color.WHITE);
+        buttons[2][12].setText("DW");
+        buttons[2][12].setOpaque(true);
+        buttons[2][12].setBorderPainted(false);
+
+        buttons[3][11].setBackground(DWRed);
+        buttons[3][11].setForeground(Color.WHITE);
+        buttons[3][11].setText("DW");
+        buttons[3][11].setOpaque(true);
+        buttons[3][11].setBorderPainted(false);
+
+        buttons[4][10].setBackground(DWRed);
+        buttons[4][10].setForeground(Color.WHITE);
+        buttons[4][10].setText("DW");
+        buttons[4][10].setOpaque(true);
+        buttons[4][10].setBorderPainted(false);
+
+        //THIRD QUADRANT
+        buttons[13][13].setBackground(DWRed);
+        buttons[13][13].setForeground(Color.WHITE);
+        buttons[13][13].setText("DW");
+        buttons[13][13].setOpaque(true);
+        buttons[13][13].setBorderPainted(false);
+
+        buttons[12][12].setBackground(DWRed);
+        buttons[12][12].setForeground(Color.WHITE);
+        buttons[12][12].setText("DW");
+        buttons[12][12].setOpaque(true);
+        buttons[12][12].setBorderPainted(false);
+
+        buttons[11][11].setBackground(DWRed);
+        buttons[11][11].setForeground(Color.WHITE);
+        buttons[11][11].setText("DW");
+        buttons[11][11].setOpaque(true);
+        buttons[11][11].setBorderPainted(false);
+
+        buttons[10][10].setBackground(DWRed);
+        buttons[10][10].setForeground(Color.WHITE);
+        buttons[10][10].setText("DW");
+        buttons[10][10].setOpaque(true);
+        buttons[10][10].setBorderPainted(false);
+
+        //FOURTH QUADRANT
+        buttons[13][1].setBackground(DWRed);
+        buttons[13][1].setForeground(Color.WHITE);
+        buttons[13][1].setText("DW");
+        buttons[13][1].setOpaque(true);
+        buttons[13][1].setBorderPainted(false);
+
+        buttons[12][2].setBackground(DWRed);
+        buttons[12][2].setForeground(Color.WHITE);
+        buttons[12][2].setText("DW");
+        buttons[12][2].setOpaque(true);
+        buttons[12][2].setBorderPainted(false);
+
+        buttons[11][3].setBackground(DWRed);
+        buttons[11][3].setForeground(Color.WHITE);
+        buttons[11][3].setText("DW");
+        buttons[11][3].setOpaque(true);
+        buttons[11][3].setBorderPainted(false);
+
+        buttons[11][3].setBackground(DWRed);
+        buttons[11][3].setForeground(Color.WHITE);
+        buttons[11][3].setText("DW");
+        buttons[11][3].setOpaque(true);
+        buttons[11][3].setBorderPainted(false);
+
+        buttons[10][4].setBackground(DWRed);
+        buttons[10][4].setForeground(Color.WHITE);
+        buttons[10][4].setText("DW");
+        buttons[10][4].setOpaque(true);
+        buttons[10][4].setBorderPainted(false);
+
+
+            //  Triple Letter Score Squares
+
+        buttons[1][5].setBackground(TLBlue);
+        buttons[1][5].setForeground(Color.WHITE);
+        buttons[1][5].setText("TL");
+        buttons[1][5].setOpaque(true);
+        buttons[1][5].setBorderPainted(false);
+
+
+
+
+
 
         this.setVisible(true);
 
