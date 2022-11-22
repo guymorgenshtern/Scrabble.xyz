@@ -92,7 +92,14 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         Color TLBlue = new Color(77, 77, 255);   // Color; Triple Letter Squares WebSafe #4D4DFF
         Color DLBlue = new Color(204, 204, 255); // Color; Double Letter Squares WebSafe #CCCCFF
 
-        // TRIPLE WORD SQUARES
+        /*
+            In this scenario row and column can be interchanged since the board is symmetric about the scrabble
+            board axis.
+
+         */
+
+        // 0 th Row Grouping
+
         buttons[0][0].setBackground(TWRed);
         buttons[0][0].setForeground(Color.WHITE);
         buttons[0][0].setText("TW");
@@ -110,6 +117,70 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         buttons[0][14].setText("TW");
         buttons[0][14].setOpaque(true);
         buttons[0][14].setBorderPainted(false);
+
+        buttons[0][3].setBackground(DLBlue);
+        buttons[0][3].setForeground(Color.WHITE);
+        buttons[0][3].setText("DL");
+        buttons[0][3].setOpaque(true);
+        buttons[0][3].setBorderPainted(false);
+
+        buttons[0][11].setBackground(DLBlue);
+        buttons[0][11].setForeground(Color.WHITE);
+        buttons[0][11].setText("DL");
+        buttons[0][11].setOpaque(true);
+        buttons[0][11].setBorderPainted(false);
+
+
+        // 1 st Row Grouping
+
+        // 2 nd Row Grouping
+
+        // 3 rd Row Grouping
+
+        // 4 th Row Grouping
+
+        // 5 th Row Grouping
+
+        // 6 th Row Grouping
+
+        // 7 th Row Grouping
+
+        // 8 th Row Grouping
+
+        // 9 th Row Grouping
+
+        // 10 th Row Grouping
+
+        // 11 th Row Grouping
+
+        // 12 th Row Grouping
+
+        // 13 th Row Grouping
+
+        // 14 th Row Grouping
+
+        // TRIPLE WORD SQUARES
+
+        /*
+        buttons[0][0].setBackground(TWRed);
+        buttons[0][0].setForeground(Color.WHITE);
+        buttons[0][0].setText("TW");
+        buttons[0][0].setOpaque(true);
+        buttons[0][0].setBorderPainted(false);
+
+        buttons[0][7].setBackground(TWRed);
+        buttons[0][7].setForeground(Color.WHITE);
+        buttons[0][7].setText("TW");
+        buttons[0][7].setOpaque(true);
+        buttons[0][7].setBorderPainted(false);
+
+        buttons[0][14].setBackground(TWRed);
+        buttons[0][14].setForeground(Color.WHITE);
+        buttons[0][14].setText("TW");
+        buttons[0][14].setOpaque(true);
+        buttons[0][14].setBorderPainted(false);
+        */
+
 
         buttons[7][0].setBackground(TWRed);
         buttons[7][0].setForeground(Color.WHITE);
@@ -340,7 +411,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         buttons[13][9].setBorderPainted(false);
 
         // Double Letter Score Squares
-
+/*
         buttons[0][3].setBackground(DLBlue);
         buttons[0][3].setForeground(Color.WHITE);
         buttons[0][3].setText("DL");
@@ -352,7 +423,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         buttons[0][11].setText("DL");
         buttons[0][11].setOpaque(true);
         buttons[0][11].setBorderPainted(false);
-
+*/
         buttons[2][6].setBackground(DLBlue);
         buttons[2][6].setForeground(Color.WHITE);
         buttons[2][6].setText("DL");
