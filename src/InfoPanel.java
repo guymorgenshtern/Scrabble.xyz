@@ -23,8 +23,10 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         });
         this.add(currentNameLabel);
         this.add(playerName);
+        playerName.setForeground(Color.WHITE);
         this.add(currentScoreLabel);
         this.add(playerScore);
+        playerScore.setForeground(Color.WHITE);
         this.add(endTurn);
 
         this.setVisible(true);
