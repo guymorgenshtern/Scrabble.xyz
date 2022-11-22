@@ -9,6 +9,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
     // Set Colors for Multipliers On Board
 
+
     public BoardPanel(ScrabbleModel scrabbleModel) {
         super();
 
@@ -30,6 +31,8 @@ public class BoardPanel extends JPanel implements ScrabbleView {
                     String selectedLetter = scrabbleModel.getSelectedLetter();
                     l[0] = Integer.parseInt(clickedLocation[0]);
                     l[1] = Integer.parseInt(clickedLocation[1]);
+
+                    // Alternate Implementation for Squares Coloring
 
                     // support for blank tile
                     if (selectedLetter.equals(" ")) {
@@ -75,7 +78,10 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
             - Tried implementing conditional statements to save time -> did not work
 
+            - Need to clean code smell
+
          */
+
 
         Color TWRed = new Color(179,0, 0);      // Color; Triple Word Squares WebSafe #B30000
         Color DWRed = new Color(255,128, 128);  // Color; Double Word Squares WebSafe #FF8080
@@ -131,11 +137,11 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         buttons[14][14].setBorderPainted(false);
 
 
-        /*
-            Double Word Squares -
 
-                Fill order. First Quadrant, Second Quadrant, Third Quadrant, Fourth Quadrant
-         */
+            // Double Word Squares -
+
+                // Fill order. First Quadrant, Second Quadrant, Third Quadrant, Fourth Quadrant
+
 
         buttons[1][1].setBackground(DWRed);
         buttons[1][1].setForeground(Color.WHITE);
@@ -186,6 +192,8 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         buttons[4][10].setOpaque(true);
         buttons[4][10].setBorderPainted(false);
 
+
+
         //THIRD QUADRANT
         buttons[13][13].setBackground(DWRed);
         buttons[13][13].setForeground(Color.WHITE);
@@ -211,7 +219,10 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         buttons[10][10].setOpaque(true);
         buttons[10][10].setBorderPainted(false);
 
+
+
         //FOURTH QUADRANT
+
         buttons[13][1].setBackground(DWRed);
         buttons[13][1].setForeground(Color.WHITE);
         buttons[13][1].setText("DW");
@@ -243,7 +254,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         buttons[10][4].setBorderPainted(false);
 
 
-            //  Triple Letter Score Squares
+        //  Triple Letter Score Squares
 
         buttons[1][5].setBackground(TLBlue);
         buttons[1][5].setForeground(Color.WHITE);
@@ -251,7 +262,77 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         buttons[1][5].setOpaque(true);
         buttons[1][5].setBorderPainted(false);
 
+        buttons[1][9].setBackground(TLBlue);
+        buttons[1][9].setForeground(Color.WHITE);
+        buttons[1][9].setText("TL");
+        buttons[1][9].setOpaque(true);
+        buttons[1][9].setBorderPainted(false);
 
+        buttons[5][1].setBackground(TLBlue);
+        buttons[5][1].setForeground(Color.WHITE);
+        buttons[5][1].setText("TL");
+        buttons[5][1].setOpaque(true);
+        buttons[5][1].setBorderPainted(false);
+
+        buttons[5][5].setBackground(TLBlue);
+        buttons[5][5].setForeground(Color.WHITE);
+        buttons[5][5].setText("TL");
+        buttons[5][5].setOpaque(true);
+        buttons[5][5].setBorderPainted(false);
+
+        buttons[5][9].setBackground(TLBlue);
+        buttons[5][9].setForeground(Color.WHITE);
+        buttons[5][9].setText("TL");
+        buttons[5][9].setOpaque(true);
+        buttons[5][9].setBorderPainted(false);
+
+        buttons[5][13].setBackground(TLBlue);
+        buttons[5][13].setForeground(Color.WHITE);
+        buttons[5][13].setText("TL");
+        buttons[5][13].setOpaque(true);
+        buttons[5][13].setBorderPainted(false);
+
+        buttons[5][13].setBackground(TLBlue);
+        buttons[5][13].setForeground(Color.WHITE);
+        buttons[5][13].setText("TL");
+        buttons[5][13].setOpaque(true);
+        buttons[5][13].setBorderPainted(false);
+
+        buttons[9][1].setBackground(TLBlue);
+        buttons[9][1].setForeground(Color.WHITE);
+        buttons[9][1].setText("TL");
+        buttons[9][1].setOpaque(true);
+        buttons[9][1].setBorderPainted(false);
+
+        buttons[9][5].setBackground(TLBlue);
+        buttons[9][5].setForeground(Color.WHITE);
+        buttons[9][5].setText("TL");
+        buttons[9][5].setOpaque(true);
+        buttons[9][5].setBorderPainted(false);
+
+        buttons[9][9].setBackground(TLBlue);
+        buttons[9][9].setForeground(Color.WHITE);
+        buttons[9][9].setText("TL");
+        buttons[9][9].setOpaque(true);
+        buttons[9][9].setBorderPainted(false);
+
+        buttons[9][13].setBackground(TLBlue);
+        buttons[9][13].setForeground(Color.WHITE);
+        buttons[9][13].setText("TL");
+        buttons[9][13].setOpaque(true);
+        buttons[9][13].setBorderPainted(false);
+
+        buttons[13][5].setBackground(TLBlue);
+        buttons[13][5].setForeground(Color.WHITE);
+        buttons[13][5].setText("TL");
+        buttons[13][5].setOpaque(true);
+        buttons[13][5].setBorderPainted(false);
+
+        buttons[13][9].setBackground(TLBlue);
+        buttons[13][9].setForeground(Color.WHITE);
+        buttons[13][9].setText("TL");
+        buttons[13][9].setOpaque(true);
+        buttons[13][9].setBorderPainted(false);
 
 
 
