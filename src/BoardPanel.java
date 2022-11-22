@@ -74,14 +74,16 @@ public class BoardPanel extends JPanel implements ScrabbleView {
             after the fact that we are accessing the "formed" buttons on the board once the for loop is done
             formatting them.
 
-            - Board is set as [Y, X], this is fine as long as associated buttons are mapped with proper ui + multipliers
+            - Board is set as [Y, X], this is fine as long as associated buttons are mapped with proper ui + multipliers [Arbitrary]
 
             - Tried implementing conditional statements to save time -> did not work
 
             - Need to clean code smell (Duplicated Code)
-                - After general code modules are created refactor
-                - Group everything in terms of "i" and create generalized for-loops
-                - have less than 15 or exactly 15 for loops for each row/column
+                - After general code modules are created refactor -> COMPLETED 600+ lines to less than 360 Lines
+                - Group everything in terms of "i" and create generalized for-loops -> COMPLETED
+                - have less than 15 or exactly 15 for loops for each row/column -> COMPLETED
+
+                Group Code with Relation to Color and Perform Method Extract
 
          */
 
@@ -95,7 +97,6 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         /*
             In this scenario row and column can be interchanged since the board is symmetric about the scrabble
             board axis.
-
          */
 
         // 0 th Row Grouping
@@ -322,7 +323,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
     private void updateButton(int x, int y, String letter) {
         if (!letter.equals("")) {
-            buttons[x][y].setBackground(Color.RED);
+            buttons[x][y].setBackground(Color.BLUE);
             buttons[x][y].setBorderPainted(false);
             buttons[x][y].setEnabled(false);
         }
