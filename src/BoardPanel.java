@@ -10,9 +10,9 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     public BoardPanel(ScrabbleModel scrabbleModel) {
         super();
 
-        this.setLayout(new GridLayout(15, 15)); // Need to define size within board
+        this.setLayout(new GridLayout(15, 15));  // Need to define size within board
         this.setSize(900,900);
-        this.buttons = new JButton[15][15]; // Place board size in place. Call Board Size Directly
+        this.buttons = new JButton[15][15];                 // Place board size in place. Call Board Size Directly
 
         for (int i= 0; i < 15; i++){          // Place board size.
             for (int j = 0; j < 15; j++){      // Place board size.
@@ -60,13 +60,34 @@ public class BoardPanel extends JPanel implements ScrabbleView {
             }
         }
 
+        /*
+
+        Initialize Button Colors here after mapping board in Figma
+        @Francisco
+
+        - No need to add any updates to view as we are accessing the buttons directly,
+        after the fact that we are accessing the "formed" buttons on the board once the for loop is done
+        formatting them.
+
+        - Y, X
+
+         */
+
+
+        Color TWRed = new Color(179,0, 0);
+        buttons[8][6].setOpaque(true);
+        buttons[8][6].setBackground(TWRed);
+        buttons[8][6].setForeground(Color.WHITE);
+        buttons[8][6].setText("TW");
+        buttons[8][6].setBorderPainted(false); // Need to add to change entire button color
+
         this.setVisible(true);
 
     }
 
     private void updateButton(int x, int y, String letter) {
         if (!letter.equals("")) {
-            buttons[x][y].setBackground(Color.GREEN);
+            buttons[x][y].setBackground(Color.RED);
             buttons[x][y].setBorderPainted(false);
             buttons[x][y].setEnabled(false);
         }

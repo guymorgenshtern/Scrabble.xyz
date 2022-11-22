@@ -43,7 +43,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         this.add(infoPanel, BorderLayout.NORTH);
         model.getViews().add(this);
 
-        this.setSize(850, 750);
+        this.setSize(1000, 800); // Expanded to enable text to show on button
         this.setVisible(true);
 
         // initialize the model
