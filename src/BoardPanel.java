@@ -7,6 +7,8 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     private Board textBoard;
     private JButton [][] buttons;
 
+    // Set Colors for Multipliers On Board
+
     public BoardPanel(ScrabbleModel scrabbleModel) {
         super();
 
@@ -71,15 +73,61 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
         - Board is set as [Y, X], this is fine as long as associated buttons are mapped with proper ui + multipliers
 
+        - Tried implementing conditional statements to save time -> did not work
+
          */
 
+        Color TWRed = new Color(179,0, 0);      // Color; Triple Word Squares WebSafe #B30000
+        Color DWRed = new Color(255,128, 128);  // Color; Double Word Squares WebSafe #FF8080
 
-        Color TWRed = new Color(179,0, 0);
-        buttons[7][0].setOpaque(true);
+        // TRIPLE WORD SQUARES
+        buttons[0][0].setBackground(TWRed);
+        buttons[0][0].setForeground(Color.WHITE);
+        buttons[0][0].setText("TW");
+        buttons[0][0].setOpaque(true);
+        buttons[0][0].setBorderPainted(false);
+
+        buttons[0][7].setBackground(TWRed);
+        buttons[0][7].setForeground(Color.WHITE);
+        buttons[0][7].setText("TW");
+        buttons[0][7].setOpaque(true);
+        buttons[0][7].setBorderPainted(false);
+
+        buttons[0][14].setBackground(TWRed);
+        buttons[0][14].setForeground(Color.WHITE);
+        buttons[0][14].setText("TW");
+        buttons[0][14].setOpaque(true);
+        buttons[0][14].setBorderPainted(false);
+
         buttons[7][0].setBackground(TWRed);
         buttons[7][0].setForeground(Color.WHITE);
         buttons[7][0].setText("TW");
-        buttons[7][0].setBorderPainted(false); // Need to add to change entire button color
+        buttons[7][0].setOpaque(true);
+        buttons[7][0].setBorderPainted(false);
+
+        buttons[7][14].setBackground(TWRed);
+        buttons[7][14].setForeground(Color.WHITE);
+        buttons[7][14].setText("TW");
+        buttons[7][14].setOpaque(true);
+        buttons[7][14].setBorderPainted(false);
+
+        buttons[14][0].setBackground(TWRed);
+        buttons[14][0].setForeground(Color.WHITE);
+        buttons[14][0].setText("TW");
+        buttons[14][0].setOpaque(true);
+        buttons[14][0].setBorderPainted(false);
+
+        buttons[14][7].setBackground(TWRed);
+        buttons[14][7].setForeground(Color.WHITE);
+        buttons[14][7].setText("TW");
+        buttons[14][7].setOpaque(true);
+        buttons[14][7].setBorderPainted(false);
+
+        buttons[14][14].setBackground(TWRed);
+        buttons[14][14].setForeground(Color.WHITE);
+        buttons[14][14].setText("TW");
+        buttons[14][14].setOpaque(true);
+        buttons[14][14].setBorderPainted(false);
 
         this.setVisible(true);
 
