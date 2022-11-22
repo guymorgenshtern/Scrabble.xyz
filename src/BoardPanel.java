@@ -100,38 +100,40 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
         // 0 th Row Grouping
 
-        buttons[0][0].setBackground(TWRed);
-        buttons[0][0].setForeground(Color.WHITE);
-        buttons[0][0].setText("TW");
-        buttons[0][0].setOpaque(true);
-        buttons[0][0].setBorderPainted(false);
+        for (int i = 0; i <= 14; i += 7) {
+            buttons[0][i].setBackground(TWRed);
+            buttons[0][i].setForeground(Color.WHITE);
+            buttons[0][i].setText("TW");
+            buttons[0][i].setOpaque(true);
+            buttons[0][i].setBorderPainted(false);
+        }
 
-        buttons[0][7].setBackground(TWRed);
-        buttons[0][7].setForeground(Color.WHITE);
-        buttons[0][7].setText("TW");
-        buttons[0][7].setOpaque(true);
-        buttons[0][7].setBorderPainted(false);
-
-        buttons[0][14].setBackground(TWRed);
-        buttons[0][14].setForeground(Color.WHITE);
-        buttons[0][14].setText("TW");
-        buttons[0][14].setOpaque(true);
-        buttons[0][14].setBorderPainted(false);
-
-        buttons[0][3].setBackground(DLBlue);
-        buttons[0][3].setForeground(Color.WHITE);
-        buttons[0][3].setText("DL");
-        buttons[0][3].setOpaque(true);
-        buttons[0][3].setBorderPainted(false);
-
-        buttons[0][11].setBackground(DLBlue);
-        buttons[0][11].setForeground(Color.WHITE);
-        buttons[0][11].setText("DL");
-        buttons[0][11].setOpaque(true);
-        buttons[0][11].setBorderPainted(false);
+        for (int i : new int[]{3, 11}) {
+            buttons[0][i].setBackground(DLBlue);
+            buttons[0][i].setForeground(Color.WHITE);
+            buttons[0][i].setText("DL");
+            buttons[0][i].setOpaque(true);
+            buttons[0][i].setBorderPainted(false);
+        }
 
 
         // 1 st Row Grouping
+        for (int i : new int[]{1, 13}) {
+            buttons[1][i].setBackground(DWRed);
+            buttons[1][i].setForeground(Color.WHITE);
+            buttons[1][i].setText("DW");
+            buttons[1][i].setOpaque(true);
+            buttons[1][i].setBorderPainted(false);
+        }
+
+        for (int i : new int[]{5, 9}) {
+            buttons[1][i].setBackground(TLBlue);
+            buttons[1][i].setForeground(Color.WHITE);
+            buttons[1][i].setText("TL");
+            buttons[1][i].setOpaque(true);
+            buttons[1][i].setBorderPainted(false);
+        }
+
 
         // 2 nd Row Grouping
 
@@ -218,12 +220,14 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
                 // Fill order. First Quadrant, Second Quadrant, Third Quadrant, Fourth Quadrant
 
-
+        /*
         buttons[1][1].setBackground(DWRed);
         buttons[1][1].setForeground(Color.WHITE);
         buttons[1][1].setText("DW");
         buttons[1][1].setOpaque(true);
         buttons[1][1].setBorderPainted(false);
+        */
+
 
         buttons[2][2].setBackground(DWRed);
         buttons[2][2].setForeground(Color.WHITE);
@@ -244,11 +248,14 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         buttons[4][4].setBorderPainted(false);
 
         // SECOND QUADRANT
+
+        /*
         buttons[1][13].setBackground(DWRed);
         buttons[1][13].setForeground(Color.WHITE);
         buttons[1][13].setText("DW");
         buttons[1][13].setOpaque(true);
         buttons[1][13].setBorderPainted(false);
+         */
 
         buttons[2][12].setBackground(DWRed);
         buttons[2][12].setForeground(Color.WHITE);
@@ -332,6 +339,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
         //  Triple Letter Score Squares
 
+        /*
         buttons[1][5].setBackground(TLBlue);
         buttons[1][5].setForeground(Color.WHITE);
         buttons[1][5].setText("TL");
@@ -343,6 +351,8 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         buttons[1][9].setText("TL");
         buttons[1][9].setOpaque(true);
         buttons[1][9].setBorderPainted(false);
+
+         */
 
         buttons[5][1].setBackground(TLBlue);
         buttons[5][1].setForeground(Color.WHITE);
