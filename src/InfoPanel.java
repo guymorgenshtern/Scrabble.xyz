@@ -14,7 +14,9 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         playerName = new JLabel("", SwingConstants.CENTER);
         playerScore = new JLabel();
         JLabel currentNameLabel = new JLabel("Current Player Name:", SwingConstants.RIGHT);
+        currentNameLabel.setForeground(Color.WHITE);
         JLabel currentScoreLabel = new JLabel("Score: ", SwingConstants.RIGHT);
+        currentScoreLabel.setForeground(Color.WHITE);
         JButton endTurn = new JButton("End Turn");
         endTurn.addActionListener(e -> {
             scrabbleModel.play(scrabbleModel.getCurrentMove());
