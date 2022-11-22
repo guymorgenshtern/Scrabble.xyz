@@ -318,7 +318,8 @@ public class ScrabbleModel {
 
     /**
      * determines if all players have skipped their turn in succession
-     * @return boolean
+     * @return boolean true if players all players skipped/ended turn
+     * @author Alexander Hum 101180821
      */
     private boolean haveAllPlayerSkipped() {
         skipCount++;
@@ -328,6 +329,7 @@ public class ScrabbleModel {
     /**
      * Plays a move constructed by a player
      * @param move
+     * @author Guy Morgenshtern 101151430 Edited by Alexander Hum 101180821
      */
     public void play(ScrabbleMove move) {
         Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
