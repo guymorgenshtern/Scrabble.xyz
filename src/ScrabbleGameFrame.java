@@ -24,7 +24,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         this.setLayout(new BorderLayout(5, 5));
         this.model = model;
         this.infoPanel = new InfoPanel(model);
-        infoPanel.setBackground(new Color(153, 153, 255));
+        // infoPanel.setBackground(new Color(153, 153, 255));
         this.handPanel = new HandPanel(model);
         this.boardPanel = new BoardPanel(model);
         JButton endTurn = new JButton();

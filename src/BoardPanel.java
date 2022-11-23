@@ -7,15 +7,19 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     private Board textBoard;
     private JButton [][] buttons;
 
-    // Set Colors for Multipliers On Board
-    Color TWRed = new Color(179,0, 0);      // Color; Triple Word Squares WebSafe #B30000
-    Color DWRed = new Color(255,128, 128);  // Color; Double Word Squares WebSafe #FF8080
+    /* A Color to represent the double letter multiplier. */
+    private final Color doubleLetterColour;
 
-    Color TLBlue = new Color(77, 77, 255);   // Color; Triple Letter Squares WebSafe #4D4DFF
-    Color DLBlue = new Color(204, 204, 255); // Color; Double Letter Squares WebSafe #CCCCFF
+    /* A Color to represent the triple letter multiplier. */
+    private final Color tripleLetterColour;
 
     Color BorderColour = new Color(211,211,211);
 
+    /* A Color to represent the double word multiplier. */
+    private final Color doubleWordColour;
+
+    /* A Color to represent the triple word multiplier. */
+    private final Color tripleWordColour;
 
     public BoardPanel(ScrabbleModel scrabbleModel) {
         super();
@@ -24,6 +28,11 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         this.setSize(900,900);
         this.buttons = new JButton[15][15];                 // Place board size in place. Call Board Size Directly
         this.textBoard = scrabbleModel.getBoard();
+
+        doubleLetterColour = new Color(186, 238, 254);
+        tripleLetterColour = new Color(117, 213, 253);
+        doubleWordColour = new Color(220, 186, 254);
+        tripleWordColour = new Color(184, 117, 253);
 
         for (int i= 0; i < 15; i++){          // Place board size.
             for (int j = 0; j < 15; j++){      // Place board size.
@@ -73,7 +82,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
             }
         }
 
-        changeButtonColor(TWRed, DWRed, TLBlue, DLBlue);
+        changeButtonColor(tripleWordColour, doubleWordColour, tripleLetterColour, doubleLetterColour);
 
         this.setVisible(true);
 
@@ -131,7 +140,6 @@ public class BoardPanel extends JPanel implements ScrabbleView {
             buttons[x][y].setEnabled(false);
         }
         this.buttons[x][y].setText(letter);
-
     }
 
     @Override
