@@ -2,24 +2,23 @@
 
 ## How to run:
 - Java version 15 or greater is needed to run Scrabble.xyz
-- To play the scrabbleModel, execute the .jar file provided and follow the instructions in the terminal
+- To play the scrabbleModel, execute the .jar file provided and follow the initialization instructions when prompted
 
 ## How to play:
-1. 2-4 are needed to play Scrabble.xyz
-2. After launching, follow along with the prompts outputted in the terminal
-3. First, you will be asked to input how many players will be playing
-4. Next, each player will be prompted to input a display name for themselves
-5. Once that is done, the board is initialized, the players recieve their letters, and the scrabbleModel begins
+1. BotPlayers are available to play with. At least one human player must play with the bot. In total, one to four players are needed to play Scrabble.xyz.
+2. First, you will be asked to input how many players will be playing in total.
+3. Second, you will be asked to input how many BotPlayers you would like to play with.
+4. Next, each human player will be prompted to input a name for themselves.
+5. Once that is done, the board is initialized, the players receive their letters, and the game of Scrabble begins.
 
-### The scrabbleModel:
-- The player whose turn it currently is will have their name, score, and rack displayed on screen
-- The player is prompted to input a word they would like to play, if it will be played horizontally or vertically, and the starting coordinates of the word
-- The coordinates can be found along the left and top side of the board
+### The ScrabbleModel:
+- The current player will have their name, score, and hand displayed at the top of the window.
+- If a player would like to construct a word, first click the letter from the hand that you would like to place, then select where you would like to place the letter. Once you have constructed your word, click end turn.
+    - If you accidentally misplaced a letter, you can click the end turn button to try again.
+    - If there are no new letters placed on the board when you click end turn, you will skip your turn.
 - Currently, the criteria for a valid word are:
-    - Player has all necessary letters for word they want to play
-    - None of the spots to be occupied by the word inputted are already occupied 
-    - The word inputted is a valid word according to the word list 
-- Upon a successful move, the board is updated and the player is dealt a few new letters to keep their rack at 7 letters 
-- The board will be reprinted with the updated words
-- The next player will be prompted to input a word and the scrabbleModel repeats
-- The scrabbleModel currently continues with both players accumilating score until the bank of letters runs out
+    - Player has all necessary letters for word they want to play.
+    - None of the spots to be occupied by the word inputted are preoccupied. 
+    - The word inputted is a valid word according to the word list.
+- Upon a successful move, the board is updated and the player is dealt new letters to maintain a hand of 7 letters.
+- The scrabbleModel currently continues with all players accumulating score until the letter bag runs out tiles.
