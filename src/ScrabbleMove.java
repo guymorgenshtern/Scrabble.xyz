@@ -127,4 +127,5 @@ public class ScrabbleMove {
     public ScrabbleModel.Direction getDirection() {
         return direction;
     }
+
 }

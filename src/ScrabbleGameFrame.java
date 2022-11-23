@@ -72,11 +72,8 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
             for (int i = listPlayers.size() - 1; i >= 0; i--) {
                 message += "\n" + listPlayers.get(i).getName() + " " + listPlayers.get(i).getScore();
             }
-            JOptionPane optionPane= new JOptionPane(message);
-
-            final JDialog dialog = optionPane.createDialog(null, "Game Over!");
-            dialog.setDefaultCloseOperation(HIDE_ON_CLOSE);
-            dialog.setVisible(true);
+            JOptionPane.showMessageDialog(this, message);
+            System.exit(0);
         }
     }
 }
