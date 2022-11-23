@@ -31,6 +31,7 @@ public class Board {
      * Creates a Board using the specified file.
      * @param fileName A String representing the name of the file that contains the layout of a 15x15 Scrabble board.
      * @throws IOException If an I/O error occurs.
+     * @author Guy Morgenshtern - 101151430
      */
     public Board(String fileName) throws IOException {
         scrabbleBoard = new Square[SIZE][SIZE];
@@ -88,6 +89,7 @@ public class Board {
 
     /**
      * @return A 2D array of squares representing the Board.
+     * @author Guy Morgenshtern - 101151430
      */
     public Square[][] getScrabbleBoard() {
         return scrabbleBoard;
@@ -97,6 +99,7 @@ public class Board {
      * @param row An integer representing a row on the Board.
      * @param column An integer representing a column on the Board.
      * @return The Square at the specified row and column.
+     * @author Guy Morgenshtern - 101151430
      */
     public Square getTileOnBoard(int row, int column){
         return this.scrabbleBoard[row][column];
@@ -106,13 +109,15 @@ public class Board {
      * @param letter A Letter to place on the Square.
      * @param row An integer representing a row on the Board.
      * @param column An integer representing a column on the Board.
+     * @author Guy Morgenshtern - 101151430
      */
     public void setSquare(char letter, int row, int column) {
         this.scrabbleBoard[row][column].setLetter(letter);
     }
 
     /**
-     * Prints a text-based representation of the Board.
+     * Prints a text-based representation of the Board. For debug purposes
+     * @author Guy Morgenshtern - 101151430
      */
     public void printBoard() {
         System.out.printf("%7d", 0);

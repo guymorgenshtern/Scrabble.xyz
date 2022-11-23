@@ -21,6 +21,11 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     /* A Color to represent the triple word multiplier. */
     private final Color tripleWordColour;
 
+    /**
+     * Constructor
+     * @param scrabbleModel
+     * @author Guy Morgenshtern - 101151430
+     */
     public BoardPanel(ScrabbleModel scrabbleModel) {
         super();
 
@@ -90,7 +95,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     }
 
     /**
-     * Method Extract, changes color of buttons on board to coordinate with designated multiplier.
+     * changes color of buttons on board to coordinate with designated multiplier.
      * @author Created + Refactored By: Francisco De Grano, 101147447
      */
     private void initializeButtonColor() {
@@ -126,6 +131,13 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         }
     }
 
+    /**
+     * Update button that was clicked
+     * @param x
+     * @param y
+     * @param letter
+     * @author Guy Morgenshtern - 101151430
+     */
     private void updateButton(int x, int y, String letter) {
         if (!letter.equals("")) {
             buttons[x][y].setBorderPainted(false);
@@ -134,6 +146,11 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         this.buttons[x][y].setText(letter);
     }
 
+    /**
+     * update board
+     * @param event
+     * @author Guy Morgenshtern - 101151430
+     */
     @Override
     public void update(ScrabbleEvent event) { // Update Game Model
         if (event.getMove().isValid()) {

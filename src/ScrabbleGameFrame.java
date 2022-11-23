@@ -14,6 +14,12 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
 
     private Board textBoard;
 
+    /**
+     * Constructor
+     * @param model
+     * @throws IOException
+     * @author Guy Morgenshtern - 101151430
+     */
     public ScrabbleGameFrame(ScrabbleModel model) throws IOException {
         super("Scrabble.xyz");
 
@@ -24,7 +30,6 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         this.setLayout(new BorderLayout(5, 5));
         this.model = model;
         this.infoPanel = new InfoPanel(model);
-        // infoPanel.setBackground(new Color(153, 153, 255));
         this.handPanel = new HandPanel(model);
         this.boardPanel = new BoardPanel(model);
         JButton endTurn = new JButton();
@@ -49,6 +54,11 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         new InitController(model);
     }
 
+    /**
+     * update scrabble game frame and all its panels
+     * @param event
+     * @author Guy Morgenshtern - 101151430
+     */
     @Override
     public void update(ScrabbleEvent event) {
         boardPanel.update(event);
