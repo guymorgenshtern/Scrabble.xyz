@@ -50,4 +50,11 @@ public class Multiplier {
         return score; // multiplier has been used already, do not multiply the score
     }
 
+    /**
+     *
+     * @return multiplier value
+     */
+    public int getMultiplier() {
+        return multiplier;
+    }
 }

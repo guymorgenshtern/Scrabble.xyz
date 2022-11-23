@@ -70,6 +70,10 @@ public class ScrabbleModel {
         initializeLetterBag("res/letters_by_quantity");
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     public ArrayList<Integer> getUsedLetters() {
         return usedLetters;
     }
@@ -454,7 +458,5 @@ public class ScrabbleModel {
     public static void main (String[] args) throws IOException {
         ScrabbleModel scrabble = new ScrabbleModel();
         ScrabbleGameFrame gameFrame = new ScrabbleGameFrame(scrabble);
-        gameFrame.attachTextBoard(scrabble.board);
-        scrabble.getViews().add(gameFrame);
     }
 }
