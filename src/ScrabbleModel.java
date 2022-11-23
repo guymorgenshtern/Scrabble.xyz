@@ -70,6 +70,10 @@ public class ScrabbleModel {
         initializeLetterBag("res/letters_by_quantity");
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     public ArrayList<Integer> getUsedLetters() {
         return usedLetters;
     }
@@ -138,12 +142,19 @@ public class ScrabbleModel {
         return playerList;
     }
 
+    /**
+     *
+     * @param l
+     * @return score of letter
+     * @author Guy Morgenshtern - 101151430
+     */
     private int getLetterScore(String l) {
         return this.scorePerLetter.get(l);
     }
 
     /**
      * Deals seven letters to each player.
+     * @author Guy Morgenshtern - 101151430
      */
     public void dealLetters() {
         for (Player p : playerList) {
@@ -153,6 +164,10 @@ public class ScrabbleModel {
         }
     }
 
+    /**
+     * initialize the board
+     * @author Guy Morgenshtern - 101151430
+     */
     public void initializeBoard() {
         String firstLetter = letterBag.getRandomLetter();
         int centerSquare = (Board.SIZE - 1) / 2;
@@ -180,6 +195,7 @@ public class ScrabbleModel {
      * given a scrabble move, finds the full word on the baord, including all existing adjacent letter
      * @param scrabbleMove
      * @return String: final word
+     * @author Guy Morgenshtern - 101151430
      */
     private String findFullWord(ScrabbleMove scrabbleMove) {
 
@@ -224,6 +240,7 @@ public class ScrabbleModel {
      * Finds any additional words that were created by the move provided
      * @param move
      * @return ArrayList of surrounding words
+     * @author Guy Morgenshtern - 101151430
      */
     private ArrayList<String> findSurroundingWords(ScrabbleMove move) {
         Direction newDirection = move.getDirection() == Direction.HORIZONTAL ? Direction.VERTICAL : Direction.HORIZONTAL;
@@ -245,6 +262,7 @@ public class ScrabbleModel {
      * Given a scrabble move, determines its validity according to scrabble rules
      * @param move
      * @return boolean of the validity
+     * @author Guy Morgenshtern - 101151430
      */
     private boolean checkMoveValidity(ScrabbleMove move) {
         boolean adjacentToSquare = false;
@@ -261,13 +279,22 @@ public class ScrabbleModel {
         return adjacentToSquare && isWord && surroundingWordsAreWords;
     }
 
+    /**
+     * Removes word from the board when determined it is invalid
+     * @param move
+     */
     private void deleteInvalidWordFromBoard(ScrabbleMove move){
         for (int i = 0; i < move.getCoords().size(); i++) {
             this.board.getTileOnBoard(move.getCoords().get(i).coords()[0], move.getCoords().get(i).coords()[1]).setLetter(' ');
-            this.board.printBoard();
         }
     }
 
+    /**
+     * Calculates the total score for a move including any secondary surrounding words
+     * @param move
+     * @return total score for the move
+     * @author Guy Morgenshtern - 101151430
+     */
     private int calculateMoveScore(ScrabbleMove move) {
         int total = 0;
         ArrayList<String> lettersToScore = new ArrayList<>();
@@ -445,6 +472,7 @@ public class ScrabbleModel {
                 }
             }
 
+            //bot play
             if (playerList.get(playerTurnCounter % playerList.size()) instanceof BotPlayer) {
                 this.play(((BotPlayer) playerList.get(playerTurnCounter % playerList.size())).play(board));
             }
@@ -454,7 +482,5 @@ public class ScrabbleModel {
     public static void main (String[] args) throws IOException {
         ScrabbleModel scrabble = new ScrabbleModel();
         ScrabbleGameFrame gameFrame = new ScrabbleGameFrame(scrabble);
-        gameFrame.attachTextBoard(scrabble.board);
-        scrabble.getViews().add(gameFrame);
     }
 }

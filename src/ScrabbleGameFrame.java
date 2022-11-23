@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
-    private ArrayList<ScrabbleView> panels;
-    private ArrayList<Integer> onBoard;
     private BoardPanel boardPanel;
     private HandPanel handPanel;
     private PlayerComparator playerComparator;
@@ -16,20 +14,26 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
 
     private Board textBoard;
 
+    /**
+     * Constructor
+     * @param model
+     * @throws IOException
+     * @author Guy Morgenshtern - 101151430
+     */
     public ScrabbleGameFrame(ScrabbleModel model) throws IOException {
         super("Scrabble.xyz");
 
-        this.onBoard = new ArrayList<>();
+        model.getViews().add(this);
+
         this.playerComparator = new PlayerComparator();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout(5, 5));
-        this.panels = new ArrayList<>();
         this.model = model;
         this.infoPanel = new InfoPanel(model);
-        // infoPanel.setBackground(new Color(153, 153, 255));
         this.handPanel = new HandPanel(model);
         this.boardPanel = new BoardPanel(model);
         JButton endTurn = new JButton();
+        this.textBoard = model.getBoard();
         endTurn.setText("End Turn");
         endTurn.addActionListener(e -> {
             model.play(model.getCurrentMove());
@@ -50,15 +54,11 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         new InitController(model);
     }
 
-    public void attachTextBoard(Board b) {
-        this.textBoard = b;
-        boardPanel.attachTextBoard(b);
-    }
-
-    public Board getTextBoard() {
-        return textBoard;
-    }
-
+    /**
+     * update scrabble game frame and all its panels
+     * @param event
+     * @author Guy Morgenshtern - 101151430
+     */
     @Override
     public void update(ScrabbleEvent event) {
         boardPanel.update(event);
