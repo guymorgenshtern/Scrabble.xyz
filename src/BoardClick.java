@@ -3,7 +3,12 @@
  */
 public class BoardClick {
 
+    /** An array of integers representing the coordinates to place a letter at. The integer at index 0 represents the
+     * x-coordinate. The integer at index 1 represents the y-coordinate.
+     */
     private final int[] coords;
+
+    /** A String representing the letter to place on the board. */
     private final String letter;
 
     /**

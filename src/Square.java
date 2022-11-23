@@ -58,4 +58,5 @@ public class Square {
     public Multiplier getMultiplier() {
         return multiplier;
     }
+
 }

@@ -7,5 +7,11 @@ Francisco De Grano
     "View" updating only.
  */
 public interface ScrabbleView {
-    void update(ScrabbleEvent event); // Need to check if this is being updated properly
+
+    /**
+     * Updates the "look" of the GUI.
+     * @param event A ScrabbleEvent that occurs.
+     * @author Francisco DeGrano 101147447
+     */
+    void update(ScrabbleEvent event);
 }

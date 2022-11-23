@@ -13,9 +13,6 @@ import java.util.HashMap;
  */
 public class ScrabbleModel {
 
-    //boardSize squared
-    private final int MAX_ATTEMPTS = 100;
-
     /** A Scrabble board. */
     private final Board board;
 
@@ -28,10 +25,13 @@ public class ScrabbleModel {
     /** A Library for word validation checking. */
     private final Library lib;
 
+    /** A HashMap to store the score of each letter. */
     private final HashMap<String, Integer> scorePerLetter;
 
+    /** An ArrayList of ScrabbleViews that subscribes to the model. */
     private final ArrayList<ScrabbleView> views;
 
+    /** An integer representing the number of tries the current player has made to add a word to the board. */
     private int numberOfTries;
 
     private PlayerComparator playerComparator;
@@ -40,32 +40,46 @@ public class ScrabbleModel {
      * A word can either be horizontally, or vertically placed onto the board.
      */
     public enum Direction { HORIZONTAL, VERTICAL }
-    public enum Status { DONE, NOT_DONE }
+
+    /**
+     * The game can either be finished or not finished.
+     */
     public enum GameStatus { FINISHED, NOT_FINISHED, TIE }
+
+    /** A String representing the selected letter. */
     private String selectedLetter;
+
+    /** A ScrabbleMove to represent the current move. */
     private ScrabbleMove currentMove;
+
+    /** An integer representing the amount of consecutive skips. */
     private int skipCount;
+
+    /** A GameStatus representing the current status of the game. */
     private GameStatus status;
 
+    /** An ArrayList of Integers to delete letters from the hand properly. */
     private final ArrayList<Integer> usedLetters;
 
+    /** An integer representing the player counter. */
     private int playerTurnCounter;
 
     /**
      * Runs a text-based playable version of Scrabble.
      * @throws IOException If an I/O error occurs.
+     * @author Guy Morgenshtern 101151430
      */
     public ScrabbleModel() throws IOException {
-        this.board = new Board("res/default_board.txt");
-        this.lib = new Library();
-        this.scorePerLetter = new HashMap<>();
-        this.views = new ArrayList<>();
-        this.selectedLetter = "";
+        board = new Board("res/default_board.txt");
+        lib = new Library();
+        scorePerLetter = new HashMap<>();
+        views = new ArrayList<>();
+        selectedLetter = "";
         playerList = new ArrayList<>();
-        this.playerTurnCounter = 0;
-        this.currentMove = new ScrabbleMove();
-        this.letterBag = new LetterBag();
-        this.usedLetters = new ArrayList<>();
+        playerTurnCounter = 0;
+        currentMove = new ScrabbleMove();
+        letterBag = new LetterBag();
+        usedLetters = new ArrayList<>();
         status = GameStatus.NOT_FINISHED;
         this.numberOfTries = 0;
         this.playerComparator = new PlayerComparator();
@@ -73,26 +87,51 @@ public class ScrabbleModel {
         initializeLetterBag("res/letters_by_quantity");
     }
 
+    /**
+     * @return A Board representing the current board.
+     * @author Guy Morgenshtern 101151430
+     */
     public Board getBoard() {
         return board;
     }
 
+    /**
+     * @return An ArrayList of Integers to delete letters from the hand properly.
+     * @author Guy Morgenshtern 101151430
+     */
     public ArrayList<Integer> getUsedLetters() {
         return usedLetters;
     }
 
+    /**
+     * @return A ScrabbleMove to represent the current move.
+     * @author Guy Morgenshtern 101151430
+     */
     public ScrabbleMove getCurrentMove() {
         return currentMove;
     }
 
+    /**
+     * @return A String representing the selected letter.
+     * @author Guy Morgenshtern 101151430
+     */
     public String getSelectedLetter() {
         return selectedLetter;
     }
 
+    /**
+     * Sets the selected letter to be the specified string.
+     * @param selectedLetter A String representing the selected letter.
+     * @author Guy Morgenshtern 101151430
+     */
     public void setSelectedLetter(String selectedLetter) {
         this.selectedLetter = selectedLetter;
     }
 
+    /**
+     * @return An ArrayList of ScrabbleViews.
+     * @author Guy Morgenshtern 101151430
+     */
     public ArrayList<ScrabbleView> getViews() {
         return this.views;
     }
@@ -146,18 +185,17 @@ public class ScrabbleModel {
     }
 
     /**
-     *
-     * @param l
-     * @return score of letter
-     * @author Guy Morgenshtern - 101151430
+     * @param l A String representing a letter to check the score of.
+     * @return An integer representing the score of letter.
+     * @author Guy Morgenshtern 101151430
      */
     private int getLetterScore(String l) {
-        return this.scorePerLetter.get(l);
+        return scorePerLetter.get(l);
     }
 
     /**
      * Deals seven letters to each player.
-     * @author Guy Morgenshtern - 101151430
+     * @author Guy Morgenshtern 101151430
      */
     public void dealLetters() {
         for (Player p : playerList) {
@@ -169,7 +207,7 @@ public class ScrabbleModel {
 
     /**
      * initialize the board
-     * @author Guy Morgenshtern - 101151430
+     * @author Guy Morgenshtern 101151430
      */
     public void initializeBoard() {
         String firstLetter = letterBag.getRandomLetter();
@@ -192,7 +230,7 @@ public class ScrabbleModel {
 
         //update the views for the first time
         for (ScrabbleView v : this.getViews()) {
-            v.update(new ScrabbleEvent(this, m, playerList.get(0), board, Status.NOT_DONE, GameStatus.NOT_FINISHED));
+            v.update(new ScrabbleEvent(this, m, playerList.get(0), board, GameStatus.NOT_FINISHED));
         }
 
     }
@@ -201,10 +239,9 @@ public class ScrabbleModel {
      * given a scrabble move, finds the full word on the baord, including all existing adjacent letter
      * @param scrabbleMove
      * @return String: final word
-     * @author Guy Morgenshtern - 101151430
+     * @author Guy Morgenshtern 101151430
      */
     private String findFullWord(ScrabbleMove scrabbleMove) {
-
         //getting the coords of first letter of move
         int x = scrabbleMove.getCoords().get(0).coords()[0];
         int y = scrabbleMove.getCoords().get(0).coords()[1];
@@ -246,7 +283,7 @@ public class ScrabbleModel {
      * Finds any additional words that were created by the move provided
      * @param move
      * @return ArrayList of surrounding words
-     * @author Guy Morgenshtern - 101151430
+     * @author Guy Morgenshtern 101151430
      */
     private ArrayList<String> findSurroundingWords(ScrabbleMove move) {
         Direction newDirection = move.getDirection() == Direction.HORIZONTAL ? Direction.VERTICAL : Direction.HORIZONTAL;
@@ -260,7 +297,6 @@ public class ScrabbleModel {
                 surroundingWordList.add(found);
             }
         }
-
         return surroundingWordList;
     }
 
@@ -268,7 +304,7 @@ public class ScrabbleModel {
      * Given a scrabble move, determines its validity according to scrabble rules
      * @param move
      * @return boolean of the validity
-     * @author Guy Morgenshtern - 101151430
+     * @author Guy Morgenshtern 101151430
      */
     private boolean checkMoveValidity(ScrabbleMove move) {
         boolean surroundingWordsAreWords = true;
@@ -394,7 +430,7 @@ public class ScrabbleModel {
                     currentPlayer.removeLetter(rand);
                     currentPlayer.addLetter(letterBag.getRandomLetter());
                     playerTurnCounter++;
-                    ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.DONE, GameStatus.NOT_FINISHED);
+                    ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, GameStatus.NOT_FINISHED);
                     for (ScrabbleView v : this.getViews()) {
                         v.update(event);
                     }
@@ -459,6 +495,8 @@ public class ScrabbleModel {
 
                     deleteInvalidWordFromBoard(move);
                     move.setValid(false);
+                    // boardSize squared
+                    int MAX_ATTEMPTS = 100;
                     if (this.numberOfTries == MAX_ATTEMPTS) {
                         playerTurnCounter++;
                         haveAllPlayerSkipped();
@@ -470,7 +508,7 @@ public class ScrabbleModel {
 
 
                 //update views
-                ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, Status.NOT_DONE, GameStatus.NOT_FINISHED);
+                ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, GameStatus.NOT_FINISHED);
                 currentMove = new ScrabbleMove();
                 for (ScrabbleView v : this.getViews()) {
                     v.update(event);

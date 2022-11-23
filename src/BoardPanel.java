@@ -3,6 +3,7 @@ import java.awt.*;
 
 public class BoardPanel extends JPanel implements ScrabbleView {
 
+    // FIXME: don't need two Boards
     private Board textBoard;
     private JButton [][] buttons;
 
@@ -22,8 +23,8 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     private final Color tripleWordColour;
 
     /**
-     * Constructor
-     * @param scrabbleModel
+     * Initializes a JPanel to hold the Scrabble board.
+     * @param scrabbleModel A ScrabbleModel to model the board of.
      * @author Guy Morgenshtern - 101151430
      */
     public BoardPanel(ScrabbleModel scrabbleModel) {
@@ -80,7 +81,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
                     Gets the state of Scrabble board and sets letter at
                      */
                     this.textBoard.getScrabbleBoard()[x][y].setLetter(selectedLetter.charAt(0));
-                    scrabbleModel.setSelectedLetter("");
+                    scrabbleModel.setSelectedLetter(""); //
                 });
                 this.add(buttons[i][j]);
 

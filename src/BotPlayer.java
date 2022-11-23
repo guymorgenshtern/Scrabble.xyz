@@ -115,6 +115,7 @@ public class BotPlayer extends Player {
         // create an ArrayList of BoardClicks to add to a new ScrabbleMove
         ArrayList<BoardClick> boardClicks = new ArrayList<>();
         boardClicks.add(new BoardClick(new int[] { row, col }, letter + ""));
+        // sets tile on board to be the given letter
         board.getTileOnBoard(row, col).setLetter(letter);
         return new ScrabbleMove(boardClicks, direction, this);
     }

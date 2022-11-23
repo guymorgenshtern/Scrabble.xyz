@@ -1,46 +1,59 @@
 import java.util.ArrayList;
 
 /**
- * Class ScrableMove allows the user
+ * ScrabbleMove represents a move a player made in Scrabble.
  * @author Guy Morgenshtern 101151430
  */
 public class ScrabbleMove {
-    // initializes the word, row, column and direction
+
+    /** A String representing a word. */
     private String word;
+
+    /** An ArrayList of BoardClicks representing the coordinates of the word. */
     private ArrayList<BoardClick> coords;
+
+    /** A Direction representing the orientation of the word the player placed on the board. */
     private ScrabbleModel.Direction direction;
+
+    /** A boolean representing if the word is valid or not. */
     private boolean isValid;
+
+    /** A Player representing the player that placed the word. */
     private Player p;
 
+    /**
+     * Initializes a ScrabbleMove with no coordinates.
+     * @author Guy Morgenshtern 101151430
+     */
     public ScrabbleMove() {
-        this.coords = new ArrayList<>();
+        coords = new ArrayList<>();
     }
 
     /**
-     * Constructor
-     * @param coords
-     * @param direction
-     * @param player
+     * Initializes a ScrabbleMove with the specified coordinates, direction, and player.
+     * @param coords An ArrayList of BoardClicks representing the coordinates of the word.
+     * @param direction A Direction representing the orientation of the word the player placed on the board.
+     * @param player A Player representing the player that placed the word.
      * @author Guy Morgenshtern 101151430
      */
     public ScrabbleMove(ArrayList<BoardClick> coords, ScrabbleModel.Direction direction, Player player) {
         this.coords = coords;
         this.direction = direction;
-        this.isValid = false;
+        isValid = false;
         this.p = player;
     }
 
     /**
-     * @return player of move
-     *  @author Guy Morgenshtern 101151430
+     * @return A Player representing the player that placed the word.
+     * @author Guy Morgenshtern 101151430
      */
     public Player getPlayer() {
         return p;
     }
 
     /**
-     * sets player
-     * @param p
+     * Sets the player to the specified player.
+     * @param p A Player representing the player that placed the word.
      * @author Guy Morgenshtern 101151430
      */
     public void setPlayer(Player p) {
@@ -48,8 +61,7 @@ public class ScrabbleMove {
     }
 
     /**
-     *
-     * @return move validity
+     * @return A boolean representing if the word is valid or not.
      * @author Guy Morgenshtern 101151430
      */
     public boolean isValid() {
@@ -57,8 +69,8 @@ public class ScrabbleMove {
     }
 
     /**
-     * set validity of move
-     * @param valid
+     * Sets the word validity to the specified boolean.
+     * @param valid A boolean representing the validity of the word.
      * @author Guy Morgenshtern 101151430
      */
     public void setValid(boolean valid) {
@@ -66,8 +78,8 @@ public class ScrabbleMove {
     }
 
     /**
-     * set word
-     * @param word
+     * Sets the word to the specified string.
+     * @param word A String representing the word to set.
      * @author Guy Morgenshtern 101151430
      */
     public void setWord(String word) {
@@ -75,8 +87,8 @@ public class ScrabbleMove {
     }
 
     /**
-     * set coordinates of move
-     * @param coords of move
+     * Sets the coordinates to be the specified coordinates in the ArrayList of BoardClicks.
+     * @param coords An ArrayList of BoardClicks representing the coordinates of the ScrabbleMove.
      * @author Guy Morgenshtern 101151430
      */
     public void setCoords(ArrayList<BoardClick> coords) {
@@ -84,8 +96,8 @@ public class ScrabbleMove {
     }
 
     /**
-     * set direction of move
-     * @param direction
+     * Sets the direction of the ScrabbleMove to the specified direction.
+     * @param direction A Direction to set orientation in the ScrabbleMove.
      * @author Guy Morgenshtern 101151430
      */
     public void setDirection(ScrabbleModel.Direction direction) {
@@ -93,8 +105,7 @@ public class ScrabbleMove {
     }
 
     /**
-     * gets the word
-     * @return word as a string
+     * @return A String representing the word.
      * @author Guy Morgenshtern 101151430
      */
     public String getWord() {
@@ -102,8 +113,7 @@ public class ScrabbleMove {
     }
 
     /**
-     * return move coordinates
-     * @return arraylist of move coordinates
+     * @return An ArrayList of BoardClicks representing the coordinates of the ScrabbleMove.
      * @author Guy Morgenshtern 101151430
      */
     public ArrayList<BoardClick> getCoords() {
@@ -111,8 +121,7 @@ public class ScrabbleMove {
     }
 
     /**
-     * gets the direction
-     * @return direction as a direction in the game
+     * @return A Direction representing the direction of the orientation of the word in ScrabbleMove.
      * @author Guy Morgenshtern 101151430
      */
     public ScrabbleModel.Direction getDirection() {
