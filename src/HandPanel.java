@@ -1,13 +1,21 @@
 import javax.swing.*;
 import java.awt.*;
 
-/*
-    Following Class will represent the users Hand/Rack
+/**
+ * HandPanel will display the current player's hand.
  */
 public class HandPanel extends JPanel implements ScrabbleView {
+
+    /** An array of JButtons to display the current player's hand. */
     private final JButton [] buttons;
+
+    /** A ScrabbleModel to update the "look" of. */
     private final ScrabbleModel scrabbleModel;
 
+    /**
+     * Initializes the HandPanel.
+     * @param scrabbleModel A ScrabbleModel to update the "look" of.
+     */
     public HandPanel(ScrabbleModel scrabbleModel){
         super();
         this.setLayout(new GridLayout(1, 7)); // Place handsize
@@ -28,16 +36,22 @@ public class HandPanel extends JPanel implements ScrabbleView {
             }); // insert controller
             this.add(buttons[i]);
         }
-
         this.setVisible(true);
     }
 
+    /**
+     * Sets the JButtons to display the specified player's hand.
+     * @param p A Player to display the hand of.
+     */
     private void setHandForTurn(Player p) {
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setText(p.getAvailableLetters().get(i));
         }
     }
 
+    /**
+     * Updates the visibility of the JButton.
+     */
     private void updateVisibility() {
         for (JButton b : buttons) {
             b.setEnabled(true);
@@ -47,14 +61,10 @@ public class HandPanel extends JPanel implements ScrabbleView {
         }
     }
 
-    public JButton[] getButtons() {
-        return buttons;
-    }
-
-    /*
-        Use following update section to update the Scrabble Game Model
-            -   missing players rack size is 0
-         */
+    /**
+     * Updates the "look" of the HandPanel.
+     * @param event A ScrabbleEvent to update.
+     */
     @Override
     public void update(ScrabbleEvent event){ // Use this section to update the Scrabble game model
         setHandForTurn(event.getCurrentPlayer());

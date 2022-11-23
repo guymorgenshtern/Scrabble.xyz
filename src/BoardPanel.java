@@ -19,6 +19,10 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     /* A Color to represent the triple word multiplier. */
     private final Color tripleWordColour;
 
+    /**
+     * Initializes a JPanel to hold the Scrabble board.
+     * @param scrabbleModel A ScrabbleModel to model the board of.
+     */
     public BoardPanel(ScrabbleModel scrabbleModel) {
         super();
 
@@ -74,15 +78,10 @@ public class BoardPanel extends JPanel implements ScrabbleView {
                     scrabbleModel.setSelectedLetter(""); //
                 });
                 this.add(buttons[i][j]);
-
-
             }
         }
-
         changeButtonColor(tripleWordColour, doubleWordColour, tripleLetterColour, doubleLetterColour);
-
         this.setVisible(true);
-
     }
 
     /**
@@ -295,19 +294,25 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         }
     }
 
+    /**
+     * Sets the square on the board to be disabled once a letter is placed on it.
+     * @param x An integer representing the row on the board.
+     * @param y An integer representing the column on the board.
+     * @param letter A String representing the letter to be placed on the board.
+     */
     private void updateButton(int x, int y, String letter) {
         if (!letter.equals("")) {
             buttons[x][y].setBackground(Color.BLUE);
             buttons[x][y].setBorderPainted(false);
             buttons[x][y].setEnabled(false);
         }
-        this.buttons[x][y].setText(letter);
+        buttons[x][y].setText(letter);
     }
 
-    public void attachTextBoard(Board board) {
-        this.textBoard = board;
-    }
-
+    /**
+     * Update the BoardPanel.
+     * @param event A ScrabbleEvent to update.
+     */
     @Override
     public void update(ScrabbleEvent event) { // Update Game Model
         if (event.getMove().isValid()) {

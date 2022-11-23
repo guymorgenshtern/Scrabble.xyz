@@ -70,13 +70,4 @@ public class LetterBag  {
          return null;
     }
 
-    /**
-     * return bag size
-     * @return int for the size of the bag
-     * @author Alexander Hum 101180821
-     */
-    public int bagSize() {
-        return size;
-    }
-
 }
