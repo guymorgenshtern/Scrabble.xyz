@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * A Board in the game of Scrabble.
@@ -46,7 +44,8 @@ public class Board {
      */
     private void initBoard(String fileName) throws IOException {
         // read in the board layout
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+        try (InputStream inputStream = getClass().getResourceAsStream(fileName);
+             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             String line = br.readLine(); // get the first row of the board layout
             int row = -1;
             int column;

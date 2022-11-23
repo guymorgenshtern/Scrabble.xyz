@@ -1,8 +1,6 @@
 import com.zetcode.Library;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -70,7 +68,7 @@ public class ScrabbleModel {
      * @author Guy Morgenshtern 101151430
      */
     public ScrabbleModel() throws IOException {
-        board = new Board("res/default_board.txt");
+        board = new Board("/default_board.txt");
         lib = new Library();
         scorePerLetter = new HashMap<>();
         views = new ArrayList<>();
@@ -84,7 +82,7 @@ public class ScrabbleModel {
         this.numberOfTries = 0;
         this.playerComparator = new PlayerComparator();
 
-        initializeLetterBag("res/letters_by_quantity");
+        initializeLetterBag("/letters_by_quantity");
     }
 
     /**
@@ -163,7 +161,8 @@ public class ScrabbleModel {
      * @throws IOException If an I/O error occurs.
      */
     public void initializeLetterBag(String fileName) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        InputStream inputStream = getClass().getResourceAsStream(fileName);
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
         String line = br.readLine();
         while (line != null) {
@@ -420,7 +419,7 @@ public class ScrabbleModel {
                     status = (playerList.get(0).getScore() == playerList.get(1).getScore())? GameStatus.TIE: GameStatus.FINISHED;
                     //create the end game event
                     playerList.sort(playerComparator);
-                    ScrabbleEvent event = new ScrabbleEvent(this, move, currentPlayer, this.board, Status.DONE, status);
+                    ScrabbleEvent event = new ScrabbleEvent(this, move, currentPlayer, this.board, status);
                     for (ScrabbleView v : this.getViews()) {
                         v.update(event);
                     }
