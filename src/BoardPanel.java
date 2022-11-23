@@ -3,7 +3,6 @@ import java.awt.*;
 
 public class BoardPanel extends JPanel implements ScrabbleView {
 
-    // FIXME: don't need two Boards
     private Board textBoard;
     private JButton [][] buttons;
 
@@ -13,7 +12,8 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     /* A Color to represent the triple letter multiplier. */
     private final Color tripleLetterColour;
 
-    Color BorderColour = new Color(211,211,211);
+    /* Border colour of tiles */
+    private final Color borderColour;
 
     /* A Color to represent the double word multiplier. */
     private final Color doubleWordColour;
@@ -33,6 +33,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         tripleLetterColour = new Color(117, 213, 253);
         doubleWordColour = new Color(220, 186, 254);
         tripleWordColour = new Color(184, 117, 253);
+        borderColour = new Color(211,211,211);
 
         for (int i= 0; i < 15; i++){          // Place board size.
             for (int j = 0; j < 15; j++){      // Place board size.
@@ -82,7 +83,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
             }
         }
 
-        changeButtonColor(tripleWordColour, doubleWordColour, tripleLetterColour, doubleLetterColour);
+        initializeButtonColor();
 
         this.setVisible(true);
 
@@ -90,41 +91,33 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
     /**
      * Method Extract, changes color of buttons on board to coordinate with designated multiplier.
-     *
-     * @param TWRed     rgb value for Triple Word Score Squares on board
-     * @param DWRed     rgb value for Double Word Score Squares on Board
-     * @param TLBlue    rgb value for Triple Letter Score Squares on Board
-     * @param DLBlue    rgb value for Double Letter Score Squares on Board
-     *
      * @author Created + Refactored By: Francisco De Grano, 101147447
      */
-    private void changeButtonColor(Color TWRed, Color DWRed, Color TLBlue, Color DLBlue) {
+    private void initializeButtonColor() {
         //  Triple Word Red Extract Method
         for (int i = 0; i < buttons.length; i++) {
             for (int j = 0; j < buttons.length; j++) {
                 Square tile = textBoard.getTileOnBoard(i,j);
-                buttons[i][j].setBorder(BorderFactory.createLineBorder(BorderColour, 1, true));
+                buttons[i][j].setBorder(BorderFactory.createLineBorder(borderColour, 1, true));
                 buttons[i][j].setBorderPainted(true);
 
                 if (tile.isPremiumSquare()) {
-//                    buttons[i][j].setContentAreaFilled(true);
                     buttons[i][j].setOpaque(true);
-                    //buttons[i][j].setBorderPainted(false);
                     buttons[i][j].setForeground(Color.BLACK);
                     switch (tile.getMultiplier().getType()) {
                         case WORD -> {
                             if (tile.getMultiplier().getMultiplier() == 3) {
-                                buttons[i][j].setBackground(TWRed);
+                                buttons[i][j].setBackground(tripleWordColour);
 
                             } else {
-                                buttons[i][j].setBackground(DWRed);
+                                buttons[i][j].setBackground(doubleWordColour);
                             }
                         }
                         case LETTER -> {
                             if (tile.getMultiplier().getMultiplier() == 3) {
-                                buttons[i][j].setBackground(TLBlue);
+                                buttons[i][j].setBackground(tripleLetterColour);
                             } else {
-                                buttons[i][j].setBackground(DLBlue);
+                                buttons[i][j].setBackground(doubleLetterColour);
                             }
                         }
                     }
@@ -135,7 +128,6 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
     private void updateButton(int x, int y, String letter) {
         if (!letter.equals("")) {
-            buttons[x][y].setBackground(Color.BLUE);
             buttons[x][y].setBorderPainted(false);
             buttons[x][y].setEnabled(false);
         }
