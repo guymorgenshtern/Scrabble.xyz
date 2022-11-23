@@ -34,12 +34,14 @@ public class ScrabbleModel {
 
     private int numberOfTries;
 
+    private PlayerComparator playerComparator;
+
     /**
      * A word can either be horizontally, or vertically placed onto the board.
      */
     public enum Direction { HORIZONTAL, VERTICAL }
     public enum Status { DONE, NOT_DONE }
-    public enum GameStatus { FINISHED, NOT_FINISHED }
+    public enum GameStatus { FINISHED, NOT_FINISHED, TIE }
     private String selectedLetter;
     private ScrabbleMove currentMove;
     private int skipCount;
@@ -66,6 +68,7 @@ public class ScrabbleModel {
         this.usedLetters = new ArrayList<>();
         status = GameStatus.NOT_FINISHED;
         this.numberOfTries = 0;
+        this.playerComparator = new PlayerComparator();
 
         initializeLetterBag("res/letters_by_quantity");
     }
@@ -170,6 +173,9 @@ public class ScrabbleModel {
      */
     public void initializeBoard() {
         String firstLetter = letterBag.getRandomLetter();
+        while (firstLetter.equals("")) {
+            firstLetter = letterBag.getRandomLetter();
+        }
         int centerSquare = (Board.SIZE - 1) / 2;
         board.setSquare(firstLetter.toCharArray()[0], centerSquare, centerSquare);
         ArrayList<BoardClick> coordsList = new ArrayList<>();
@@ -265,12 +271,10 @@ public class ScrabbleModel {
      * @author Guy Morgenshtern - 101151430
      */
     private boolean checkMoveValidity(ScrabbleMove move) {
-        boolean adjacentToSquare = false;
-        boolean isWord = false;
         boolean surroundingWordsAreWords = true;
 
-        adjacentToSquare = (move.getWord().length() > move.getCoords().size());
-        isWord = lib.isValidWord(move.getWord().toLowerCase());
+        boolean adjacentToSquare = (move.getWord().length() > move.getCoords().size());
+        boolean isWord = lib.isValidWord(move.getWord().toLowerCase());
         for (String word : findSurroundingWords(move)) {
             if (!lib.isValidWord(word)) {
                 surroundingWordsAreWords = false;
@@ -377,9 +381,10 @@ public class ScrabbleModel {
             if (move.getCoords().size() == 0) {
                 //if the game has ended (all players have skipped their turn in succession)
                 if (haveAllPlayerSkipped()) {
-                    status = GameStatus.FINISHED;
+                    status = (playerList.get(0).getScore() == playerList.get(1).getScore())? GameStatus.TIE: GameStatus.FINISHED;
                     //create the end game event
-                    ScrabbleEvent event = new ScrabbleEvent(this, move, currentPlayer, this.board, Status.DONE, GameStatus.FINISHED);
+                    playerList.sort(playerComparator);
+                    ScrabbleEvent event = new ScrabbleEvent(this, move, currentPlayer, this.board, Status.DONE, status);
                     for (ScrabbleView v : this.getViews()) {
                         v.update(event);
                     }

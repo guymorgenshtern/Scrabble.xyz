@@ -108,24 +108,33 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
                 if (tile.isPremiumSquare()) {
                     buttons[i][j].setOpaque(true);
-                    buttons[i][j].setForeground(Color.BLACK);
+                    buttons[i][j].setForeground(Color.darkGray);
+                    String label = "";
                     switch (tile.getMultiplier().getType()) {
                         case WORD -> {
+                            label += "W";
                             if (tile.getMultiplier().getMultiplier() == 3) {
                                 buttons[i][j].setBackground(tripleWordColour);
+                                label = "T" + label;
 
                             } else {
                                 buttons[i][j].setBackground(doubleWordColour);
+                                label = "D" + label;
                             }
                         }
                         case LETTER -> {
+                            label += "L";
                             if (tile.getMultiplier().getMultiplier() == 3) {
                                 buttons[i][j].setBackground(tripleLetterColour);
+                                label = "T" + label;
                             } else {
                                 buttons[i][j].setBackground(doubleLetterColour);
+                                label = "D" + label;
                             }
                         }
                     }
+                    buttons[i][j].setText(label);
+                    buttons[i][j].setFont(new Font("Helvetica", Font.PLAIN, 8));
                 }
             }
         }
@@ -143,7 +152,9 @@ public class BoardPanel extends JPanel implements ScrabbleView {
             buttons[x][y].setBorderPainted(false);
             buttons[x][y].setEnabled(false);
         }
-        this.buttons[x][y].setText(letter);
+        buttons[x][y].setText(letter);
+        buttons[x][y].setForeground(Color.BLACK);
+        buttons[x][y].setFont(new Font("Helvetica", Font.PLAIN, 12));
     }
 
     /**

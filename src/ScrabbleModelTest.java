@@ -48,4 +48,96 @@ public class ScrabbleModelTest {
             assertEquals(0, initializedPlayerList.get(i + 1).getScore());    // checks that score is zero
         }
     }
+
+    /**
+     * tests if score is calculated and given to player correctly
+     * @throws IOException
+     * @author Guy Morgenshtern - 101151430
+     */
+    @org.junit.Test
+    public void testCalculateMoveScore() throws IOException {
+        ScrabbleModel scrabbleModel = new ScrabbleModel();
+
+        String[] playerNames = new String[] { "Guy", "Francisco", "Emily" };
+        scrabbleModel.initializeGame(0, playerNames);
+
+        ArrayList<BoardClick> clicks = new ArrayList<>();
+        scrabbleModel.getBoard().setSquare('H', 7, 7);
+        scrabbleModel.getBoard().setSquare('E', 8, 7);
+        scrabbleModel.getBoard().setSquare('L', 9, 7);
+        scrabbleModel.getBoard().setSquare('L', 10, 7);
+        scrabbleModel.getBoard().setSquare('O', 11, 7);
+
+        clicks.add(new BoardClick(new int[]{8, 7}, "E"));
+        clicks.add(new BoardClick(new int[]{9, 7}, "L"));
+        clicks.add(new BoardClick(new int[]{10, 7}, "L"));
+        clicks.add(new BoardClick(new int[]{11, 7}, "O"));
+
+        ScrabbleMove move = new ScrabbleMove(clicks, ScrabbleModel.Direction.VERTICAL, scrabbleModel.getPlayerList().get(0));
+        scrabbleModel.play(move);
+
+        assert(scrabbleModel.getPlayerList().get(0).getScore() == 9);
+    }
+
+    /**
+     * Tests if letter stays on board when valid move is played
+     * @throws IOException
+     * @author Guy Morgenshtern - 101151430
+     */
+    @org.junit.Test
+    public void testPlayValidMove() throws IOException {
+        ScrabbleModel scrabbleModel = new ScrabbleModel();
+
+        String[] playerNames = new String[] { "Guy", "Francisco", "Emily" };
+        scrabbleModel.initializeGame(0, playerNames);
+
+        ArrayList<BoardClick> clicks = new ArrayList<>();
+        scrabbleModel.getBoard().setSquare('H', 7, 7);
+        scrabbleModel.getBoard().setSquare('E', 8, 7);
+        scrabbleModel.getBoard().setSquare('L', 9, 7);
+        scrabbleModel.getBoard().setSquare('L', 10, 7);
+        scrabbleModel.getBoard().setSquare('O', 11, 7);
+
+        clicks.add(new BoardClick(new int[]{8, 7}, "E"));
+        clicks.add(new BoardClick(new int[]{9, 7}, "L"));
+        clicks.add(new BoardClick(new int[]{10, 7}, "L"));
+        clicks.add(new BoardClick(new int[]{11, 7}, "O"));
+
+        ScrabbleMove move = new ScrabbleMove(clicks, ScrabbleModel.Direction.VERTICAL, scrabbleModel.getPlayerList().get(0));
+        scrabbleModel.play(move);
+
+        assert(scrabbleModel.getBoard().getTileOnBoard(11, 7).getLetter() == 'O');
+    }
+
+    /**
+     * Tests if letters cleared after invalid move
+     * @throws IOException
+     * @author Guy Morgenshtern - 101151430
+     */
+    @org.junit.Test
+    public void testPlayInvalidMove() throws IOException {
+        ScrabbleModel scrabbleModel = new ScrabbleModel();
+
+        String[] playerNames = new String[] { "Guy", "Francisco", "Emily" };
+        scrabbleModel.initializeGame(0, playerNames);
+
+        ArrayList<BoardClick> clicks = new ArrayList<>();
+        scrabbleModel.getBoard().setSquare('H', 7, 7);
+        scrabbleModel.getBoard().setSquare('G', 8, 7);
+        scrabbleModel.getBoard().setSquare('L', 9, 7);
+        scrabbleModel.getBoard().setSquare('L', 10, 7);
+        scrabbleModel.getBoard().setSquare('O', 11, 7);
+
+        clicks.add(new BoardClick(new int[]{8, 7}, "E"));
+        clicks.add(new BoardClick(new int[]{9, 7}, "L"));
+        clicks.add(new BoardClick(new int[]{10, 7}, "L"));
+        clicks.add(new BoardClick(new int[]{11, 7}, "O"));
+
+        ScrabbleMove move = new ScrabbleMove(clicks, ScrabbleModel.Direction.VERTICAL, scrabbleModel.getPlayerList().get(0));
+        scrabbleModel.play(move);
+
+        assert(scrabbleModel.getBoard().getTileOnBoard(11, 7).getLetter() == ' ');
+    }
+
+
 }

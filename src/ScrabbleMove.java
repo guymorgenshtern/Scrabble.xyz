@@ -17,19 +17,12 @@ public class ScrabbleMove {
     }
 
     /**
-     * creates ScrabbleMove
-     * @param word A string representation for the word
-     * @param direction A Game.Direction representation for the direction
+     * Constructor
+     * @param coords
+     * @param direction
+     * @param player
      * @author Guy Morgenshtern 101151430
      */
-    public ScrabbleMove(String word, ArrayList<int[]> coords[][], ScrabbleModel.Direction direction) {
-        this.word = word;
-        this.direction = direction;
-        this.isValid = false;
-    }
-
-
-
     public ScrabbleMove(ArrayList<BoardClick> coords, ScrabbleModel.Direction direction, Player player) {
         this.coords = coords;
         this.direction = direction;
@@ -37,30 +30,64 @@ public class ScrabbleMove {
         this.p = player;
     }
 
+    /**
+     * @return player of move
+     *  @author Guy Morgenshtern 101151430
+     */
     public Player getPlayer() {
         return p;
     }
 
+    /**
+     * sets player
+     * @param p
+     * @author Guy Morgenshtern 101151430
+     */
     public void setPlayer(Player p) {
         this.p = p;
     }
 
+    /**
+     *
+     * @return move validity
+     * @author Guy Morgenshtern 101151430
+     */
     public boolean isValid() {
         return isValid;
     }
 
+    /**
+     * set validity of move
+     * @param valid
+     * @author Guy Morgenshtern 101151430
+     */
     public void setValid(boolean valid) {
         isValid = valid;
     }
 
+    /**
+     * set word
+     * @param word
+     * @author Guy Morgenshtern 101151430
+     */
     public void setWord(String word) {
         this.word = word;
     }
 
+    /**
+     * set coordinates of move
+     * @param coords of move
+     * @author Guy Morgenshtern 101151430
+     */
     public void setCoords(ArrayList<BoardClick> coords) {
         this.coords = coords;
     }
 
+    /**
+     * set direction of move
+     * @param direction
+     * @author Guy Morgenshtern 101151430
+     */
     public void setDirection(ScrabbleModel.Direction direction) {
         this.direction = direction;
     }
@@ -74,6 +101,11 @@ public class ScrabbleMove {
         return word;
     }
 
+    /**
+     * return move coordinates
+     * @return arraylist of move coordinates
+     * @author Guy Morgenshtern 101151430
+     */
     public ArrayList<BoardClick> getCoords() {
         return coords;
     }
