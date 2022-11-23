@@ -8,8 +8,10 @@ import java.awt.*;
  * @author Alexander Hum 101180821
  */
 public class InfoPanel extends JPanel implements ScrabbleView {
+
     /** JLabel for the current players name */
     private final JLabel playerName;
+
     /** JLabel for the current players name */
     private final JLabel playerScore;
 
@@ -44,6 +46,10 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         this.add(playerScore);
         playerScore.setForeground(Color.WHITE);
         this.add(endTurn);
+
+        // set background colour
+        this.setBackground(new Color(253, 239, 117));
+
         this.setVisible(true);
     }
 
