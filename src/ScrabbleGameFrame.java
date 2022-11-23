@@ -7,7 +7,6 @@ import java.util.Collections;
 public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
     private BoardPanel boardPanel;
     private HandPanel handPanel;
-    private PlayerComparator playerComparator;
     private InfoPanel infoPanel;
 
     private ScrabbleModel model;
@@ -24,8 +23,8 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         super("Scrabble.xyz");
 
         model.getViews().add(this);
+        this.setFont(new Font("Helvetica", Font.PLAIN, 12));
 
-        this.playerComparator = new PlayerComparator();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout(5, 5));
         this.model = model;
@@ -64,11 +63,16 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         boardPanel.update(event);
         handPanel.update(event);
         infoPanel.update(event);
-        if (event.getGameStatus() == ScrabbleModel.GameStatus.FINISHED) {
+        if (event.getGameStatus() == ScrabbleModel.GameStatus.FINISHED || event.getGameStatus() == ScrabbleModel.GameStatus.TIE) {
             ArrayList<Player> listPlayers = event.getScrabbleModel().getPlayerList();
-            listPlayers.sort(playerComparator);
 
-            String message = "Congratulations " + listPlayers.get(listPlayers.size() - 1).getName() + "!\nLeaderboard";
+            String message;
+            if (event.getGameStatus() == ScrabbleModel.GameStatus.TIE) {
+                message = "Tie!";
+            } else {
+                message = "Congratulations " + listPlayers.get(listPlayers.size() - 1).getName() + "!\nLeaderboard";
+            }
+
             for (int i = listPlayers.size() - 1; i >= 0; i--) {
                 message += "\n" + listPlayers.get(i).getName() + " " + listPlayers.get(i).getScore();
             }

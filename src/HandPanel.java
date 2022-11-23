@@ -46,6 +46,9 @@ public class HandPanel extends JPanel implements ScrabbleView {
     private void setHandForTurn(Player p) {
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setText(p.getAvailableLetters().get(i));
+            if (i > p.getAvailableLetters().size() - 1) {
+                buttons[i].setEnabled(false);
+            }
         }
     }
 
