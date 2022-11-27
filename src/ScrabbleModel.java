@@ -408,7 +408,7 @@ public class ScrabbleModel {
     /**
      * Plays a move constructed by a player
      * @param move
-     * @author Guy Morgenshtern 101151430 Edited by Alexander Hum 101180821
+     * @author Guy Morgenshtern 101151430. Edited by Alexander Hum 101180821.
      */
     public void play(ScrabbleMove move) {
         Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());

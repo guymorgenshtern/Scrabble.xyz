@@ -49,6 +49,7 @@ public class CustomizationFrame extends JFrame {
                 JButton b = new JButton("");
                 int x = i;
                 int y = j;
+                // ActionListener for when user presses a JButton
                 b.addActionListener(e -> {
                     askUserToInputMultiplier(x, y);
                 });
@@ -162,28 +163,28 @@ public class CustomizationFrame extends JFrame {
         // ActionListener for when user removes a row from their board
         decrementRowsButton.addActionListener(e -> {
             if (numRows > MIN_NUM_ROWS_OR_COLS) {
-                updateBoardPanel(true, false);
+                updateNumRowsOrCols(true, false);
             }
         });
 
         // ActionListener for when user adds a row to their board
         incrementRowsButton.addActionListener(e -> {
             if (numRows < MAX_NUM_ROWS_OR_COLS) {
-                updateBoardPanel(true, true);
+                updateNumRowsOrCols(true, true);
             }
         });
 
         // ActionListener for when user removes a column from their board
         decrementColsButton.addActionListener(e -> {
             if (numCols > MIN_NUM_ROWS_OR_COLS) {
-                updateBoardPanel(false, false);
+                updateNumRowsOrCols(false, false);
             }
         });
 
         // ActionListener for when user adds a column to their board
         incrementColsButton.addActionListener(e -> {
             if (numCols < MAX_NUM_ROWS_OR_COLS) {
-                updateBoardPanel(false, true);
+                updateNumRowsOrCols(false, true);
             }
         });
 
@@ -192,6 +193,18 @@ public class CustomizationFrame extends JFrame {
         modPanel.add(createRowOrColModPanel("columns", numColsLabel, incrementColsButton, decrementColsButton));
 
         add(modPanel); // add the modifier panel to the JFrame
+    }
+
+    /**
+     * Updates the boardPanel to display the appropriate number of rows and columns.
+     * @author Emily Tang 101192604
+     */
+    private void updateBoardPanel() {
+        boardPanel.removeAll(); // remove all components currently on the board panel
+        boardPanel.setLayout(new GridLayout(numRows, numCols)); // update layout to current number of rows and columns
+        addButtonsToBoardPanel(); // add the appropriate number of buttons to the board panel
+        boardPanel.revalidate();
+        boardPanel.repaint();
     }
 
     /**
@@ -212,7 +225,7 @@ public class CustomizationFrame extends JFrame {
      * @param increment True, if the number of rows or columns has been incremented. False, if decremented.
      * @author Emily Tang 101192604
      */
-    private void updateBoardPanel(boolean isRow, boolean increment) {
+    private void updateNumRowsOrCols (boolean isRow, boolean increment) {
         // update the number of rows and columns
         if (isRow && increment) {
             numRows++;
@@ -225,13 +238,7 @@ public class CustomizationFrame extends JFrame {
         }
         numRowsLabel.setText(numRows + "");
         numColsLabel.setText(numCols + "");
-
-        // update the board
-        boardPanel.removeAll(); // remove all components currently on the board panel
-        boardPanel.setLayout(new GridLayout(numRows, numCols)); // update layout to current number of rows and columns
-        addButtonsToBoardPanel(); // add the appropriate number of buttons to the board panel
-        boardPanel.revalidate();
-        boardPanel.repaint();
+        updateBoardPanel();
     }
 
     /**
@@ -244,7 +251,6 @@ public class CustomizationFrame extends JFrame {
         boardPanel.setLayout(new GridLayout(numRows, numCols));
 
         addButtonsToBoardPanel(); // add the appropriate number of buttons to the boardPanel
-
         add(boardPanel); // add the board panel to the JFrame
     }
 
@@ -259,14 +265,32 @@ public class CustomizationFrame extends JFrame {
 
         // initialize the JButtons and add them to the navigation panel
         JButton cancelButton = new JButton("Cancel");
+        JButton resetButton = new JButton("Reset");
         JButton doneButton = new JButton("Done");
         navigationPanel.add(cancelButton);
+        navigationPanel.add(resetButton);
         navigationPanel.add(doneButton);
 
         // ActionListener for when user would like to go back to the StartupFrame
         cancelButton.addActionListener(e -> {
             welcomeFrame.setVisible(true); // navigate back to the welcomeFrame
             dispose(); // destroy the CustomizationFrame
+        });
+
+        // ActionListener for when user would like to reset to a blank 15x15 board
+        resetButton.addActionListener(e -> {
+            System.out.println("Reset button was pressed!");
+            // clear the entire board
+            for (int i = 0; i < MAX_NUM_ROWS_OR_COLS; i++) {
+                for (int j = 0; j < MAX_NUM_ROWS_OR_COLS; j++) {
+                    buttons[i][j].setText("");
+                }
+            }
+            numRows = 15;
+            numCols = 15;
+            numRowsLabel.setText(numRows + "");
+            numColsLabel.setText(numCols + "");
+            updateBoardPanel();
         });
 
         // ActionListener for when user would like to start the game with their current customized board

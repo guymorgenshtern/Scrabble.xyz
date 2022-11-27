@@ -87,7 +87,7 @@ public class WelcomeFrame extends JFrame {
         customizeGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loadGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         welcomePanel.add(scrabbleLabel);
-        welcomePanel.add(Box.createVerticalGlue());
+        welcomePanel.add(Box.createVerticalGlue()); // add a bit of spacing between "Scrabble.xyz" and the JButtons
         welcomePanel.add(playGameButton);
         welcomePanel.add(customizeGameButton);
         welcomePanel.add(loadGameButton);

@@ -3,8 +3,7 @@ import java.awt.*;
 
 public class BoardPanel extends JPanel implements ScrabbleView {
 
-    // FIXME: don't need two Boards
-    private Board board;
+    private final Board board;
     private final JButton [][] buttons;
 
     /* A Color to represent the double letter multiplier. */
@@ -13,7 +12,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     /* A Color to represent the triple letter multiplier. */
     private final Color tripleLetterColour;
 
-    /* Border colour of tiles */
+    /* A Color to represent the border of the tiles. */
     private final Color borderColour;
 
     /* A Color to represent the double word multiplier. */
@@ -22,45 +21,50 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     /* A Color to represent the triple word multiplier. */
     private final Color tripleWordColour;
 
+    /** A Color to represent the default multiplier colour. */
+    private final Color defaultMultiplierColour;
+
     /**
-     * Initializes a JPanel to hold the Scrabble board.
+     * Initializes a JPanel to display the Scrabble board.
      * @param scrabbleModel A ScrabbleModel to model the board of.
-     * @author Guy Morgenshtern - 101151430
+     * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
      */
     public BoardPanel(ScrabbleModel scrabbleModel) {
         super();
 
-        int numRows = scrabbleModel.getBoard().getNumRows();
-        int numCols = scrabbleModel.getBoard().getNumCols();
+        // initialize the board
+        board = scrabbleModel.getBoard();
+        int numRows = board.getNumRows();
+        int numCols = board.getNumCols();
+        buttons = new JButton[numRows][numCols];
+        setLayout(new GridLayout(numRows, numCols));
+        setSize(900,900);
 
-        this.setLayout(new GridLayout(numRows, numCols));  // Need to define size within board
-        this.setSize(900,900);
-
-        this.buttons = new JButton[numRows][numCols];                 // Place board size in place. Call Board Size Directly
-        this.board = scrabbleModel.getBoard();
-
+        // initialize the colours to use on the board
         doubleLetterColour = new Color(186, 238, 254);
         tripleLetterColour = new Color(117, 213, 253);
         doubleWordColour = new Color(220, 186, 254);
         tripleWordColour = new Color(184, 117, 253);
         borderColour = new Color(211,211,211);
+        defaultMultiplierColour = new Color(253, 239, 117); // for any multiplier that's not a DW DL TW TL
 
-        for (int i= 0; i < numRows; i++){          // Place board size.
-            for (int j = 0; j < numCols; j++){      // Place board size.
+        // initialize the JButtons
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
                 buttons[i][j] = new JButton();
                 buttons[i][j].setActionCommand(i + "," + j);
                 int x = i;
                 int y = j;
+
+                // ActionListener for when user presses a JButton
                 buttons[i][j].addActionListener(e -> {
-                    String[] clickedLocation = e.getActionCommand().split(",");
-                    int[] l = new int[2];
-                    System.out.println(e.getActionCommand());
+                    String actionCommand = e.getActionCommand();
+                    System.out.println(actionCommand);
 
+                    // determine which JButton was pressed and which letter was selected
+                    String[] clickedLocation = actionCommand.split(",");
+                    int[] coords = new int[] { Integer.parseInt(clickedLocation[0]), Integer.parseInt(clickedLocation[1]) };
                     String selectedLetter = scrabbleModel.getSelectedLetter();
-                    l[0] = Integer.parseInt(clickedLocation[0]);
-                    l[1] = Integer.parseInt(clickedLocation[1]);
-
-                    // Alternate Implementation for Squares Coloring
 
                     // support for blank tile
                     if (selectedLetter.equals(" ")) {
@@ -79,32 +83,30 @@ public class BoardPanel extends JPanel implements ScrabbleView {
                         }
                     }
 
-                    scrabbleModel.getCurrentMove().getCoords().add(new BoardClick(l, selectedLetter));
+                    scrabbleModel.getCurrentMove().getCoords().add(new BoardClick(coords, selectedLetter));
                     buttons[x][y].setText(selectedLetter);
-                    /*
-                    Gets the state of Scrabble board and sets letter at
-                     */
-                    this.board.getScrabbleBoard()[x][y].setLetter(selectedLetter.charAt(0));
+
+                    // gets the state of the Scrabble board and sets the letter at the clicked location
+                    board.getScrabbleBoard()[x][y].setLetter(selectedLetter.charAt(0));
                     scrabbleModel.setSelectedLetter(""); //
                 });
-                this.add(buttons[i][j]);
-
-
+                add(buttons[i][j]);
             }
         }
-        initializeButtonColor();
-        this.setVisible(true);
+        initializeButtonColor(numRows, numCols);
+        setVisible(true);
     }
 
     /**
-     * changes color of buttons on board to coordinate with designated multiplier.
-     * @author Created + Refactored By: Francisco De Grano, 101147447
+     * Changes color and text of buttons on board to coordinate with the designated multiplier.
+     * @param numRows An integer representing the number of rows there are on the board.
+     * @param numCols An integer representing the number of columns there are on the board.
+     * @author Francisco De Grano 101147447. Edited by Guy Morgenshtern 101151430 and Emily Tang 101192604.
      */
-    private void initializeButtonColor() {
-        //  Triple Word Red Extract Method
-        for (int i = 0; i < buttons.length; i++) {
-            for (int j = 0; j < buttons.length; j++) {
-                Square tile = board.getTileOnBoard(i,j);
+    private void initializeButtonColor(int numRows, int numCols) {
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                Square tile = board.getTileOnBoard(i, j);
                 buttons[i][j].setBorder(BorderFactory.createLineBorder(borderColour, 1, true));
                 buttons[i][j].setBorderPainted(true);
 
@@ -112,29 +114,39 @@ public class BoardPanel extends JPanel implements ScrabbleView {
                     buttons[i][j].setOpaque(true);
                     buttons[i][j].setForeground(Color.darkGray);
                     String label = "";
+
+                    Color backgroundColour = defaultMultiplierColour;
+                    int multiplierFactor = tile.getMultiplier().getMultiplier();
+
                     switch (tile.getMultiplier().getType()) {
                         case WORD -> {
                             label += "W";
-                            if (tile.getMultiplier().getMultiplier() == 3) {
-                                buttons[i][j].setBackground(tripleWordColour);
+                            if (multiplierFactor == 3) {
+                                backgroundColour = tripleWordColour;
                                 label = "T" + label;
 
-                            } else {
-                                buttons[i][j].setBackground(doubleWordColour);
+                            } else if (multiplierFactor == 2) {
+                                backgroundColour = doubleWordColour;
                                 label = "D" + label;
+                            } else {
+                                label = tile.getMultiplier().getMultiplier() + label;
                             }
                         }
                         case LETTER -> {
                             label += "L";
-                            if (tile.getMultiplier().getMultiplier() == 3) {
-                                buttons[i][j].setBackground(tripleLetterColour);
+                            if (multiplierFactor == 3) {
+                                backgroundColour = tripleLetterColour;
                                 label = "T" + label;
-                            } else {
-                                buttons[i][j].setBackground(doubleLetterColour);
+                            } else if (multiplierFactor == 2) {
+                                backgroundColour = doubleLetterColour;
                                 label = "D" + label;
+                            } else {
+                                label = tile.getMultiplier().getMultiplier() + label;
                             }
                         }
                     }
+
+                    buttons[i][j].setBackground(backgroundColour);
                     buttons[i][j].setText(label);
                     buttons[i][j].setFont(new Font("Helvetica", Font.PLAIN, 8));
                 }
@@ -162,7 +174,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     /**
      * update board
      * @param event
-     * @author Guy Morgenshtern - 101151430
+     * @author Guy Morgenshtern 101151430
      */
     @Override
     public void update(ScrabbleEvent event) { // Update Game Model
