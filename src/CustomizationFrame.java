@@ -166,36 +166,28 @@ public class CustomizationFrame extends JFrame {
         // ActionListener for when user removes a row from their board
         decrementRowsButton.addActionListener(e -> {
             if (numRows > MIN_NUM_ROWS_OR_COLS) {
-                numRows--;
-                numRowsLabel.setText(numRows + "");
-                updateBoardPanel();
+                updateBoardPanel(true, false);
             }
         });
 
         // ActionListener for when user adds a row to their board
         incrementRowsButton.addActionListener(e -> {
             if (numRows < MAX_NUM_ROWS_OR_COLS) {
-                numRows++;
-                numRowsLabel.setText(numRows + "");
-                updateBoardPanel();
+                updateBoardPanel(true, true);
             }
         });
 
         // ActionListener for when user removes a column from their board
         decrementColsButton.addActionListener(e -> {
             if (numCols > MIN_NUM_ROWS_OR_COLS) {
-                numCols--;
-                numColsLabel.setText(numCols + "");
-                updateBoardPanel();
+                updateBoardPanel(false, false);
             }
         });
 
         // ActionListener for when user adds a column to their board
         incrementColsButton.addActionListener(e -> {
             if (numCols < MAX_NUM_ROWS_OR_COLS) {
-                numCols++;
-                numColsLabel.setText(numCols + "");
-                updateBoardPanel();
+                updateBoardPanel(false, true);
             }
         });
 
@@ -216,6 +208,34 @@ public class CustomizationFrame extends JFrame {
                 boardPanel.add(buttons[i][j]);
             }
         }
+    }
+
+    /**
+     * Updates the JLabel displaying the number of rows and columns the board has, and updates the board.
+     * @param isRow True, if the number of rows has been modified. False, if number of columns.
+     * @param increment True, if the number of rows or columns has been incremented. False, if decremented.
+     * @author Emily Tang 101192604
+     */
+    private void updateBoardPanel(boolean isRow, boolean increment) {
+        // update the number of rows and columns
+        if (isRow && increment) {
+            numRows++;
+        } else if (isRow && !increment) {
+            numRows--;
+        } else if (!isRow && increment) {
+            numCols++;
+        } else {
+            numCols--;
+        }
+        numRowsLabel.setText(numRows + "");
+        numColsLabel.setText(numCols + "");
+
+        // update the board
+        boardPanel.removeAll(); // remove all components currently on the board panel
+        boardPanel.setLayout(new GridLayout(numRows, numCols)); // update layout to current number of rows and columns
+        addButtonsToBoardPanel(); // add the appropriate number of buttons to the board panel
+        boardPanel.revalidate();
+        boardPanel.repaint();
     }
 
     /**
@@ -272,18 +292,6 @@ public class CustomizationFrame extends JFrame {
         });
 
         add(navigationPanel); // add the navigation panel to the JFrame
-    }
-
-    /**
-     * Updates the board panel when the user adds or removes rows or columns.
-     * @author Emily Tang 101192604
-     */
-    private void updateBoardPanel() {
-        boardPanel.removeAll(); // remove all components currently on the board panel
-        boardPanel.setLayout(new GridLayout(numRows, numCols)); // update layout to current number of rows and columns
-        addButtonsToBoardPanel(); // add the appropriate number of buttons to the board panel
-        boardPanel.revalidate();
-        boardPanel.repaint();
     }
 
 }
