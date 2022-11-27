@@ -49,14 +49,13 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         this.setSize(1000, 800); // Expanded to enable text to show on button
         this.setVisible(true);
 
-        // initialize the model
-        new InitController(model);
+        new InitController(model); // initialize the model
     }
 
     /**
-     * update scrabble game frame and all its panels
-     * @param event
-     * @author Guy Morgenshtern - 101151430
+     * Update ScrabbleGameFrame and all of its panels.
+     * @param event A ScrabbleEvent to update.
+     * @author Guy Morgenshtern 101151430
      */
     @Override
     public void update(ScrabbleEvent event) {
@@ -70,7 +69,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
             if (event.getGameStatus() == ScrabbleModel.GameStatus.TIE) {
                 message = "Tie!";
             } else {
-                message = "Congratulations " + listPlayers.get(listPlayers.size() - 1).getName() + "!\nLeaderboard";
+                message = "Congratulations " + listPlayers.get(listPlayers.size() - 1).getName() + "!\n\nLeaderboard";
             }
 
             for (int i = listPlayers.size() - 1; i >= 0; i--) {
@@ -79,5 +78,9 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
             JOptionPane.showMessageDialog(this, message);
             System.exit(0);
         }
+    }
+
+    public static void main (String[] args) throws IOException {
+        new ScrabbleGameFrame(new ScrabbleModel());
     }
 }

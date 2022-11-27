@@ -36,13 +36,15 @@ public class BotPlayer extends Player {
     }
 
     /**
-     * @param board A 2D array of squares representing the Scrabble board.
+     * @param scrabbleBoard The Board that is currently in play.
      * @param row An integer representing the row of the Square to check the surroundings of.
      * @param col An integer representing the column of the Square to check the surroundings of.
      * @return A SquareStatus array representing the status of the surrounding squares.
      * @author Emily Tang 101192604
      */
-    private SquareStatus[] getStatusOfSurroundingSquares(Square[][] board, int row, int col) {
+    private SquareStatus[] getStatusOfSurroundingSquares(Board scrabbleBoard, int row, int col) {
+        Square[][] board = scrabbleBoard.getScrabbleBoard();
+
         // create a SquareStatus array and initialize all indices as NOT_EMPTY
         SquareStatus[] statusOfSurroundingSquares = new SquareStatus[4];
         Arrays.fill(statusOfSurroundingSquares, SquareStatus.NOT_EMPTY);
@@ -54,7 +56,7 @@ public class BotPlayer extends Player {
             statusOfSurroundingSquares[LEFT] = SquareStatus.EMPTY;
         }
         // check to the right of the square
-        if (col == Board.SIZE - 1) {
+        if (col == scrabbleBoard.getNumCols() - 1) {
             statusOfSurroundingSquares[RIGHT] = SquareStatus.DOES_NOT_EXIST;
         } else if (board[row][col + 1].getLetter() == ' ') {
             statusOfSurroundingSquares[RIGHT] = SquareStatus.EMPTY;
@@ -66,7 +68,7 @@ public class BotPlayer extends Player {
             statusOfSurroundingSquares[TOP] = SquareStatus.EMPTY;
         }
         // check to the bottom of the square
-        if (row == Board.SIZE - 1) {
+        if (row == scrabbleBoard.getNumRows() - 1) {
             statusOfSurroundingSquares[BOTTOM] = SquareStatus.DOES_NOT_EXIST;
         } else if (board[row + 1][col].getLetter() == ' ') {
             statusOfSurroundingSquares[BOTTOM] = SquareStatus.EMPTY;
@@ -129,12 +131,12 @@ public class BotPlayer extends Player {
         Square[][] scrabbleBoard = board.getScrabbleBoard();
 
         // iterate through the board from left-to-right, top-to-bottom looking for a square with a letter
-        for (int row = 0; row < Board.SIZE; row++) {
-            for (int col = 0; col < Board.SIZE; col++) {
+        for (int row = 0; row < board.getNumRows(); row++) {
+            for (int col = 0; col < board.getNumCols(); col++) {
                 if (scrabbleBoard[row][col].getLetter() != ' ') { // found a square with a letter
                     System.out.println("Found " + scrabbleBoard[row][col].getLetter() + " at " + row + " " + col + "!");
                     // check the status of the surrounding squares and determine the number of surrounding empty squares
-                    SquareStatus[] statusOfSurroundingSquares = getStatusOfSurroundingSquares(scrabbleBoard, row, col);
+                    SquareStatus[] statusOfSurroundingSquares = getStatusOfSurroundingSquares(board, row, col);
                     int numOfSurroundingEmptySquares = getNumSurroundingEmptySquares(statusOfSurroundingSquares);
 
                     if (numOfSurroundingEmptySquares == 4) { // this means we're at the beginning of the game
@@ -161,8 +163,8 @@ public class BotPlayer extends Player {
                         ArrayList<BoardClick> boardClicks = new ArrayList<>();
                         for (int i = 0; i < validWord.length(); i++) {
                             if (i != index) { // do not add the pre-existing letter into ScrabbleMove
-                                boardClicks.add(new BoardClick(new int[]{Board.SIZE / 2 - index + i, Board.SIZE / 2}, validWord.charAt(i) + ""));
-                                board.getTileOnBoard(Board.SIZE / 2 - index + i, Board.SIZE / 2).setLetter(validWord.charAt(i));
+                                boardClicks.add(new BoardClick(new int[] { board.getNumRows() / 2 - index + i, board.getNumCols() / 2 }, validWord.charAt(i) + ""));
+                                board.getTileOnBoard(board.getNumRows() / 2 - index + i, board.getNumCols() / 2).setLetter(validWord.charAt(i));
                             }
                         }
 
@@ -187,7 +189,7 @@ public class BotPlayer extends Player {
                         }
 
                         // determine the number of surrounding empty spaces there are around the letter to place
-                        int numSurroundingEmptySquaresAtNewSquare = getNumSurroundingEmptySquares(getStatusOfSurroundingSquares(scrabbleBoard, rowToPlaceLetter, colToPlaceLetter));
+                        int numSurroundingEmptySquaresAtNewSquare = getNumSurroundingEmptySquares(getStatusOfSurroundingSquares(board, rowToPlaceLetter, colToPlaceLetter));
                         System.out.println("Num of surrounding empty spaces at " + rowToPlaceLetter + " " + colToPlaceLetter + " is " + numSurroundingEmptySquaresAtNewSquare + "!");
                         if (scrabbleBoard[rowToPlaceLetter][colToPlaceLetter].getLetter() == ' '
                                 && ((direction == ScrabbleModel.Direction.HORIZONTAL && numSurroundingEmptySquaresAtNewSquare == 3)

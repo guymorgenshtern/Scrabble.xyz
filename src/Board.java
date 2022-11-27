@@ -6,8 +6,14 @@ import java.io.*;
  */
 public class Board {
 
-    /** An integer representing the size of the board. */
-    public static int SIZE = 15;
+    /** An integer representing the default size of the board. */
+    private static final int DEFAULT_SIZE = 15;
+
+    /** An integer representing the number of rows the board has. */
+    private final int numRows;
+
+    /** An integer representing the number of columns the board has. */
+    private final int numCols;
 
     /** A 2D array of squares to represent the board. */
     private final Square[][] scrabbleBoard;
@@ -17,23 +23,58 @@ public class Board {
      * @author Emily Tang 101192604
      */
     public Board() {
-        scrabbleBoard = new Square[Board.SIZE][Board.SIZE];
-        for (int row = 0; row < SIZE; row++) {
-            for (int col = 0; col < SIZE; col++) {
-                this.scrabbleBoard[row][col] = new Square();
+        numRows = DEFAULT_SIZE;
+        numCols = DEFAULT_SIZE;
+        scrabbleBoard = new Square[numRows][numCols];
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                scrabbleBoard[row][col] = new Square();
             }
         }
     }
 
     /**
-     * Creates a Board using the specified file.
+     * Creates a Board using the specified file containing ASCII characters.
      * @param fileName A String representing the name of the file that contains the layout of a 15x15 Scrabble board.
      * @throws IOException If an I/O error occurs.
-     * @author Guy Morgenshtern - 101151430
+     * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
      */
     public Board(String fileName) throws IOException {
-        scrabbleBoard = new Square[SIZE][SIZE];
+        numRows = DEFAULT_SIZE;
+        numCols = DEFAULT_SIZE;
+        scrabbleBoard = new Square[numRows][numCols];
         initBoard(fileName);
+    }
+
+    /**
+     * Creates a custom board using the specified 2D String array.
+     * @param customBoard A 2D String array representing the custom board.
+     * @param numRows An integer representing the number of rows the custom board has.
+     * @param numCols An integer representing the number of columns the custom board has.
+     * @author Emily Tang 101192604
+     */
+    public Board(String[][] customBoard, int numRows, int numCols) {
+        this.numRows = numRows;
+        this.numCols = numCols;
+
+        scrabbleBoard = new Square[this.numRows][this.numCols];
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                // determine if there's a multiplier on the square or not
+                if (customBoard[i][j].equals("")) {
+                    scrabbleBoard[i][j] = new Square();
+                } else {
+                    // determine the type of multiplier on the square
+                    Multiplier.Type type;
+                    if (customBoard[i][j].charAt(1) == 'L') {
+                        type = Multiplier.Type.LETTER;
+                    } else {
+                        type = Multiplier.Type.WORD;
+                    }
+                    scrabbleBoard[i][j] = new Square(new Multiplier(type, Integer.parseInt(customBoard[i][j].charAt(0) + "")));
+                }
+            }
+        }
     }
 
     /**
@@ -64,7 +105,6 @@ public class Board {
                         // create a Square with a blank letter
                         scrabbleBoard[row][column] = new Square();
                     }
-
                 }
                 line = br.readLine();
             }
@@ -88,7 +128,7 @@ public class Board {
 
     /**
      * @return A 2D array of squares representing the Board.
-     * @author Guy Morgenshtern - 101151430
+     * @author Guy Morgenshtern 101151430
      */
     public Square[][] getScrabbleBoard() {
         return scrabbleBoard;
@@ -98,7 +138,7 @@ public class Board {
      * @param row An integer representing a row on the Board.
      * @param column An integer representing a column on the Board.
      * @return The Square at the specified row and column.
-     * @author Guy Morgenshtern - 101151430
+     * @author Guy Morgenshtern 101151430
      */
     public Square getTileOnBoard(int row, int column){
         return this.scrabbleBoard[row][column];
@@ -108,15 +148,31 @@ public class Board {
      * @param letter A Letter to place on the Square.
      * @param row An integer representing a row on the Board.
      * @param column An integer representing a column on the Board.
-     * @author Guy Morgenshtern - 101151430
+     * @author Guy Morgenshtern 101151430
      */
     public void setSquare(char letter, int row, int column) {
         this.scrabbleBoard[row][column].setLetter(letter);
     }
 
     /**
-     * Prints a text-based representation of the Board. For debug purposes
-     * @author Guy Morgenshtern - 101151430
+     * @return An integer representing the number of rows the board has.
+     * @author Emily Tang 101192604
+     */
+    public int getNumRows() {
+        return numRows;
+    }
+
+    /**
+     * @return An integer representing the number of columns the board has.
+     * @author Emily Tang 101192604
+     */
+    public int getNumCols() {
+        return numCols;
+    }
+
+    /**
+     * Prints a text-based representation of the Board for debugging purposes.
+     * @author Guy Morgenshtern 101151430
      */
     public void printBoard() {
         System.out.printf("%7d", 0);
