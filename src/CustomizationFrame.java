@@ -4,27 +4,32 @@ import java.io.IOException;
 
 public class CustomizationFrame extends JFrame {
 
+    /** An integer representing the minimum number of rows and columns the board can have. */
     private static final int MIN_NUM_ROWS_OR_COLS = 10;
+
+    /** An integer representing the maximum number of rows and columns the board can have. */
     private static final int MAX_NUM_ROWS_OR_COLS = 20;
 
+    /** A JFrame representing the welcome frame so users can navigate back if they press the "Cancel" button. */
     private final JFrame welcomeFrame;
 
+    /** A 2D array of JButtons representing the board. */
     private final JButton[][] buttons;
 
+    /** An integer representing the number of rows the board currently has. */
     private int numRows;
-    private JLabel numRowsLabel;
-    private JButton incrementRowsButton;
-    private JButton decrementRowsButton;
 
+    /** An integer representing the number of columns the board currently has. */
     private int numCols;
+
+    /** A JLabel to display the number of rows the board currently has. */
+    private JLabel numRowsLabel;
+
+    /** A JLabel to display the number of columns the board currently has. */
     private JLabel numColsLabel;
-    private JButton incrementColsButton;
-    private JButton decrementColsButton;
 
+    /** A JPanel to display the current board. */
     private JPanel boardPanel;
-
-    private JButton cancelButton;
-    private JButton doneButton;
 
     /**
      * Initializes a CustomizationFrame to allow user to design their own Scrabble board.
@@ -45,7 +50,6 @@ public class CustomizationFrame extends JFrame {
                 int x = i;
                 int y = j;
                 b.addActionListener(e -> {
-                    System.out.println("JButton at " + x + " " + y + " was pressed!");
                     askUserToInputMultiplier(x, y);
                 });
                 buttons[i][j] = b;
@@ -71,11 +75,11 @@ public class CustomizationFrame extends JFrame {
 
     /**
      * Asks user to add a multiplier to the square at the specified row and column.
-     * @param x An integer representing the row of the JButton that was clicked.
-     * @param y An integer representing the column of the JButton that was clicked.
+     * @param row An integer representing the row of the JButton that was clicked.
+     * @param col An integer representing the column of the JButton that was clicked.
      * @author Emily Tang 101192604
      */
-    private void askUserToInputMultiplier(int x, int y) {
+    private void askUserToInputMultiplier(int row, int col) {
         JPanel multiplierPanel = new JPanel();
         multiplierPanel.setLayout(new GridLayout(2, 2, 10, 10));
 
@@ -91,21 +95,13 @@ public class CustomizationFrame extends JFrame {
 
         Object[] options = { "Remove Multiplier", "Done" };
 
-        int result = JOptionPane.showOptionDialog(this, multiplierPanel, "Choose a Multiplier for the Square at " + x + " " + y,
+        int result = JOptionPane.showOptionDialog(this, multiplierPanel, "Choose a Multiplier for the Square at " + row + " " + col,
                 JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
 
         if (result == JOptionPane.YES_OPTION) { // remove button was pressed
-            buttons[x][y].setText("");
+            buttons[row][col].setText("");
         } else if (result == JOptionPane.NO_OPTION) { // done button was pressed
             String factorString = factorField.getText(); // get the inputted factor
-
-            // determine if the inputted factor is numeric
-            boolean isFactorFieldNumeric = true;
-            for (char c : factorString.toCharArray()) {
-                if (!Character.isDigit(c)) {
-                    isFactorFieldNumeric = false;
-                }
-            }
 
             // factor can be a numeric value from 1 to 9 inclusive
             if (factorString.length() == 1 && !factorString.equals("0") && Character.isDigit(factorString.charAt(0))) {
@@ -117,7 +113,7 @@ public class CustomizationFrame extends JFrame {
                 } else {
                     multiplier += "W";
                 }
-                buttons[x][y].setText(multiplier);
+                buttons[row][col].setText(multiplier);
             }
         }
     }
@@ -155,13 +151,13 @@ public class CustomizationFrame extends JFrame {
 
         // initialize the JLabel and JButtons for the row modifier
         numRowsLabel = new JLabel(numRows + "");
-        incrementRowsButton = new JButton("+");
-        decrementRowsButton = new JButton("-");
+        JButton incrementRowsButton = new JButton("+");
+        JButton decrementRowsButton = new JButton("-");
 
         // initialize the JLabel and JButtons for the column modifier
         numColsLabel = new JLabel(numCols + "");
-        incrementColsButton = new JButton("+");
-        decrementColsButton = new JButton("-");
+        JButton incrementColsButton = new JButton("+");
+        JButton decrementColsButton = new JButton("-");
 
         // ActionListener for when user removes a row from their board
         decrementRowsButton.addActionListener(e -> {
@@ -262,8 +258,8 @@ public class CustomizationFrame extends JFrame {
         navigationPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));
 
         // initialize the JButtons and add them to the navigation panel
-        cancelButton = new JButton("Cancel");
-        doneButton = new JButton("Done");
+        JButton cancelButton = new JButton("Cancel");
+        JButton doneButton = new JButton("Done");
         navigationPanel.add(cancelButton);
         navigationPanel.add(doneButton);
 
@@ -293,5 +289,4 @@ public class CustomizationFrame extends JFrame {
 
         add(navigationPanel); // add the navigation panel to the JFrame
     }
-
 }
