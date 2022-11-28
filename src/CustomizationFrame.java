@@ -61,6 +61,19 @@ public class CustomizationFrame extends JFrame {
         numRows = 15;
         numCols = 15;
 
+        // instructions for user
+        add(Box.createVerticalGlue());
+        JLabel instructions1 = new JLabel("Customize your own board by adding or removing rows and columns!");
+        JLabel instructions2 = new JLabel("Click on a button to add a multiplier to the board.");
+        JLabel instructions3 = new JLabel("Press 'CANCEL' to go back to the home screen, 'RESTART' to reset the board, and 'DONE' when you would like to play!");
+        instructions1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        instructions2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        instructions3.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(instructions1);
+        add(instructions2);
+        add(instructions3);
+        add(Box.createVerticalGlue());
+
         // create JPanels to add to the JFrame
         createModPanel();
         createBoardPanel();
@@ -84,13 +97,13 @@ public class CustomizationFrame extends JFrame {
         JPanel multiplierPanel = new JPanel();
         multiplierPanel.setLayout(new GridLayout(2, 2, 10, 10));
 
-        multiplierPanel.add(new JLabel("Select the type of multiplier: "));
+        multiplierPanel.add(new JLabel("Select the type of multiplier: ", SwingConstants.RIGHT));
         JComboBox<String> multiplierComboBox = new JComboBox<>();
         multiplierComboBox.addItem("Letter");
         multiplierComboBox.addItem("Word");
         multiplierPanel.add(multiplierComboBox);
 
-        multiplierPanel.add(new JLabel("Enter a numeric value to represent the factor of the multiplier: "));
+        multiplierPanel.add(new JLabel("Enter a numeric value from 1-9 to represent the factor of the multiplier: "));
         JTextField factorField = new JTextField("");
         multiplierPanel.add(factorField);
 

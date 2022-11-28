@@ -159,7 +159,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
      * @param x
      * @param y
      * @param letter
-     * @author Guy Morgenshtern - 101151430
+     * @author Guy Morgenshtern 101151430
      */
     private void updateButton(int x, int y, String letter) {
         if (!letter.equals("")) {
@@ -169,6 +169,10 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         buttons[x][y].setText(letter);
         buttons[x][y].setForeground(Color.BLACK);
         buttons[x][y].setFont(new Font("Helvetica", Font.BOLD, 12));
+
+        // repaint border
+        buttons[x][y].setBorder(BorderFactory.createLineBorder(borderColour, 1, true));
+        buttons[x][y].setBorderPainted(true);
     }
 
     /**
