@@ -55,6 +55,8 @@ public class BoardPanel extends JPanel implements ScrabbleView {
                     String selectedLetter = scrabbleModel.getSelectedLetter();
                     l[0] = Integer.parseInt(clickedLocation[0]);
                     l[1] = Integer.parseInt(clickedLocation[1]);
+                    buttons[x][y].setForeground(Color.BLACK);
+                    buttons[x][y].setFont(new Font("Helvetica", Font.PLAIN, 12));
 
                     // Alternate Implementation for Squares Coloring
 
