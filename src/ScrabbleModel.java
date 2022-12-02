@@ -424,6 +424,17 @@ public class ScrabbleModel {
                 board.getTileOnBoard(m.getMove().getCoords().get(i).coords()[0], m.getMove().getCoords().get(i).coords()[1]).setLetter(' ');
             }
 
+            for (Integer i : m.getIndexOfUsedLetters()) {
+                this.letterBag.addLetter(m.getMove().getPlayer().getAvailableLetters().get(i), 1);
+                m.getMove().getPlayer().getAvailableLetters().remove(i.intValue());
+            }
+
+            for (BoardClick b : m.getMove().getCoords()) {
+                m.getMove().getPlayer().addLetter(b.letter());
+            }
+
+            m.getMove().getPlayer().setScore(m.getScore());
+
             // subtract score with word score
             System.out.println(getCurrentPlayer().getScore());
 
@@ -447,22 +458,10 @@ public class ScrabbleModel {
             System.out.println("Unavailable to redo\n");
         } else {
             UndoMove r = redoStack.pop();
-            playerTurnCounter--;
-            r.getMove().setPlayer(playerList.get(playerTurnCounter % playerList.size()));
-
             r.getMove().setRedo(true);
-            for (Integer i : r.getIndexOfUsedLetters()) {
-                r.getMove().getPlayer().getAvailableLetters().remove(i);
-            }
-
             for (BoardClick b : r.getMove().getCoords()) {
-                r.getMove().getPlayer().addLetter(b.letter());
+                board.getTileOnBoard(b.coords()[0], b.coords()[1]).setLetter(b.letter().charAt(0));
             }
-
-
-
-            r.getMove().getPlayer().setScore(r.getScore());
-            redoStack.push(r);
             play(r.getMove());
             System.out.println("Updated\n");
         }
@@ -561,7 +560,9 @@ public class ScrabbleModel {
                 if (move.isValid()) {
                     redoStack.clear();
                     usedLetters.sort(Collections.reverseOrder());
-                    UndoMove undoMove = new UndoMove(move, currentPlayer.getScore(), usedLetters);
+                    ArrayList<Integer> indexesOfUsedLetters = (ArrayList<Integer>) usedLetters.clone();
+
+                    UndoMove undoMove = new UndoMove(move, currentPlayer.getScore(), indexesOfUsedLetters);
                     this.numberOfTries = 0;
                     //calculate score
                     currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
