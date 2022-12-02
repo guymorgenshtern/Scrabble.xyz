@@ -419,21 +419,27 @@ public class ScrabbleModel {
         } else {
             UndoMove m = undoStack.pop();
             UndoMove m2 = redoStack.push(m);
+            playerTurnCounter--;
 
             for (int i = 0; i < m.getMove().getCoords().size(); i++) {
                 board.getTileOnBoard(m.getMove().getCoords().get(i).coords()[0], m.getMove().getCoords().get(i).coords()[1]).setLetter(' ');
             }
 
-            for (Integer i : m.getIndexOfUsedLetters()) {
-                this.letterBag.addLetter(m.getMove().getPlayer().getAvailableLetters().get(i), 1);
-                m.getMove().getPlayer().getAvailableLetters().remove(i.intValue());
+            Player currentPlayer = m.getMove().getPlayer();
+            for (int i = 0; i < m.getMove().getCoords().size(); i++) {
+                this.letterBag.addLetter(currentPlayer.getAvailableLetters().get(currentPlayer.getAvailableLetters().size() - 1 - i), 1);
+                currentPlayer.getAvailableLetters().remove(currentPlayer.getAvailableLetters().size() - 1 - i);
             }
 
             for (BoardClick b : m.getMove().getCoords()) {
-                m.getMove().getPlayer().addLetter(b.letter());
+                currentPlayer.addLetter(b.letter());
             }
 
-            m.getMove().getPlayer().setScore(m.getScore());
+            currentPlayer.setScore(m.getScore());
+
+            for (ScrabbleView v : views) {
+                v.update(new ScrabbleEvent(this, m.getMove(), m.getMove().getPlayer(), board, GameStatus.NOT_FINISHED));
+            }
 
             // subtract score with word score
             System.out.println(getCurrentPlayer().getScore());
@@ -603,6 +609,10 @@ public class ScrabbleModel {
                 for (ScrabbleView v : this.getViews()) {
                     v.update(event);
                 }
+                System.out.println(currentPlayer.getName() + " " + currentPlayer.getScore());
+                System.out.println(playerList.get((playerTurnCounter) % playerList.size()).getName() + " "
+                        + playerList.get((playerTurnCounter) % playerList.size()).getScore());
+
             }
 
             //bot play
