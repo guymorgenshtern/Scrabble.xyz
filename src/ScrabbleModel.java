@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * A text-based playable version of Scrabble.
@@ -49,6 +50,7 @@ public class ScrabbleModel {
 
     /** A ScrabbleMove to represent the current move. */
     private ScrabbleMove currentMove;
+    private ScrabbleMove lastMove;
 
     /** An integer representing the amount of consecutive skips. */
     private int skipCount;
@@ -61,6 +63,9 @@ public class ScrabbleModel {
 
     /** An integer representing the player counter. */
     private int playerTurnCounter;
+
+    private Stack<UndoMove> undoStack = new Stack<>();
+    private Stack<UndoMove> redoStack = new Stack<>();
 
     /**
      * Runs a text-based playable version of Scrabble.
@@ -192,6 +197,18 @@ public class ScrabbleModel {
     }
 
     /**
+     * Gets the number of moves for the undo stack
+     * @return An integer of the number of moves
+     */
+    public int getNumberOfUndoStack() { return undoStack.size(); }
+
+    /**
+     * Gets the number of moves for the redo stack
+     * @return An integer of the number of moves
+     */
+    public int getNumberOfRedoStack() { return redoStack.size(); }
+
+    /**
      * @param l A String representing a letter to check the score of.
      * @return An integer representing the score of letter.
      * @author Guy Morgenshtern 101151430
@@ -225,6 +242,7 @@ public class ScrabbleModel {
         int columnCenterSquare = (board.getNumCols() - 1) / 2;
         board.setSquare(firstLetter.toCharArray()[0], rowCenterSquare, columnCenterSquare);
         ArrayList<BoardClick> coordsList = new ArrayList<>();
+
 
         // Game is initialized with a singular letter in the centre of the board
         int[] coords = new int[2];
@@ -324,7 +342,6 @@ public class ScrabbleModel {
         }
         return adjacentToSquare && isWord && surroundingWordsAreWords;
     }
-
     /**
      * Removes word from the board when determined it is invalid
      * @param move
@@ -334,7 +351,6 @@ public class ScrabbleModel {
             board.getTileOnBoard(move.getCoords().get(i).coords()[0], move.getCoords().get(i).coords()[1]).setLetter(' ');
         }
     }
-
     /**
      * Calculates the total score for a move including any secondary surrounding words
      * @param move
@@ -379,7 +395,6 @@ public class ScrabbleModel {
         for (String s : lettersToScore) {
             total += this.getLetterScore(s);
         }
-
         //score any surrounding words created
         for (String s : this.findSurroundingWords(move)) {
             for (char c : s.toCharArray()) {
@@ -387,12 +402,72 @@ public class ScrabbleModel {
             }
 
         }
-
         for (Multiplier m : wordMultipliers) {
             total = m.calculateScore(total);
         }
-
         return total;
+    }
+
+    /**
+     * Undoes the players current move
+     * @author Alexander Hum 101180821
+     */
+    public void undo() {
+        // if there is nothing in the stack
+        if(getNumberOfUndoStack() == 0) {
+            // message dialog undo available
+        } else {
+            UndoMove m = undoStack.pop();
+            UndoMove m2 = redoStack.push(m);
+
+            for (int i = 0; i < m.getMove().getCoords().size(); i++) {
+                board.getTileOnBoard(m.getMove().getCoords().get(i).coords()[0], m.getMove().getCoords().get(i).coords()[1]).setLetter(' ');
+            }
+
+            // subtract score with word score
+            System.out.println(getCurrentPlayer().getScore());
+
+            ScrabbleEvent event = new ScrabbleEvent(this, m.getMove(), playerList.get(playerTurnCounter % playerList.size()), this.board, GameStatus.NOT_FINISHED);
+            currentMove = new ScrabbleMove();
+            for (ScrabbleView v : this.getViews()) {
+                v.update(event);
+            }
+            System.out.println("Popped " + m);
+            System.out.println(undoStack.size());
+            System.out.println("Redo Stack:\n" + m2);
+        }
+    }
+
+    /**
+     * Redoes the player current move
+     * @author Alexander Hum 101180821
+     */
+    public void redo() {
+        if(getNumberOfRedoStack() == 0) {
+            System.out.println("Unavailable to redo\n");
+        } else {
+            UndoMove r = redoStack.pop();
+            playerTurnCounter--;
+            r.getMove().setPlayer(playerList.get(playerTurnCounter % playerList.size()));
+
+            r.getMove().setRedo(true);
+            for (Integer i : r.getIndexOfUsedLetters()) {
+                r.getMove().getPlayer().getAvailableLetters().remove(i);
+            }
+
+            for (BoardClick b : r.getMove().getCoords()) {
+                r.getMove().getPlayer().addLetter(b.letter());
+            }
+
+
+
+            r.getMove().getPlayer().setScore(r.getScore());
+            redoStack.push(r);
+            play(r.getMove());
+            System.out.println("Updated\n");
+        }
+
+        //System.out.println("REDO");
     }
 
     /**
@@ -405,20 +480,24 @@ public class ScrabbleModel {
         return skipCount == playerList.size();
     }
 
+    public Player getCurrentPlayer() {
+        Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
+        return currentPlayer;
+    }
+
     /**
      * Plays a move constructed by a player
      * @param move
      * @author Guy Morgenshtern 101151430. Edited by Alexander Hum 101180821.
      */
     public void play(ScrabbleMove move) {
-        Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
+        Player currentPlayer = getCurrentPlayer();
         boolean horizontal = true;
         boolean vertical = true;
         Direction dir = null;
         this.numberOfTries++;
 
         // coords is checking letters on the board
-
         if (status == GameStatus.NOT_FINISHED) {
             if (move.getCoords().size() == 0) {
                 //if the game has ended (all players have skipped their turn in succession)
@@ -480,23 +559,27 @@ public class ScrabbleModel {
 
                 //score the move if it is valid
                 if (move.isValid()) {
+                    redoStack.clear();
+                    usedLetters.sort(Collections.reverseOrder());
+                    UndoMove undoMove = new UndoMove(move, currentPlayer.getScore(), usedLetters);
                     this.numberOfTries = 0;
                     //calculate score
                     currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
-
                     //removed played letters
-                    usedLetters.sort(Collections.reverseOrder());
                     for (Integer index : usedLetters) {
                         currentPlayer.removeLetter(index);
                     }
-
                     //give new letters to player
                     for (int i = 0; i < move.getCoords().size(); i++) {
                         currentPlayer.addLetter(letterBag.getRandomLetter());
                     }
-
+                    // add move to stack
+                    undoStack.push(undoMove);
+                    System.out.println(undoStack);
                     //next player
-                    playerTurnCounter++;
+                    if (!move.isRedo()) {
+                        playerTurnCounter++;
+                    }
                 } else {
                     deleteInvalidWordFromBoard(move);
                     move.setValid(false);
@@ -508,6 +591,7 @@ public class ScrabbleModel {
                         this.numberOfTries = 0;
                         System.out.println("Player attempted too many turns");
                     }
+                    System.out.println("Invalid");
                 }
                 this.getUsedLetters().clear();
 

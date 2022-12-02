@@ -62,6 +62,8 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         boardPanel.update(event);
         handPanel.update(event);
         infoPanel.update(event);
+
+
         if (event.getGameStatus() == ScrabbleModel.GameStatus.FINISHED || event.getGameStatus() == ScrabbleModel.GameStatus.TIE) {
             ArrayList<Player> listPlayers = event.getScrabbleModel().getPlayerList();
 

@@ -37,6 +37,14 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         endTurn.addActionListener(e -> {
             scrabbleModel.play(scrabbleModel.getCurrentMove());
         });
+        JButton undoButton = new JButton("Undo");
+        undoButton.addActionListener(e -> {
+            scrabbleModel.undo();
+        });
+        JButton redoButton = new JButton("Redo");
+        redoButton.addActionListener(e -> {
+            scrabbleModel.redo();
+        });
 
         //adds labels and buttons to the panel
         this.add(currentNameLabel);
@@ -46,6 +54,9 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         this.add(playerScore);
         playerScore.setForeground(Color.BLACK);
         this.add(endTurn);
+        this.add(undoButton);
+        this.add(redoButton);
+
 
         // set background colour
         this.setBackground(new Color(253, 239, 117));
