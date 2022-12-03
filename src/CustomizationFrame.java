@@ -1,7 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
+/**
+ * A JFrame to display when the user would like to create or load in their own custom board to play a game of Scrabble
+ * with.
+ */
 public class CustomizationFrame extends JFrame {
 
     /** An integer representing the minimum number of rows and columns the board can have. */
@@ -29,7 +34,7 @@ public class CustomizationFrame extends JFrame {
     private JLabel numColsLabel;
 
     /** A JPanel to display the current board. */
-    private JPanel boardPanel;
+    private JPanel customBoardPanel;
 
     /**
      * Initializes a CustomizationFrame to allow user to design their own Scrabble board.
@@ -46,14 +51,14 @@ public class CustomizationFrame extends JFrame {
         buttons = new JButton[MAX_NUM_ROWS_OR_COLS][MAX_NUM_ROWS_OR_COLS];
         for (int i = 0; i < MAX_NUM_ROWS_OR_COLS; i++) {
             for (int j = 0; j < MAX_NUM_ROWS_OR_COLS; j++) {
-                JButton b = new JButton("");
+                buttons[i][j] = new JButton("");
                 int x = i;
                 int y = j;
+
                 // ActionListener for when user presses a JButton
-                b.addActionListener(e -> {
+                buttons[i][j].addActionListener(e -> {
                     askUserToInputMultiplier(x, y);
                 });
-                buttons[i][j] = b;
             }
         }
 
@@ -63,20 +68,19 @@ public class CustomizationFrame extends JFrame {
 
         // instructions for user
         add(Box.createVerticalGlue());
-        JLabel instructions1 = new JLabel("Customize your own board by adding or removing rows and columns!");
-        JLabel instructions2 = new JLabel("Click on a button to add a multiplier to the board.");
-        JLabel instructions3 = new JLabel("Press 'CANCEL' to go back to the home screen, 'RESTART' to reset the board, and 'DONE' when you would like to play!");
-        instructions1.setAlignmentX(Component.CENTER_ALIGNMENT);
-        instructions2.setAlignmentX(Component.CENTER_ALIGNMENT);
-        instructions3.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(instructions1);
-        add(instructions2);
-        add(instructions3);
+        ArrayList<JLabel> instructionLabels = new ArrayList<>();
+        instructionLabels.add(new JLabel("Customize your own board by adding or removing rows and columns!"));
+        instructionLabels.add(new JLabel("Click on a button to add a multiplier to the board."));
+        instructionLabels.add(new JLabel("Press 'CANCEL' to go back to the home screen, 'RESTART' to reset the board, and 'DONE' when you would like to play!"));
+        for (JLabel instructionLabel : instructionLabels) {
+            instructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            add(instructionLabel);
+        }
         add(Box.createVerticalGlue());
 
         // create JPanels to add to the JFrame
         createModPanel();
-        createBoardPanel();
+        createCustomBoardPanel();
         createNavigationPanel();
 
         // finish initializing JFrame
@@ -94,21 +98,25 @@ public class CustomizationFrame extends JFrame {
      * @author Emily Tang 101192604
      */
     private void askUserToInputMultiplier(int row, int col) {
+        // create a JPanel with a 2x2 GridLayout
         JPanel multiplierPanel = new JPanel();
         multiplierPanel.setLayout(new GridLayout(2, 2, 10, 10));
 
+        // add a JComboBox for users to select the type of multiplier they would like
         multiplierPanel.add(new JLabel("Select the type of multiplier: ", SwingConstants.RIGHT));
         JComboBox<String> multiplierComboBox = new JComboBox<>();
         multiplierComboBox.addItem("Letter");
         multiplierComboBox.addItem("Word");
         multiplierPanel.add(multiplierComboBox);
 
+        // add a JTextField for users to input the factor they would like their multiplier to have
         multiplierPanel.add(new JLabel("Enter a numeric value from 1-9 to represent the factor of the multiplier: "));
         JTextField factorField = new JTextField("");
         multiplierPanel.add(factorField);
 
-        Object[] options = { "Remove Multiplier", "Done" };
+        Object[] options = { "Remove Multiplier", "Done" }; // buttons for the JOptionPane
 
+        // display the JOptionPane to the user
         int result = JOptionPane.showOptionDialog(this, multiplierPanel, "Choose a Multiplier for the Square at " + row + " " + col,
                 JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
 
@@ -116,17 +124,11 @@ public class CustomizationFrame extends JFrame {
             buttons[row][col].setText("");
         } else if (result == JOptionPane.NO_OPTION) { // done button was pressed
             String factorString = factorField.getText(); // get the inputted factor
-
             // factor can be a numeric value from 1 to 9 inclusive
             if (factorString.length() == 1 && !factorString.equals("0") && Character.isDigit(factorString.charAt(0))) {
                 // set the multiplier
-                String multiplier = "";
-                multiplier += factorString;
-                if (multiplierComboBox.getSelectedItem().equals("Letter")) {
-                    multiplier += "L";
-                } else {
-                    multiplier += "W";
-                }
+                String multiplier = factorString;
+                multiplier += multiplierComboBox.getSelectedItem().equals("Letter") ? "L" : "W";
                 buttons[row][col].setText(multiplier);
             }
         }
@@ -212,22 +214,22 @@ public class CustomizationFrame extends JFrame {
      * Updates the boardPanel to display the appropriate number of rows and columns.
      * @author Emily Tang 101192604
      */
-    private void updateBoardPanel() {
-        boardPanel.removeAll(); // remove all components currently on the board panel
-        boardPanel.setLayout(new GridLayout(numRows, numCols)); // update layout to current number of rows and columns
-        addButtonsToBoardPanel(); // add the appropriate number of buttons to the board panel
-        boardPanel.revalidate();
-        boardPanel.repaint();
+    private void updateCustomBoardPanel() {
+        customBoardPanel.removeAll(); // remove all components currently on the board panel
+        customBoardPanel.setLayout(new GridLayout(numRows, numCols)); // update layout to current number of rows and columns
+        addButtonsToCustomBoardPanel(); // add the appropriate number of buttons to the board panel
+        customBoardPanel.revalidate();
+        customBoardPanel.repaint();
     }
 
     /**
      * Adds the appropriate number of buttons to the boardPanel.
      * @author Emily Tang 101192604
      */
-    private void addButtonsToBoardPanel() {
+    private void addButtonsToCustomBoardPanel() {
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
-                boardPanel.add(buttons[i][j]);
+                customBoardPanel.add(buttons[i][j]);
             }
         }
     }
@@ -238,7 +240,7 @@ public class CustomizationFrame extends JFrame {
      * @param increment True, if the number of rows or columns has been incremented. False, if decremented.
      * @author Emily Tang 101192604
      */
-    private void updateNumRowsOrCols (boolean isRow, boolean increment) {
+    private void updateNumRowsOrCols(boolean isRow, boolean increment) {
         // update the number of rows and columns
         if (isRow && increment) {
             numRows++;
@@ -251,20 +253,20 @@ public class CustomizationFrame extends JFrame {
         }
         numRowsLabel.setText(numRows + "");
         numColsLabel.setText(numCols + "");
-        updateBoardPanel();
+        updateCustomBoardPanel();
     }
 
     /**
      * Initializes a JPanel to display the squares of the Scrabble board.
      * @author Emily Tang 101192604
      */
-    private void createBoardPanel() {
+    private void createCustomBoardPanel() {
         // create a JPanel with a GridLayout based on the default number of rows and columns
-        boardPanel = new JPanel();
-        boardPanel.setLayout(new GridLayout(numRows, numCols));
+        customBoardPanel = new JPanel();
+        customBoardPanel.setLayout(new GridLayout(numRows, numCols));
 
-        addButtonsToBoardPanel(); // add the appropriate number of buttons to the boardPanel
-        add(boardPanel); // add the board panel to the JFrame
+        addButtonsToCustomBoardPanel(); // add the appropriate number of buttons to the boardPanel
+        add(customBoardPanel); // add the board panel to the JFrame
     }
 
     /**
@@ -279,9 +281,11 @@ public class CustomizationFrame extends JFrame {
         // initialize the JButtons and add them to the navigation panel
         JButton cancelButton = new JButton("Cancel");
         JButton resetButton = new JButton("Reset");
+        JButton loadButton = new JButton("Load");
         JButton doneButton = new JButton("Done");
         navigationPanel.add(cancelButton);
         navigationPanel.add(resetButton);
+        navigationPanel.add(loadButton);
         navigationPanel.add(doneButton);
 
         // ActionListener for when user would like to go back to the StartupFrame
@@ -292,7 +296,6 @@ public class CustomizationFrame extends JFrame {
 
         // ActionListener for when user would like to reset to a blank 15x15 board
         resetButton.addActionListener(e -> {
-            System.out.println("Reset button was pressed!");
             // clear the entire board
             for (int i = 0; i < MAX_NUM_ROWS_OR_COLS; i++) {
                 for (int j = 0; j < MAX_NUM_ROWS_OR_COLS; j++) {
@@ -303,11 +306,18 @@ public class CustomizationFrame extends JFrame {
             numCols = 15;
             numRowsLabel.setText(numRows + "");
             numColsLabel.setText(numCols + "");
-            updateBoardPanel();
+            updateCustomBoardPanel();
+        });
+
+        // ActionListener for when user would like to load in an XML file of a custom board
+        loadButton.addActionListener(e -> {
+            System.out.println("Load button was pressed!");
         });
 
         // ActionListener for when user would like to start the game with their current customized board
         doneButton.addActionListener(e -> {
+            // FIXME: add functionality for saving the custom board to an XML file
+
             // create a 2D String array representation of the board the user created
             String[][] customBoard = new String[numRows][numCols];
             for (int i = 0; i < numRows; i++) {
@@ -316,6 +326,7 @@ public class CustomizationFrame extends JFrame {
                 }
             }
 
+            // start a game of Scrabble with the custom board
             try {
                 new ScrabbleGameFrame(new ScrabbleModel(customBoard, numRows, numCols));
                 dispose(); // destroy the CustomizationFrame
@@ -326,4 +337,5 @@ public class CustomizationFrame extends JFrame {
 
         add(navigationPanel); // add the navigation panel to the JFrame
     }
+
 }
