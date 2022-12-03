@@ -5,34 +5,34 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
-    private BoardPanel boardPanel;
-    private HandPanel handPanel;
-    private InfoPanel infoPanel;
 
-    private ScrabbleModel model;
+    /** A JPanel to display the board. */
+    private final BoardPanel boardPanel;
 
-    private Board textBoard;
+    /** A JPanel to display the current player's hand. */
+    private final HandPanel handPanel;
+
+    /** A JPanel to store the game information. */
+    private final InfoPanel infoPanel;
 
     /**
-     * Constructor
-     * @param model
-     * @throws IOException
-     * @author Guy Morgenshtern - 101151430
+     * Initializes a ScrabbleGameFrame to display the game of Scrabble.
+     * @param model A ScrabbleModel to represent.
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @author Guy Morgenshtern 101151430
      */
     public ScrabbleGameFrame(ScrabbleModel model) throws IOException {
         super("Scrabble.xyz");
+        setFont(new Font("Helvetica", Font.PLAIN, 12));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout(5, 5));
 
         model.getViews().add(this);
-        this.setFont(new Font("Helvetica", Font.PLAIN, 12));
 
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new BorderLayout(5, 5));
-        this.model = model;
-        this.infoPanel = new InfoPanel(model);
-        this.handPanel = new HandPanel(model);
-        this.boardPanel = new BoardPanel(model);
+        infoPanel = new InfoPanel(model);
+        handPanel = new HandPanel(model);
+        boardPanel = new BoardPanel(model);
         JButton endTurn = new JButton();
-        this.textBoard = model.getBoard();
         endTurn.setText("End Turn");
         endTurn.addActionListener(e -> {
             model.play(model.getCurrentMove());
@@ -41,13 +41,12 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         score.setText("Score:    \n");
         score.setSize(350,100);
 
-        this.add(boardPanel, BorderLayout.CENTER);
-        this.add(handPanel, BorderLayout.SOUTH);
-        this.add(infoPanel, BorderLayout.NORTH);
-        model.getViews().add(this);
+        add(boardPanel, BorderLayout.CENTER);
+        add(handPanel, BorderLayout.SOUTH);
+        add(infoPanel, BorderLayout.NORTH);
 
-        this.setSize(1000, 800); // Expanded to enable text to show on button
-        this.setVisible(true);
+        setSize(1000, 800); // expanded to enable text to show on button
+        setVisible(true);
 
         new InitController(model); // initialize the model
     }
@@ -83,4 +82,5 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
     public static void main (String[] args) throws IOException {
         new ScrabbleGameFrame(new ScrabbleModel());
     }
+
 }

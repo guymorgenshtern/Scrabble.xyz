@@ -4,7 +4,6 @@ import java.awt.*;
 /**
  * Creates the JPanel for the top of the program. It includes the players name, score, and an end turn button when
  * the user wants to skip or end turn.
- *
  * @author Alexander Hum 101180821
  */
 public class InfoPanel extends JPanel implements ScrabbleView {
@@ -17,13 +16,13 @@ public class InfoPanel extends JPanel implements ScrabbleView {
 
     /**
      * InfoPanel creates the layout and location for thr buttons and labels.
-     * @param scrabbleModel The Game of Scrabble to update
+     * @param scrabbleModel The game of Scrabble to represent.
      * @author Alexander Hum 101180821
      */
     public InfoPanel(ScrabbleModel scrabbleModel) {
         super();
-        this.setLayout(new GridLayout(1, 3));
-        this.setSize(900,100);
+        setLayout(new GridLayout(1, 3));
+        setSize(900,100);
 
         // creates the labels
         playerName = new JLabel("", SwingConstants.CENTER);
@@ -39,30 +38,30 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         });
 
         //adds labels and buttons to the panel
-        this.add(currentNameLabel);
-        this.add(playerName);
+        add(currentNameLabel);
+        add(playerName);
         playerName.setForeground(Color.BLACK);
-        this.add(currentScoreLabel);
-        this.add(playerScore);
+        add(currentScoreLabel);
+        add(playerScore);
         playerScore.setForeground(Color.BLACK);
-        this.add(endTurn);
+        add(endTurn);
 
         // set background colour
-        this.setBackground(new Color(253, 239, 117));
+        setBackground(new Color(253, 239, 117));
 
-        this.setVisible(true);
+        setVisible(true);
     }
 
     /**
-     * updates the players name and score.
-     * @param event for the ScrabbleEvent
+     * Updates the current player's name and score.
+     * @param event A ScrabbleEvent that has occurred.
      * @author Alexander Hum 101180821
      */
     @Override
     public void update(ScrabbleEvent event) {
-        // sets text for players name
-        playerName.setText(event.getCurrentPlayer().getName());
-        // sets text for the players score
-        playerScore.setText(Integer.toString(event.getCurrentPlayer().getScore()));
+        Player currentPlayer = event.getCurrentPlayer();
+        playerName.setText(currentPlayer.getName()); // sets text for players name
+        playerScore.setText(currentPlayer.getScore() + ""); // sets text for the players score
     }
+
 }

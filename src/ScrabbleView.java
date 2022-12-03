@@ -1,10 +1,5 @@
-/*
-Francisco De Grano
-
-    ScrabbleView Interface
-
-    Following MVC the following is an interface and holds the property of a
-    "View" updating only.
+/**
+ * The View in the MVC pattern of a game of Scrabble.
  */
 public interface ScrabbleView {
 
@@ -14,4 +9,5 @@ public interface ScrabbleView {
      * @author Francisco DeGrano 101147447
      */
     void update(ScrabbleEvent event);
+
 }

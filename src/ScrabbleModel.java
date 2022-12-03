@@ -32,16 +32,13 @@ public class ScrabbleModel {
     /** An integer representing the number of tries the current player has made to add a word to the board. */
     private int numberOfTries;
 
+    /** A PlayerComparator to compare the scores of players. */
     private PlayerComparator playerComparator;
 
-    /**
-     * A word can either be horizontally, or vertically placed onto the board.
-     */
+    /** A word can either be horizontally, or vertically placed onto the board. */
     public enum Direction { HORIZONTAL, VERTICAL }
 
-    /**
-     * The game can either be finished or not finished.
-     */
+    /** The game can either be finished or not finished. */
     public enum GameStatus { FINISHED, NOT_FINISHED, TIE }
 
     /** A String representing the selected letter. */
@@ -72,11 +69,24 @@ public class ScrabbleModel {
         initializeScrabbleModel();
     }
 
+    /**
+     * Initializes a ScrabbleModel using the specified custom board.
+     * @param customBoard A 2D String array representing the custom board.
+     * @param numRows An integer representing the number of rows the custom board has.
+     * @param numCols An integer representing the number of columns the custom board has.
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @author Emily Tang 101192604
+     */
     public ScrabbleModel(String[][] customBoard, int numRows, int numCols) throws IOException {
         board = new Board(customBoard, numRows, numCols);
         initializeScrabbleModel();
     }
 
+    /**
+     * Initializes all fields of the ScrabbleModel except for the board.
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @author Emily Tang 101192604
+     */
     private void initializeScrabbleModel() throws IOException {
         lib = new Library();
         scorePerLetter = new HashMap<>();
@@ -175,10 +185,10 @@ public class ScrabbleModel {
         String line = br.readLine();
         while (line != null) {
             //letter quantity
-            letterBag.addLetter(line.substring(0,1), Integer.parseInt(line.substring(2,line.lastIndexOf("-"))));
+            letterBag.addLetter(line.substring(0, 1), Integer.parseInt(line.substring(2, line.lastIndexOf("-"))));
 
             //letter score
-            scorePerLetter.put(line.substring(0,1), Integer.parseInt(line.substring(line.lastIndexOf("-") + 1)));
+            scorePerLetter.put(line.substring(0, 1), Integer.parseInt(line.substring(line.lastIndexOf("-") + 1)));
             line = br.readLine();
         }
     }
@@ -213,39 +223,37 @@ public class ScrabbleModel {
     }
 
     /**
-     * initialize the board
-     * @author Guy Morgenshtern 101151430
+     * Initialize the board with a letter in the centre of the board.
+     * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
      */
     public void initializeBoard() {
+        // get a letter to place in the centre of the board
         String firstLetter = letterBag.getRandomLetter();
-        while (firstLetter.equals("")) {
-            firstLetter = letterBag.getRandomLetter();
+        while (firstLetter.equals(" ")) { // first letter cannot be blank
+            letterBag.addLetter(" ", 1); // add the blank letter back into the letterBag
+            firstLetter = letterBag.getRandomLetter(); // pull another letter from the letterBag
         }
         int rowCenterSquare = (board.getNumRows() - 1) / 2;
         int columnCenterSquare = (board.getNumCols() - 1) / 2;
         board.setSquare(firstLetter.toCharArray()[0], rowCenterSquare, columnCenterSquare);
-        ArrayList<BoardClick> coordsList = new ArrayList<>();
 
-        // Game is initialized with a singular letter in the centre of the board
-        int[] coords = new int[2];
-        coords[0] = rowCenterSquare;
-        coords[1] = columnCenterSquare;
-        BoardClick b = new BoardClick(coords, firstLetter);
-        coordsList.add(b);
-        ScrabbleMove m = new ScrabbleMove();
-        m.setCoords(coordsList);
-        m.setValid(true);
+        // game begins with a letter in the centre of the board
+        ArrayList<BoardClick> boardClicks = new ArrayList<>();
+        boardClicks.add(new BoardClick(new int[] { rowCenterSquare, columnCenterSquare }, firstLetter));
+        ScrabbleMove move = new ScrabbleMove();
+        move.setCoords(boardClicks);
+        move.setValid(true);
 
-        //update the views for the first time
-        for (ScrabbleView v : this.getViews()) {
-            v.update(new ScrabbleEvent(this, m, playerList.get(0), board, GameStatus.NOT_FINISHED));
+        // update the views to display the letter at the centre of the board
+        for (ScrabbleView v : getViews()) {
+            v.update(new ScrabbleEvent(this, move, playerList.get(0), board, GameStatus.NOT_FINISHED));
         }
     }
 
     /**
-     * given a scrabble move, finds the full word on the baord, including all existing adjacent letter
-     * @param scrabbleMove
-     * @return String: final word
+     * Given a ScrabbleMove, find the full word on the board (including all pre-existing adjacent letters).
+     * @param scrabbleMove A ScrabbleMove to investigate.
+     * @return A String representing the full word.
      * @author Guy Morgenshtern 101151430
      */
     private String findFullWord(ScrabbleMove scrabbleMove) {
@@ -286,16 +294,16 @@ public class ScrabbleModel {
     }
 
     /**
-     * Finds any additional words that were created by the move provided
-     * @param move
-     * @return ArrayList of surrounding words
+     * Finds any additional words that were created by the ScrabbleMove provided.
+     * @param move A ScrabbleMove to investigate.
+     * @return An ArrayList of Strings representing the surrounding words.
      * @author Guy Morgenshtern 101151430
      */
     private ArrayList<String> findSurroundingWords(ScrabbleMove move) {
         Direction newDirection = move.getDirection() == Direction.HORIZONTAL ? Direction.VERTICAL : Direction.HORIZONTAL;
         ArrayList<String> surroundingWordList = new ArrayList<>();
         for (int i = 0; i < move.getCoords().size(); i++) {
-            ArrayList<BoardClick> arr= new ArrayList<>();
+            ArrayList<BoardClick> arr = new ArrayList<>();
             arr.add(move.getCoords().get(i));
             ScrabbleMove newMove = new ScrabbleMove(arr, newDirection, move.getPlayer());
             String found = findFullWord(newMove);
@@ -307,14 +315,13 @@ public class ScrabbleModel {
     }
 
     /**
-     * Given a scrabble move, determines its validity according to scrabble rules
-     * @param move
-     * @return boolean of the validity
+     * Given a ScrabbleMove, determines its validity according to the Scrabble rules.
+     * @param move A ScrabbleMove to investigate.
+     * @return True, if the given ScrabbleMove is valid. False, if not.
      * @author Guy Morgenshtern 101151430
      */
     private boolean checkMoveValidity(ScrabbleMove move) {
         boolean surroundingWordsAreWords = true;
-
         boolean adjacentToSquare = (move.getWord().length() > move.getCoords().size());
         boolean isWord = lib.isValidWord(move.getWord().toLowerCase());
         for (String word : findSurroundingWords(move)) {
@@ -326,20 +333,21 @@ public class ScrabbleModel {
     }
 
     /**
-     * Removes word from the board when determined it is invalid
-     * @param move
+     * Removes the given ScrabbleMove from the board when determined it is invalid.
+     * @param move A ScrabbleMove to investigate.
      */
-    private void deleteInvalidWordFromBoard(ScrabbleMove move){
-        for (int i = 0; i < move.getCoords().size(); i++) {
-            board.getTileOnBoard(move.getCoords().get(i).coords()[0], move.getCoords().get(i).coords()[1]).setLetter(' ');
+    private void deleteInvalidWordFromBoard(ScrabbleMove move) {
+        ArrayList<BoardClick> boardClicks = move.getCoords();
+        for (BoardClick boardClick : boardClicks) {
+            board.getTileOnBoard(boardClick.coords()[0], boardClick.coords()[1]).setLetter(' ');
         }
     }
 
     /**
-     * Calculates the total score for a move including any secondary surrounding words
-     * @param move
-     * @return total score for the move
-     * @author Guy Morgenshtern - 101151430
+     * Calculates the total score for the given ScrabbleMove, including any surrounding words.
+     * @param move A ScrabbleMove to investigate.
+     * @return An integer representing the total score for the given ScrabbleMove.
+     * @author Guy Morgenshtern 101151430
      */
     private int calculateMoveScore(ScrabbleMove move) {
         int total = 0;
@@ -354,15 +362,15 @@ public class ScrabbleModel {
 
         //letters from move scoring
         //important to do because we need their coordinates to determine if they lie on a multiplier
-        for (int i = 0; i < move.getCoords().size(); i++) {
-            Square tile = this.board.getTileOnBoard(move.getCoords().get(i).coords()[0], move.getCoords().get(i).coords()[1]);
+        ArrayList<BoardClick> boardClicks = move.getCoords();
+        for (BoardClick boardClick : boardClicks) {
+            Square tile = board.getTileOnBoard(boardClick.coords()[0], boardClick.coords()[1]);
             String letter = String.valueOf(tile.getLetter());
 
             //remove any letter that has already been scored
             lettersToScore.remove(letter);
 
-
-            int value = this.getLetterScore(letter);
+            int value = getLetterScore(letter);
 
             //if letter multiplier, use it right away, if word multiplier store it to be applied at end of scoring
             if (tile.isPremiumSquare()) {
@@ -377,13 +385,13 @@ public class ScrabbleModel {
 
         //score letters not explicitly placed on board but present in the move
         for (String s : lettersToScore) {
-            total += this.getLetterScore(s);
+            total += getLetterScore(s);
         }
 
         //score any surrounding words created
-        for (String s : this.findSurroundingWords(move)) {
+        for (String s : findSurroundingWords(move)) {
             for (char c : s.toCharArray()) {
-                total += this.scorePerLetter.get(c + "");
+                total += scorePerLetter.get(c + "");
             }
 
         }
@@ -406,16 +414,15 @@ public class ScrabbleModel {
     }
 
     /**
-     * Plays a move constructed by a player
-     * @param move
+     * Plays the given ScrabbleMove that was constructed by a player.
+     * @param move A ScrabbleMove to investigate.
      * @author Guy Morgenshtern 101151430. Edited by Alexander Hum 101180821.
      */
     public void play(ScrabbleMove move) {
         Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
         boolean horizontal = true;
         boolean vertical = true;
-        Direction dir = null;
-        this.numberOfTries++;
+        numberOfTries++;
 
         // coords is checking letters on the board
 
@@ -480,7 +487,7 @@ public class ScrabbleModel {
 
                 //score the move if it is valid
                 if (move.isValid()) {
-                    this.numberOfTries = 0;
+                    numberOfTries = 0;
                     //calculate score
                     currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
 
@@ -502,27 +509,27 @@ public class ScrabbleModel {
                     move.setValid(false);
                     // boardSize squared
                     int MAX_ATTEMPTS = 100;
-                    if (this.numberOfTries == MAX_ATTEMPTS) {
+                    if (numberOfTries == MAX_ATTEMPTS) {
                         playerTurnCounter++;
                         haveAllPlayerSkipped();
-                        this.numberOfTries = 0;
+                        numberOfTries = 0;
                         System.out.println("Player attempted too many turns");
                     }
                 }
-                this.getUsedLetters().clear();
+                getUsedLetters().clear();
 
 
                 //update views
-                ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, GameStatus.NOT_FINISHED);
+                ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), board, GameStatus.NOT_FINISHED);
                 currentMove = new ScrabbleMove();
-                for (ScrabbleView v : this.getViews()) {
+                for (ScrabbleView v : getViews()) {
                     v.update(event);
                 }
             }
 
             //bot play
             if (playerList.get(playerTurnCounter % playerList.size()) instanceof BotPlayer) {
-                this.play(((BotPlayer) playerList.get(playerTurnCounter % playerList.size())).play(board));
+                play(((BotPlayer) playerList.get(playerTurnCounter % playerList.size())).play(board));
             }
         }
     }

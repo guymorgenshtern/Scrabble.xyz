@@ -34,7 +34,7 @@ public class Board {
     }
 
     /**
-     * Creates a Board using the specified file containing ASCII characters.
+     * Creates a 15x15 Board using the specified file that contains ASCII characters.
      * @param fileName A String representing the name of the file that contains the layout of a 15x15 Scrabble board.
      * @throws IOException If an I/O error occurs.
      * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
@@ -48,7 +48,7 @@ public class Board {
 
     /**
      * Creates a custom board using the specified 2D String array.
-     * @param customBoard A 2D String array representing the custom board.
+     * @param customBoard A 2D String array representing a custom board.
      * @param numRows An integer representing the number of rows the custom board has.
      * @param numCols An integer representing the number of columns the custom board has.
      * @author Emily Tang 101192604
@@ -58,19 +58,14 @@ public class Board {
         this.numCols = numCols;
 
         scrabbleBoard = new Square[this.numRows][this.numCols];
-        for (int i = 0; i < numRows; i++) {
-            for (int j = 0; j < numCols; j++) {
+        for (int i = 0; i < this.numRows; i++) {
+            for (int j = 0; j < this.numCols; j++) {
                 // determine if there's a multiplier on the square or not
                 if (customBoard[i][j].equals("")) {
                     scrabbleBoard[i][j] = new Square();
                 } else {
                     // determine the type of multiplier on the square
-                    Multiplier.Type type;
-                    if (customBoard[i][j].charAt(1) == 'L') {
-                        type = Multiplier.Type.LETTER;
-                    } else {
-                        type = Multiplier.Type.WORD;
-                    }
+                    Multiplier.Type type = customBoard[i][j].charAt(1) == 'L' ? Multiplier.Type.LETTER : Multiplier.Type.WORD;
                     scrabbleBoard[i][j] = new Square(new Multiplier(type, Integer.parseInt(customBoard[i][j].charAt(0) + "")));
                 }
             }
@@ -78,7 +73,7 @@ public class Board {
     }
 
     /**
-     * Initializes the 15x15 Board using the specified file.
+     * Initializes the 15x15 Board using the specified file that contains ASCII characters.
      * @param fileName A String representing the name of the file that contains the orientation of the Scrabble board.
      * @throws IOException If an I/O error occurs.
      * @author Edited by Emily Tang 101192604.
@@ -98,13 +93,7 @@ public class Board {
                 // iterate through the row
                 for (char c : line.toCharArray()) {
                     column++;
-                    if (c != '.') {
-                        // create a Square with a Multiplier
-                        scrabbleBoard[row][column] = new Square(initMultiplier(c));
-                    } else {
-                        // create a Square with a blank letter
-                        scrabbleBoard[row][column] = new Square();
-                    }
+                    scrabbleBoard[row][column] = c != '.' ? new Square(initMultiplier(c)) : new Square();
                 }
                 line = br.readLine();
             }

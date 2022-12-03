@@ -6,14 +6,14 @@ import java.util.HashMap;
  */
 public class LetterBag  {
 
-    /** A HashMap for the letter map */
-    private HashMap<String, Integer> letterBag;
+    /** A HashMap to store the quantity of each letter. */
+    private final HashMap<String, Integer> letterBag;
 
-    /** size of the bag */
+    /** An integer to represent the number of tiles in the LetterBag. */
     private int size;
 
     /**
-     * Creates a LetterBag.
+     * Creates an empty LetterBag.
      * @author Alexander Hum 101180821. Edited by Guy Morgenshtern 101151430.
      */
     public LetterBag() {
@@ -22,52 +22,50 @@ public class LetterBag  {
     }
 
     /**
-     * Adds a letter to letter map
-     * @param letter a string representing a letter
-     * @param quantity an integer representing the quantity of letters
+     * Adds the specified letter to the LetterBag.
+     * @param letter A String representing the letter to add.
+     * @param quantity An integer representing the quantity of the specified letter to add.
      * @author Alexander Hum 101180821. Edited by Guy Morgenshtern 101151430.
      */
     public void addLetter(String letter, int quantity) {
         letterBag.put(letter, quantity);
-        this.size += quantity;
+        size += quantity;
     }
 
     /**
-     * removes a letter from the letter map
-     * @param letter a string representing a letter
+     * Removes one tile of the specified letter from the LetterBag.
+     * @param letter A String representing the letter to remove.
      * @author Alexander Hum 101180821. Edited by Guy Morgenshtern 101151430.
      */
     public void removeLetter(String letter) {
         letter = letter.toUpperCase();
-        if (this.size > 0) {
+        if (size > 0) {
             if (letterBag.get(letter) > 1) {
                 letterBag.put(letter, letterBag.get(letter) - 1);
             } else {
                 letterBag.remove(letter);
             }
-            this.size--;
+            size--;
         }
     }
 
     /**
-     * gets a random letter from the letter map
-     * @return the letter as a string
+     * @return A String representing a random letter from the LetterBag.
      * @author Alexander Hum 101180821. Edited by Guy Morgenshtern 101151430.
      */
     public String getRandomLetter() {
-         int random = (int) ((Math.random() * (this.size)));
-         String[] availableLetters = new String[this.size];
-         int count = 0;
-         for (String k : letterBag.keySet()) {
-             for (int i = 0; i < letterBag.get(k); i++) {
-                 if (count == random) {
-                     removeLetter(k);
-                     return k;
-                 }
-                 count++;
-             }
-         }
-         return null;
+        int random = (int) ((Math.random() * (this.size)));
+        int count = 0;
+        for (String k : letterBag.keySet()) {
+            for (int i = 0; i < letterBag.get(k); i++) {
+                if (count == random) {
+                    removeLetter(k);
+                    return k;
+                }
+                count++;
+            }
+        }
+        return null;
     }
 
 }

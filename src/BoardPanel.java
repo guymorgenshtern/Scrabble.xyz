@@ -1,10 +1,17 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
+/**
+ * A JPanel representation of the Board.
+ */
 public class BoardPanel extends JPanel implements ScrabbleView {
 
+    /** A Board in a game of Scrabble. */
     private final Board board;
-    private final JButton [][] buttons;
+
+    /** A 2D array of JButtons to represent the board. */
+    private final JButton[][] buttons;
 
     /* A Color to represent the double letter multiplier. */
     private final Color doubleLetterColour;
@@ -88,9 +95,9 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
                     // gets the state of the Scrabble board and sets the letter at the clicked location
                     board.getScrabbleBoard()[x][y].setLetter(selectedLetter.charAt(0));
-                    scrabbleModel.setSelectedLetter(""); //
+                    scrabbleModel.setSelectedLetter("");
                 });
-                add(buttons[i][j]);
+                add(buttons[i][j]); // add the button to the panel
             }
         }
         initializeButtonColor(numRows, numCols);
@@ -155,10 +162,10 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     }
 
     /**
-     * Update button that was clicked
-     * @param x
-     * @param y
-     * @param letter
+     * Update the look of the JButton that was pressed.
+     * @param x An integer representing the row of the JButton that was pressed.
+     * @param y An integer representing the column of the JButton that was pressed.
+     * @param letter A String representing the letter that the JButton should display.
      * @author Guy Morgenshtern 101151430
      */
     private void updateButton(int x, int y, String letter) {
@@ -176,25 +183,26 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     }
 
     /**
-     * update board
-     * @param event
-     * @author Guy Morgenshtern 101151430
+     * Update the BoardPanel.
+     * @param event A ScrabbleEvent that has occurred.
+     * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
      */
     @Override
-    public void update(ScrabbleEvent event) { // Update Game Model
-        if (event.getMove().isValid()) {
-            for (int i = 0; i < event.getMove().getCoords().size(); i++) {
-                int x = event.getMove().getCoords().get(i).coords()[0];
-                int y = event.getMove().getCoords().get(i).coords()[1];
-                updateButton(x, y, String.valueOf(event.getBoard().getTileOnBoard(x,y).getLetter()));
-            }
-        } else {
-            for (int i = 0; i < event.getMove().getCoords().size(); i++) {
-                int x = event.getMove().getCoords().get(i).coords()[0];
-                int y = event.getMove().getCoords().get(i).coords()[1];
+    public void update(ScrabbleEvent event) {
+        // get the move that was just played
+        ScrabbleMove scrabbleMove = event.getMove();
+        ArrayList<BoardClick> boardClicks = scrabbleMove.getCoords();
+
+        // iterate through the letters that were placed on the board
+        for (BoardClick boardClick : boardClicks) {
+            int x = boardClick.coords()[0];
+            int y = boardClick.coords()[1];
+            if (scrabbleMove.isValid()) {
+                updateButton(x, y, event.getBoard().getTileOnBoard(x, y).getLetter() + "");
+            } else {
                 updateButton(x, y, "");
             }
         }
-
     }
+
 }

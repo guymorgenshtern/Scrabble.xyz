@@ -51,10 +51,10 @@ public class Multiplier {
     }
 
     /**
-     *
-     * @return multiplier value
+     * @return An integer representing the factor of the Multiplier.
      */
     public int getMultiplier() {
         return multiplier;
     }
+
 }

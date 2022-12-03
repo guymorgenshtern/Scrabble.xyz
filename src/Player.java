@@ -10,7 +10,7 @@ public class Player {
     private final String name;
 
     /** A HashMap representing the player's hand. Stores available letters and their quantities. */
-    private ArrayList<String> hand;
+    private final ArrayList<String> hand;
 
     /** An integer representing the player's score. */
     private int score;
@@ -22,8 +22,8 @@ public class Player {
      */
     public Player(String name) {
         this.name = name;
-        this.hand = new ArrayList<>();
-        this.score = 0;
+        hand = new ArrayList<>();
+        score = 0;
     }
 
     /**
@@ -39,7 +39,7 @@ public class Player {
      * @author Guy Morgenshtern 101151430
      */
     public void addLetter(String l) {
-        this.hand.add(l);
+        hand.add(l);
     }
 
     /**
@@ -66,11 +66,15 @@ public class Player {
      * @author Guy Morgenshtern 101151430
      */
     public void removeLetter(String l) {
-        this.hand.remove(l);
+        hand.remove(l);
     }
 
-    public void removeLetter(Integer i) {
-        this.hand.remove(i.intValue());
+    /**
+     * Removes the letter at the specified index from the player's hand.
+     * @param i An integer representing the index of the letter to be removed from the player's hand.
+     */
+    public void removeLetter(int i) {
+        hand.remove(i);
     }
 
     /**
@@ -78,7 +82,7 @@ public class Player {
      * @author Guy Morgenshtern 101151430
      */
     public ArrayList<String> getAvailableLetters() {
-        return this.hand;
+        return hand;
     }
 
     /**
@@ -97,6 +101,5 @@ public class Player {
     public void setScore(int score) {
         this.score = score;
     }
-
 
 }
