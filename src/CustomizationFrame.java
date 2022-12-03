@@ -1,5 +1,9 @@
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -317,6 +321,23 @@ public class CustomizationFrame extends JFrame {
         // ActionListener for when user would like to start the game with their current customized board
         doneButton.addActionListener(e -> {
             // FIXME: add functionality for saving the custom board to an XML file
+
+            String fileName = JOptionPane.showInputDialog("Please enter the name of the JSON file you would like to" +
+                    " save your custom board to.\nIf not, please ignore this message.");
+            if (!fileName.equals("")) {
+                JSONObject boardJSON = new JSONObject();
+                boardJSON.put("numRows", numRows);
+                boardJSON.put("numCols", numCols);
+
+                JSONArray multipliers = new JSONArray();
+
+                System.out.println(boardJSON);
+                try (FileOutputStream fos = new FileOutputStream(fileName)) {
+                    fos.write(boardJSON.toString().getBytes());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
 
             // create a 2D String array representation of the board the user created
             String[][] customBoard = new String[numRows][numCols];
