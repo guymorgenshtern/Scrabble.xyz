@@ -7,7 +7,7 @@ public class Square {
     private char letter;
 
     /** A Letter/Word Multiplier. */
-    private Multiplier multiplier;
+    private final Multiplier multiplier;
 
     /**
      * Creates a Square with a blank letter.
@@ -15,6 +15,7 @@ public class Square {
      */
     public Square() {
         letter = ' ';
+        multiplier = null;
     }
 
     /**

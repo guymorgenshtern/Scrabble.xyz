@@ -21,6 +21,8 @@ public class ScrabbleMove {
     /** A Player representing the player that placed the word. */
     private Player p;
 
+    private boolean isRedo;
+
     /**
      * Initializes a ScrabbleMove with no coordinates.
      * @author Guy Morgenshtern 101151430
@@ -41,6 +43,15 @@ public class ScrabbleMove {
         this.direction = direction;
         isValid = false;
         this.p = player;
+        isRedo = false;
+    }
+
+    public boolean isRedo() {
+        return isRedo;
+    }
+
+    public void setRedo(boolean redo) {
+        isRedo = redo;
     }
 
     /**

@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * A text-based playable version of Scrabble.
@@ -15,19 +16,19 @@ public class ScrabbleModel {
     private final Board board;
 
     /** An ArrayList of players. */
-    private final ArrayList<Player> playerList;
+    private ArrayList<Player> playerList;
 
     /** A LetterBag containing the letter tiles. */
-    private final LetterBag letterBag;
+    private LetterBag letterBag;
 
     /** A Library for word validation checking. */
-    private final Library lib;
+    private Library lib;
 
     /** A HashMap to store the score of each letter. */
-    private final HashMap<String, Integer> scorePerLetter;
+    private HashMap<String, Integer> scorePerLetter;
 
     /** An ArrayList of ScrabbleViews that subscribes to the model. */
-    private final ArrayList<ScrabbleView> views;
+    private ArrayList<ScrabbleView> views;
 
     /** An integer representing the number of tries the current player has made to add a word to the board. */
     private int numberOfTries;
@@ -49,6 +50,7 @@ public class ScrabbleModel {
 
     /** A ScrabbleMove to represent the current move. */
     private ScrabbleMove currentMove;
+    private ScrabbleMove lastMove;
 
     /** An integer representing the amount of consecutive skips. */
     private int skipCount;
@@ -57,10 +59,13 @@ public class ScrabbleModel {
     private GameStatus status;
 
     /** An ArrayList of Integers to delete letters from the hand properly. */
-    private final ArrayList<Integer> usedLetters;
+    private ArrayList<Integer> usedLetters;
 
     /** An integer representing the player counter. */
     private int playerTurnCounter;
+
+    private Stack<UndoMove> undoStack = new Stack<>();
+    private Stack<UndoMove> redoStack = new Stack<>();
 
     /**
      * Runs a text-based playable version of Scrabble.
@@ -69,6 +74,15 @@ public class ScrabbleModel {
      */
     public ScrabbleModel() throws IOException {
         board = new Board("/default_board.txt");
+        initializeScrabbleModel();
+    }
+
+    public ScrabbleModel(String[][] customBoard, int numRows, int numCols) throws IOException {
+        board = new Board(customBoard, numRows, numCols);
+        initializeScrabbleModel();
+    }
+
+    private void initializeScrabbleModel() throws IOException {
         lib = new Library();
         scorePerLetter = new HashMap<>();
         views = new ArrayList<>();
@@ -79,9 +93,8 @@ public class ScrabbleModel {
         letterBag = new LetterBag();
         usedLetters = new ArrayList<>();
         status = GameStatus.NOT_FINISHED;
-        this.numberOfTries = 0;
-        this.playerComparator = new PlayerComparator();
-
+        numberOfTries = 0;
+        playerComparator = new PlayerComparator();
         initializeLetterBag("/letters_by_quantity");
     }
 
@@ -131,7 +144,7 @@ public class ScrabbleModel {
      * @author Guy Morgenshtern 101151430
      */
     public ArrayList<ScrabbleView> getViews() {
-        return this.views;
+        return views;
     }
 
     /**
@@ -184,6 +197,18 @@ public class ScrabbleModel {
     }
 
     /**
+     * Gets the number of moves for the undo stack
+     * @return An integer of the number of moves
+     */
+    public int getNumberOfUndoStack() { return undoStack.size(); }
+
+    /**
+     * Gets the number of moves for the redo stack
+     * @return An integer of the number of moves
+     */
+    public int getNumberOfRedoStack() { return redoStack.size(); }
+
+    /**
      * @param l A String representing a letter to check the score of.
      * @return An integer representing the score of letter.
      * @author Guy Morgenshtern 101151430
@@ -213,14 +238,16 @@ public class ScrabbleModel {
         while (firstLetter.equals("")) {
             firstLetter = letterBag.getRandomLetter();
         }
-        int centerSquare = (Board.SIZE - 1) / 2;
-        board.setSquare(firstLetter.toCharArray()[0], centerSquare, centerSquare);
+        int rowCenterSquare = (board.getNumRows() - 1) / 2;
+        int columnCenterSquare = (board.getNumCols() - 1) / 2;
+        board.setSquare(firstLetter.toCharArray()[0], rowCenterSquare, columnCenterSquare);
         ArrayList<BoardClick> coordsList = new ArrayList<>();
 
-        //Game is initialized with a singular letter in the centre of the baord
-        int coords[] = new int[2];
-        coords[0] = (Board.SIZE - 1) / 2;
-        coords[1] = (Board.SIZE - 1) / 2;
+
+        // Game is initialized with a singular letter in the centre of the board
+        int[] coords = new int[2];
+        coords[0] = rowCenterSquare;
+        coords[1] = columnCenterSquare;
         BoardClick b = new BoardClick(coords, firstLetter);
         coordsList.add(b);
         ScrabbleMove m = new ScrabbleMove();
@@ -231,7 +258,6 @@ public class ScrabbleModel {
         for (ScrabbleView v : this.getViews()) {
             v.update(new ScrabbleEvent(this, m, playerList.get(0), board, GameStatus.NOT_FINISHED));
         }
-
     }
 
     /**
@@ -249,30 +275,29 @@ public class ScrabbleModel {
         //concat all letters to the right
         if(scrabbleMove.getDirection() == Direction.HORIZONTAL) {
             int walkingPointer = x;
-            while (walkingPointer < Board.SIZE && Character.isAlphabetic(this.board.getTileOnBoard(walkingPointer,y).getLetter())) {
-                word += String.valueOf(this.board.getTileOnBoard(walkingPointer,y).getLetter());
+            while (walkingPointer < board.getNumCols() && Character.isAlphabetic(board.getTileOnBoard(walkingPointer,y).getLetter())) {
+                word += String.valueOf(board.getTileOnBoard(walkingPointer,y).getLetter());
                 walkingPointer++;
             }
 
             //concat all letters to the left
             walkingPointer = x - 1;
-            while (walkingPointer >= 0 && Character.isAlphabetic(this.board.getTileOnBoard(walkingPointer,y).getLetter())) {
-                word = this.board.getTileOnBoard(walkingPointer,y).getLetter() + word;
+            while (walkingPointer >= 0 && Character.isAlphabetic(board.getTileOnBoard(walkingPointer,y).getLetter())) {
+                word = board.getTileOnBoard(walkingPointer,y).getLetter() + word;
                 walkingPointer--;
             }
             //concat all letters below
-        } else if(scrabbleMove.getDirection() == Direction.VERTICAL) {
+        } else if (scrabbleMove.getDirection() == Direction.VERTICAL) {
             int walkingPointer = y;
-            while (walkingPointer < Board.SIZE && Character.isAlphabetic(this.board.getTileOnBoard(x,walkingPointer).getLetter())) {
-                word += String.valueOf(this.board.getTileOnBoard(x,walkingPointer).getLetter());
+            while (walkingPointer < board.getNumRows() && Character.isAlphabetic(board.getTileOnBoard(x,walkingPointer).getLetter())) {
+                word += String.valueOf(board.getTileOnBoard(x,walkingPointer).getLetter());
                 walkingPointer++;
             }
             //concat all letters above
             walkingPointer = y - 1;
-            while (walkingPointer >= 0 && Character.isAlphabetic(this.board.getTileOnBoard(x,walkingPointer).getLetter())) {
-                word = this.board.getTileOnBoard(x,walkingPointer).getLetter() + word;
+            while (walkingPointer >= 0 && Character.isAlphabetic(board.getTileOnBoard(x,walkingPointer).getLetter())) {
+                word = board.getTileOnBoard(x,walkingPointer).getLetter() + word;
                 walkingPointer--;
-
             }
         }
         return word;
@@ -317,17 +342,15 @@ public class ScrabbleModel {
         }
         return adjacentToSquare && isWord && surroundingWordsAreWords;
     }
-
     /**
      * Removes word from the board when determined it is invalid
      * @param move
      */
     private void deleteInvalidWordFromBoard(ScrabbleMove move){
         for (int i = 0; i < move.getCoords().size(); i++) {
-            this.board.getTileOnBoard(move.getCoords().get(i).coords()[0], move.getCoords().get(i).coords()[1]).setLetter(' ');
+            board.getTileOnBoard(move.getCoords().get(i).coords()[0], move.getCoords().get(i).coords()[1]).setLetter(' ');
         }
     }
-
     /**
      * Calculates the total score for a move including any secondary surrounding words
      * @param move
@@ -359,7 +382,7 @@ public class ScrabbleModel {
 
             //if letter multiplier, use it right away, if word multiplier store it to be applied at end of scoring
             if (tile.isPremiumSquare()) {
-                if (tile.getMultiplier().getType() == Multiplier.Type.LETTER) { //will be fixed with merge with emily
+                if (tile.getMultiplier().getType() == Multiplier.Type.LETTER) {
                     value = tile.getMultiplier().calculateScore(value);
                 } else {
                     wordMultipliers.add(tile.getMultiplier());
@@ -372,7 +395,6 @@ public class ScrabbleModel {
         for (String s : lettersToScore) {
             total += this.getLetterScore(s);
         }
-
         //score any surrounding words created
         for (String s : this.findSurroundingWords(move)) {
             for (char c : s.toCharArray()) {
@@ -380,17 +402,82 @@ public class ScrabbleModel {
             }
 
         }
-
         for (Multiplier m : wordMultipliers) {
             total = m.calculateScore(total);
         }
-
         return total;
     }
 
     /**
-     * determines if all players have skipped their turn in succession
-     * @return boolean true if players all players skipped/ended turn
+     * Undoes the players current move
+     * @author Alexander Hum 101180821
+     */
+    public void undo() {
+        // if there is nothing in the stack
+        if(getNumberOfUndoStack() == 0) {
+            // message dialog undo available
+        } else {
+            UndoMove m = undoStack.pop();
+            UndoMove m2 = redoStack.push(m);
+            playerTurnCounter--;
+
+            for (int i = 0; i < m.getMove().getCoords().size(); i++) {
+                board.getTileOnBoard(m.getMove().getCoords().get(i).coords()[0], m.getMove().getCoords().get(i).coords()[1]).setLetter(' ');
+            }
+
+            Player currentPlayer = m.getMove().getPlayer();
+            for (int i = 0; i < m.getMove().getCoords().size(); i++) {
+                this.letterBag.addLetter(currentPlayer.getAvailableLetters().get(currentPlayer.getAvailableLetters().size() - 1 - i), 1);
+                currentPlayer.getAvailableLetters().remove(currentPlayer.getAvailableLetters().size() - 1 - i);
+            }
+
+            for (BoardClick b : m.getMove().getCoords()) {
+                currentPlayer.addLetter(b.letter());
+            }
+
+            currentPlayer.setScore(m.getScore());
+
+            for (ScrabbleView v : views) {
+                v.update(new ScrabbleEvent(this, m.getMove(), m.getMove().getPlayer(), board, GameStatus.NOT_FINISHED));
+            }
+
+            // subtract score with word score
+            System.out.println(getCurrentPlayer().getScore());
+
+            ScrabbleEvent event = new ScrabbleEvent(this, m.getMove(), playerList.get(playerTurnCounter % playerList.size()), this.board, GameStatus.NOT_FINISHED);
+            currentMove = new ScrabbleMove();
+            for (ScrabbleView v : this.getViews()) {
+                v.update(event);
+            }
+            System.out.println("Popped " + m);
+            System.out.println(undoStack.size());
+            System.out.println("Redo Stack:\n" + m2);
+        }
+    }
+
+    /**
+     * Redoes the player current move
+     * @author Alexander Hum 101180821
+     */
+    public void redo() {
+        if(getNumberOfRedoStack() == 0) {
+            System.out.println("Unavailable to redo\n");
+        } else {
+            UndoMove r = redoStack.pop();
+            r.getMove().setRedo(true);
+            for (BoardClick b : r.getMove().getCoords()) {
+                board.getTileOnBoard(b.coords()[0], b.coords()[1]).setLetter(b.letter().charAt(0));
+            }
+            play(r.getMove());
+            System.out.println("Updated\n");
+        }
+
+        //System.out.println("REDO");
+    }
+
+    /**
+     * Determines if all players have skipped their turn in succession.
+     * @return Return true, if all players skipped their turn in succession. False, if not.
      * @author Alexander Hum 101180821
      */
     private boolean haveAllPlayerSkipped() {
@@ -398,20 +485,24 @@ public class ScrabbleModel {
         return skipCount == playerList.size();
     }
 
+    public Player getCurrentPlayer() {
+        Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
+        return currentPlayer;
+    }
+
     /**
      * Plays a move constructed by a player
      * @param move
-     * @author Guy Morgenshtern 101151430 Edited by Alexander Hum 101180821
+     * @author Guy Morgenshtern 101151430. Edited by Alexander Hum 101180821.
      */
     public void play(ScrabbleMove move) {
-        Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
+        Player currentPlayer = getCurrentPlayer();
         boolean horizontal = true;
         boolean vertical = true;
         Direction dir = null;
         this.numberOfTries++;
 
         // coords is checking letters on the board
-
         if (status == GameStatus.NOT_FINISHED) {
             if (move.getCoords().size() == 0) {
                 //if the game has ended (all players have skipped their turn in succession)
@@ -473,25 +564,30 @@ public class ScrabbleModel {
 
                 //score the move if it is valid
                 if (move.isValid()) {
+                    redoStack.clear();
+                    usedLetters.sort(Collections.reverseOrder());
+                    ArrayList<Integer> indexesOfUsedLetters = (ArrayList<Integer>) usedLetters.clone();
+
+                    UndoMove undoMove = new UndoMove(move, currentPlayer.getScore(), indexesOfUsedLetters);
                     this.numberOfTries = 0;
                     //calculate score
                     currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
-
                     //removed played letters
-                    usedLetters.sort(Collections.reverseOrder());
                     for (Integer index : usedLetters) {
                         currentPlayer.removeLetter(index);
                     }
-
                     //give new letters to player
                     for (int i = 0; i < move.getCoords().size(); i++) {
                         currentPlayer.addLetter(letterBag.getRandomLetter());
                     }
-
+                    // add move to stack
+                    undoStack.push(undoMove);
+                    System.out.println(undoStack);
                     //next player
-                    playerTurnCounter++;
+                    if (!move.isRedo()) {
+                        playerTurnCounter++;
+                    }
                 } else {
-
                     deleteInvalidWordFromBoard(move);
                     move.setValid(false);
                     // boardSize squared
@@ -502,6 +598,7 @@ public class ScrabbleModel {
                         this.numberOfTries = 0;
                         System.out.println("Player attempted too many turns");
                     }
+                    System.out.println("Invalid");
                 }
                 this.getUsedLetters().clear();
 
@@ -512,6 +609,10 @@ public class ScrabbleModel {
                 for (ScrabbleView v : this.getViews()) {
                     v.update(event);
                 }
+                System.out.println(currentPlayer.getName() + " " + currentPlayer.getScore());
+                System.out.println(playerList.get((playerTurnCounter) % playerList.size()).getName() + " "
+                        + playerList.get((playerTurnCounter) % playerList.size()).getScore());
+
             }
 
             //bot play
@@ -521,8 +622,4 @@ public class ScrabbleModel {
         }
     }
 
-    public static void main (String[] args) throws IOException {
-        ScrabbleModel scrabble = new ScrabbleModel();
-        ScrabbleGameFrame gameFrame = new ScrabbleGameFrame(scrabble);
-    }
 }
