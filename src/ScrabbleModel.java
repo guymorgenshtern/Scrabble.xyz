@@ -473,7 +473,6 @@ public class ScrabbleModel {
             play(r.getMove());
             System.out.println("Updated\n");
         }
-        playerTurnCounter++;
 
         //System.out.println("REDO");
     }
@@ -499,7 +498,7 @@ public class ScrabbleModel {
      * @author Guy Morgenshtern 101151430. Edited by Alexander Hum 101180821.
      */
     public void play(ScrabbleMove move) {
-        Player currentPlayer = getCurrentPlayer();
+        Player currentPlayer = (move.getMoveType() == ScrabbleMove.MoveType.REDO ? move.getPlayer() : getCurrentPlayer());
         boolean horizontal = true;
         boolean vertical = true;
         Direction dir = null;
@@ -587,9 +586,7 @@ public class ScrabbleModel {
                     undoStack.push(undoMove);
                     System.out.println(undoStack);
                     //next player
-                    if (move.getMoveType() != ScrabbleMove.MoveType.REDO) {
-                        playerTurnCounter++;
-                    }
+                    playerTurnCounter++;
                 } else {
                     deleteInvalidWordFromBoard(move);
                     move.setValid(false);
