@@ -24,6 +24,10 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     /** A Color to represent the default multiplier colour. */
     private final Color defaultMultiplierColour;
 
+    private ScrabbleModel scrabbleModel;
+
+    private BoardController controller;
+
     /**
      * Initializes a JPanel to display the Scrabble board.
      * @param scrabbleModel A ScrabbleModel to model the board of.
@@ -33,7 +37,10 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         super();
 
         // initialize the board
+        this.scrabbleModel = scrabbleModel;
+        this.controller = new BoardController(scrabbleModel, this);
         board = scrabbleModel.getBoard();
+
         int numRows = board.getNumRows();
         int numCols = board.getNumCols();
         buttons = new JButton[numRows][numCols];
@@ -53,54 +60,19 @@ public class BoardPanel extends JPanel implements ScrabbleView {
             for (int j = 0; j < numCols; j++) {
                 buttons[i][j] = new JButton();
                 buttons[i][j].setActionCommand(i + "," + j);
-                int x = i;
-                int y = j;
 
                 // ActionListener for when user presses a JButton
-                buttons[i][j].addActionListener(e -> {
-                    String actionCommand = e.getActionCommand();
-                    System.out.println(actionCommand);
-
-                    // determine which JButton was pressed and which letter was selected
-                    String[] clickedLocation = actionCommand.split(",");
-                    int[] coords = new int[] { Integer.parseInt(clickedLocation[0]), Integer.parseInt(clickedLocation[1]) };
-                    String selectedLetter = scrabbleModel.getSelectedLetter();
-                    l[0] = Integer.parseInt(clickedLocation[0]);
-                    l[1] = Integer.parseInt(clickedLocation[1]);
-                    buttons[x][y].setForeground(Color.BLACK);
-                    buttons[x][y].setFont(new Font("Helvetica", Font.PLAIN, 12));
-
-                    // Alternate Implementation for Squares Coloring
-
-                    // support for blank tile
-                    if (selectedLetter.equals(" ")) {
-                        String blankTileInput = "";
-                        while (blankTileInput.equals("")) {
-                            blankTileInput = JOptionPane.showInputDialog("Please enter a valid alphabetical character.");
-                            // if user enters nothing, must set blankTileInput to be a String before calling matches()
-                            if (blankTileInput == null) {
-                                blankTileInput = "";
-                            }
-                            if (blankTileInput.matches("[a-zA-Z+]") && blankTileInput.length() == 1) {
-                                selectedLetter = blankTileInput.toUpperCase();
-                            } else {
-                                blankTileInput = "";
-                            }
-                        }
-                    }
-
-                    scrabbleModel.getCurrentMove().getCoords().add(new BoardClick(coords, selectedLetter));
-                    buttons[x][y].setText(selectedLetter);
-
-                    // gets the state of the Scrabble board and sets the letter at the clicked location
-                    board.getScrabbleBoard()[x][y].setLetter(selectedLetter.charAt(0));
-                    scrabbleModel.setSelectedLetter(""); //
-                });
+                buttons[i][j].addActionListener(controller);
                 add(buttons[i][j]);
             }
         }
+        controller.updateButtons();
         initializeButtonColor(numRows, numCols);
         setVisible(true);
+    }
+
+    public JButton[][] getButtons() {
+        return buttons;
     }
 
     /**
@@ -167,14 +139,24 @@ public class BoardPanel extends JPanel implements ScrabbleView {
      * @param letter
      * @author Guy Morgenshtern 101151430
      */
-    private void updateButton(int x, int y, String letter) {
+    private void updateButton(int x, int y, String letter, ScrabbleMove.MoveType moveType) {
         if (!letter.equals("")) {
             buttons[x][y].setBorderPainted(false);
-            buttons[x][y].setEnabled(false);
+            buttons[x][y].setForeground(Color.BLACK);
+            buttons[x][y].setFont(new Font("Helvetica", Font.BOLD, 12));
+            if (moveType == ScrabbleMove.MoveType.INIT) {
+                buttons[x][y].setText(letter);
+            }
+            if (moveType != ScrabbleMove.MoveType.UNDO && buttons[x][y].getActionListeners().length > 0) {
+                buttons[x][y].removeActionListener(controller);
+            } else if (buttons[x][y].getActionListeners().length == 0) {
+                buttons[x][y].addActionListener(controller);
+            }
         }
-        buttons[x][y].setText(letter);
-        buttons[x][y].setForeground(Color.BLACK);
-        buttons[x][y].setFont(new Font("Helvetica", Font.BOLD, 12));
+
+        if (moveType == ScrabbleMove.MoveType.UNDO || moveType == ScrabbleMove.MoveType.REDO) {
+            buttons[x][y].setText(letter);
+        }
 
         // repaint border
         buttons[x][y].setBorder(BorderFactory.createLineBorder(borderColour, 1, true));
@@ -188,19 +170,11 @@ public class BoardPanel extends JPanel implements ScrabbleView {
      */
     @Override
     public void update(ScrabbleEvent event) { // Update Game Model
-        if (event.getMove().isValid()) {
-            for (int i = 0; i < event.getMove().getCoords().size(); i++) {
-                int x = event.getMove().getCoords().get(i).coords()[0];
-                int y = event.getMove().getCoords().get(i).coords()[1];
-                updateButton(x, y, String.valueOf(event.getBoard().getTileOnBoard(x,y).getLetter()));
-            }
-        } else {
-            for (int i = 0; i < event.getMove().getCoords().size(); i++) {
-                int x = event.getMove().getCoords().get(i).coords()[0];
-                int y = event.getMove().getCoords().get(i).coords()[1];
-                updateButton(x, y, "");
-            }
+        for (int i = 0; i < event.getMove().getCoords().size(); i++) {
+            int x = event.getMove().getCoords().get(i).coords()[0];
+            int y = event.getMove().getCoords().get(i).coords()[1];
+            updateButton(x, y, String.valueOf(event.getBoard().getTileOnBoard(x,y).getLetter()), event.getMove().getMoveType());
         }
-
     }
+
 }

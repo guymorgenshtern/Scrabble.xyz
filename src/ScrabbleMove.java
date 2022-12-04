@@ -23,6 +23,17 @@ public class ScrabbleMove {
 
     private boolean isRedo;
 
+    private boolean isUndo;
+
+    public enum MoveType {
+        UNDO,
+        REDO,
+        DEFAULT,
+        INIT
+    }
+
+    private MoveType moveType;
+
     /**
      * Initializes a ScrabbleMove with no coordinates.
      * @author Guy Morgenshtern 101151430
@@ -44,14 +55,16 @@ public class ScrabbleMove {
         isValid = false;
         this.p = player;
         isRedo = false;
+        isUndo = false;
+        this.moveType = MoveType.DEFAULT;
     }
 
-    public boolean isRedo() {
-        return isRedo;
+    public MoveType getMoveType() {
+        return moveType;
     }
 
-    public void setRedo(boolean redo) {
-        isRedo = redo;
+    public void setMoveType(MoveType moveType) {
+        this.moveType = moveType;
     }
 
     /**

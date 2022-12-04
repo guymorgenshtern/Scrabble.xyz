@@ -253,6 +253,7 @@ public class ScrabbleModel {
         ScrabbleMove m = new ScrabbleMove();
         m.setCoords(coordsList);
         m.setValid(true);
+        m.setMoveType(ScrabbleMove.MoveType.INIT);
 
         //update the views for the first time
         for (ScrabbleView v : this.getViews()) {
@@ -435,6 +436,7 @@ public class ScrabbleModel {
                 currentPlayer.addLetter(b.letter());
             }
 
+            m.getMove().setMoveType(ScrabbleMove.MoveType.UNDO);
             currentPlayer.setScore(m.getScore());
 
             for (ScrabbleView v : views) {
@@ -464,13 +466,14 @@ public class ScrabbleModel {
             System.out.println("Unavailable to redo\n");
         } else {
             UndoMove r = redoStack.pop();
-            r.getMove().setRedo(true);
+            r.getMove().setMoveType(ScrabbleMove.MoveType.REDO);
             for (BoardClick b : r.getMove().getCoords()) {
                 board.getTileOnBoard(b.coords()[0], b.coords()[1]).setLetter(b.letter().charAt(0));
             }
             play(r.getMove());
             System.out.println("Updated\n");
         }
+        playerTurnCounter++;
 
         //System.out.println("REDO");
     }
@@ -584,7 +587,7 @@ public class ScrabbleModel {
                     undoStack.push(undoMove);
                     System.out.println(undoStack);
                     //next player
-                    if (!move.isRedo()) {
+                    if (move.getMoveType() != ScrabbleMove.MoveType.REDO) {
                         playerTurnCounter++;
                     }
                 } else {
@@ -609,10 +612,6 @@ public class ScrabbleModel {
                 for (ScrabbleView v : this.getViews()) {
                     v.update(event);
                 }
-                System.out.println(currentPlayer.getName() + " " + currentPlayer.getScore());
-                System.out.println(playerList.get((playerTurnCounter) % playerList.size()).getName() + " "
-                        + playerList.get((playerTurnCounter) % playerList.size()).getScore());
-
             }
 
             //bot play
