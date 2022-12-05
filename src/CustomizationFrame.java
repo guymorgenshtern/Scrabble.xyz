@@ -1,4 +1,3 @@
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.swing.*;
@@ -322,28 +321,42 @@ public class CustomizationFrame extends JFrame {
         doneButton.addActionListener(e -> {
             // FIXME: add functionality for saving the custom board to an XML file
 
-            String fileName = JOptionPane.showInputDialog("Please enter the name of the JSON file you would like to" +
-                    " save your custom board to.\nIf not, please ignore this message.");
-            if (!fileName.equals("")) {
-                JSONObject boardJSON = new JSONObject();
-                boardJSON.put("numRows", numRows);
-                boardJSON.put("numCols", numCols);
-
-                JSONArray multipliers = new JSONArray();
-
-                System.out.println(boardJSON);
-                try (FileOutputStream fos = new FileOutputStream(fileName)) {
-                    fos.write(boardJSON.toString().getBytes());
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
+            // create a JSON representation of the user's custom board
+            JSONObject customBoardJSON = new JSONObject();
+            customBoardJSON.put("numRows", numRows);
+            customBoardJSON.put("numCols", numCols);
+            ArrayList<JSONObject> premiumSquareJSONList = new ArrayList<>();
 
             // create a 2D String array representation of the board the user created
             String[][] customBoard = new String[numRows][numCols];
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numCols; j++) {
                     customBoard[i][j] = buttons[i][j].getText();
+
+                    if (!customBoard[i][j].equals("")) {
+                        JSONObject premiumSquareJSON = new JSONObject();
+                        premiumSquareJSON.put("Square", i + " " + j);
+                        premiumSquareJSON.put("Multiplier", customBoard[i][j]);
+                        premiumSquareJSONList.add(premiumSquareJSON);
+                    }
+                }
+            }
+
+            for (JSONObject o : premiumSquareJSONList) {
+                customBoardJSON.put("PremiumSquare", o);
+            }
+
+            // determine if user would like to save their custom board
+            String fileName = JOptionPane.showInputDialog("Please enter the name of the JSON file you would like to" +
+                    " save your custom board to.\nIf not, please ignore this message.");
+
+            // save the user's custom board if they provided a fileName
+            if (!fileName.equals("")) {
+                System.out.println(customBoardJSON);
+                try (FileOutputStream fos = new FileOutputStream(fileName)) {
+                    fos.write(customBoardJSON.toString().getBytes());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
 

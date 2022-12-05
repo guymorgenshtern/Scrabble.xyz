@@ -70,7 +70,9 @@ public class HandPanel extends JPanel implements ScrabbleView {
      */
     @Override
     public void update(ScrabbleEvent event) {
-        setHandForTurn(event.getCurrentPlayer());
+        if (!(event.getCurrentPlayer() instanceof BotPlayer)) {
+            setHandForTurn(event.getCurrentPlayer());
+        }
         updateVisibility();
     }
 

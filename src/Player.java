@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *  A Player in the game of Scrabble.
@@ -10,7 +11,7 @@ public class Player {
     private final String name;
 
     /** A HashMap representing the player's hand. Stores available letters and their quantities. */
-    private final ArrayList<String> hand;
+    protected final ArrayList<String> hand;
 
     /** An integer representing the player's score. */
     private int score;
@@ -46,14 +47,42 @@ public class Player {
      * Determines if the Player has the letters to make the specified word.
      * @param input A String representation of word that will be checked.
      * @return True, if Player has all letters needed. False, if not.
-     * @author Guy Morgenshtern 101151430
+     * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
      */
     public boolean hasLettersNeededForWord(String input) {
-        // iterate through the specified word
-        for (char c : input.toCharArray()) {
-            // determine if c is in hand, returns 0 if not in hand
-            boolean q = hand.contains(String.valueOf(c).toUpperCase());
-            if (!q) {
+//        // iterate through the specified word
+//        for (char c : input.toCharArray()) {
+//            // determine if the char c is in the player's hand, returns false if not in hand
+//            if (!hand.contains(String.valueOf(c).toUpperCase())) {
+//                return false;
+//            }
+//        }
+//        return true;
+
+        // create a HashMap to store all the occurrences of each letter in the Player's hand
+        HashMap<String, Integer> letterOccurrencesInHand = new HashMap<>();
+        for (String s : hand) {
+            if (letterOccurrencesInHand.containsKey(s)) {
+                letterOccurrencesInHand.put(s, letterOccurrencesInHand.get(s) + 1);
+            } else {
+                letterOccurrencesInHand.put(s, 1);
+            }
+        }
+
+        // create a HashMap to store all the occurrences of each letter in the inputted String
+        HashMap<String, Integer> letterOccurrencesInInput = new HashMap<>();
+        for (char c : input.toUpperCase().toCharArray()) {
+            if (letterOccurrencesInInput.containsKey(c + "")) {
+                letterOccurrencesInInput.put(c + "", letterOccurrencesInInput.get(c + "") + 1);
+            } else {
+                letterOccurrencesInInput.put(c + "", 1);
+            }
+        }
+
+        // determine if the player has enough of each letter to create the inputted String
+        for (String key : letterOccurrencesInInput.keySet()) {
+            if (!letterOccurrencesInHand.containsKey(key)
+                || (letterOccurrencesInHand.containsKey(key) && letterOccurrencesInInput.get(key) > letterOccurrencesInHand.get(key))) {
                 return false;
             }
         }
