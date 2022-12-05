@@ -618,4 +618,23 @@ public class ScrabbleModel {
         }
     }
 
+    public void loadScrabble(String fileName) throws IOException {
+        FileInputStream fileIn = new FileInputStream(fileName);
+        ObjectInputStream in = new ObjectInputStream(fileIn);
+        Player.deserialize(in);
+    }
+
+    public void saveScrabble(String prefix) throws IOException {
+        String suffix = ".ser";
+        String playerListFile = prefix + "_player_list" + suffix;
+        String boardFile = prefix + "_board" + suffix;
+
+        FileOutputStream fileOut = new FileOutputStream(playerListFile);
+        ObjectOutputStream out = new ObjectOutputStream(fileOut);
+        for (Player p : playerList) {
+            System.out.println(p);
+            p.serialize(out);
+        }
+        fileOut.close();
+    }
 }

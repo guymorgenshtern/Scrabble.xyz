@@ -4,7 +4,7 @@ import java.io.*;
  * A Board in the game of Scrabble.
  * @author Francisco DeGrano 101147447. Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
  */
-public class Board {
+public class Board implements Serializable {
 
     /** An integer representing the default size of the board. */
     private static final int DEFAULT_SIZE = 15;
@@ -187,6 +187,10 @@ public class Board {
             }
             System.out.println(" ");
         }
+    }
+
+    public void serialize(String prefix) {
+
     }
 
 }

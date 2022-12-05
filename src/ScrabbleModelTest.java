@@ -1,4 +1,6 @@
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import static org.junit.Assert.*;
 
@@ -139,5 +141,29 @@ public class ScrabbleModelTest {
         assert(scrabbleModel.getBoard().getTileOnBoard(11, 7).getLetter() == ' ');
     }
 
+    @org.junit.Test
+    public void testSaveScrabble() throws IOException {
+        ScrabbleModel scrabbleModel = new ScrabbleModel();
 
+        String[] playerNames = new String[] { "Guy", "Francisco", "Emily" };
+        scrabbleModel.initializeGame(0, playerNames);
+        scrabbleModel.getPlayerList().get(0).setScore(10);
+        scrabbleModel.saveScrabble("test");
+
+        FileInputStream fileIn = new FileInputStream("test_player_list.ser");
+        ObjectInputStream in = new ObjectInputStream(fileIn);
+        ArrayList<Player> newList = Player.deserialize(in);
+
+        boolean isEqual = true;
+        System.out.println(newList.size());
+        for (int i = 0; i < newList.size(); i++) {
+            System.out.println("Old " + scrabbleModel.getPlayerList().get(i).getName() + " " + scrabbleModel.getPlayerList().get(i).getScore());
+            System.out.println("New " + newList.get(i).getName() + " " + newList.get(i).getScore());
+            if (!(newList.get(i).getName().equals(scrabbleModel.getPlayerList().get(i).getName()))
+                    || newList.get(i).getScore() != scrabbleModel.getPlayerList().get(i).getScore()) {
+                isEqual = false;
+            }
+        }
+        assert(isEqual);
+    }
 }

@@ -45,6 +45,30 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         this.add(handPanel, BorderLayout.SOUTH);
         this.add(infoPanel, BorderLayout.NORTH);
 
+        JTextField saveScrabble = new JTextField(15);
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Menu");
+        JMenuItem save = new JMenuItem("Save");
+
+        JPanel saveScrabblePanel = new JPanel();
+        saveScrabblePanel.add(saveScrabble);
+        save.addActionListener(e-> {
+            int result = JOptionPane.showConfirmDialog(null, saveScrabblePanel,
+                    "Choose file to save to", JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.OK_OPTION) {
+                try {
+                    model.saveScrabble(saveScrabble.getText());
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
+
+        menuBar.add(menu);
+        menu.add(save);
+        this.setJMenuBar(menuBar);
+
         this.setSize(1000, 800); // Expanded to enable text to show on button
         this.setVisible(true);
 

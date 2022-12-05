@@ -1,10 +1,12 @@
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *  A Player in the game of Scrabble.
  *  @author Guy Morgenshtern 101151430
  */
-public class Player {
+public class Player implements Serializable {
 
     /** A String representing the player's name. */
     private final String name;
@@ -96,6 +98,45 @@ public class Player {
      */
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public static ArrayList<Player> deserialize(ObjectInputStream input) throws IOException {
+
+        ArrayList<Player> playerList = new ArrayList<>();
+        try
+        {
+            for (;;)
+            {
+                Player p = (Player) input.readObject();
+                playerList.add(p);
+            }
+        }
+        catch (EOFException exc) {
+            System.out.println("end of file");
+            input.close();
+        }
+        catch (IOException exc) {
+            exc.printStackTrace();
+        }
+        catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return playerList;
+    }
+
+    public void serialize(ObjectOutputStream output) throws IOException {
+
+
+        try {
+            output.writeObject(this);
+        }
+        catch (EOFException exc) {
+            System.out.println("end of file");
+            output.close();
+        }
+        catch (IOException exc) {
+            exc.printStackTrace();
+        }
     }
 
 
