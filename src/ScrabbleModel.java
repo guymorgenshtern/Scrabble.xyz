@@ -258,8 +258,8 @@ public class ScrabbleModel {
      */
     private String findFullWord(ScrabbleMove scrabbleMove) {
         //getting the coords of first letter of move
-        int x = scrabbleMove.getCoords().get(0).coords()[0];
-        int y = scrabbleMove.getCoords().get(0).coords()[1];
+        int x = scrabbleMove.getCoords().get(0).getCoords()[0];
+        int y = scrabbleMove.getCoords().get(0).getCoords()[1];
         String word = "";
 
         //concat all letters to the right
@@ -339,7 +339,7 @@ public class ScrabbleModel {
     private void deleteInvalidWordFromBoard(ScrabbleMove move) {
         ArrayList<BoardClick> boardClicks = move.getCoords();
         for (BoardClick boardClick : boardClicks) {
-            board.getTileOnBoard(boardClick.coords()[0], boardClick.coords()[1]).setLetter(' ');
+            board.getTileOnBoard(boardClick.getCoords()[0], boardClick.getCoords()[1]).setLetter(' ');
         }
     }
 
@@ -364,7 +364,7 @@ public class ScrabbleModel {
         //important to do because we need their coordinates to determine if they lie on a multiplier
         ArrayList<BoardClick> boardClicks = move.getCoords();
         for (BoardClick boardClick : boardClicks) {
-            Square tile = board.getTileOnBoard(boardClick.coords()[0], boardClick.coords()[1]);
+            Square tile = board.getTileOnBoard(boardClick.getCoords()[0], boardClick.getCoords()[1]);
             String letter = String.valueOf(tile.getLetter());
 
             //remove any letter that has already been scored
@@ -440,6 +440,7 @@ public class ScrabbleModel {
                 } else {
                     //if the player skipped but the game isn't over, skip to next player
                     int rand = (int)(Math.random() * 7);
+                    System.out.println("Current Player is: " + currentPlayer.getName() + ". They have " + currentPlayer.getAvailableLetters().size() + " letters in their hand.");
                     currentPlayer.removeLetter(rand);
                     currentPlayer.addLetter(letterBag.getRandomLetter());
                     playerTurnCounter++;
@@ -454,8 +455,8 @@ public class ScrabbleModel {
 
                 //determine if the word is horizontal or vertical
                 for (int i = 1; i < move.getCoords().size(); i++) {
-                    horizontal = horizontal && move.getCoords().get(i).coords()[1] == move.getCoords().get(0).coords()[1];
-                    vertical = vertical && move.getCoords().get(i).coords()[0] == move.getCoords().get(0).coords()[0];
+                    horizontal = horizontal && move.getCoords().get(i).getCoords()[1] == move.getCoords().get(0).getCoords()[1];
+                    vertical = vertical && move.getCoords().get(i).getCoords()[0] == move.getCoords().get(0).getCoords()[0];
                 }
 
                 if ((horizontal) && (vertical) && move.getCoords().size() == 1) {
@@ -482,14 +483,30 @@ public class ScrabbleModel {
                 //begin building the rest of the move
                 move.setPlayer(currentPlayer);
                 move.setWord(findFullWord(move));
-                System.out.println(move.getWord());
+                System.out.println("The inputted word is: " + move.getWord());
                 move.setValid(checkMoveValidity(move));
 
+                if (currentPlayer instanceof BotPlayer) {
+                    System.out.println("Is the move valid? " + move.isValid());
+                }
                 //score the move if it is valid
                 if (move.isValid()) {
                     numberOfTries = 0;
                     //calculate score
                     currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
+
+                    if (currentPlayer instanceof BotPlayer) {
+                        System.out.println("Before adding letters: The BotPlayer's move is valid and they now have " + currentPlayer.getAvailableLetters().size() + " letter(s) in their hand.");
+                    }
+
+                    // BotPlayer never touches a JButton, so usedLetters is never added to
+                    if (currentPlayer instanceof BotPlayer) {
+                        System.out.println("Removing letters from the BotPlayer's hand!");
+                        // remove used letters from the BotPlayer's hand
+                        for (BoardClick boardClick : move.getCoords()) {
+                            currentPlayer.removeLetter(boardClick.getLetter());
+                        }
+                    }
 
                     //removed played letters
                     usedLetters.sort(Collections.reverseOrder());
@@ -501,7 +518,9 @@ public class ScrabbleModel {
                     for (int i = 0; i < move.getCoords().size(); i++) {
                         currentPlayer.addLetter(letterBag.getRandomLetter());
                     }
-
+                    if (currentPlayer instanceof BotPlayer) {
+                        System.out.println("The BotPlayer's move is valid and they now have " + currentPlayer.getAvailableLetters().size() + " letter(s) in their hand.");
+                    }
                     //next player
                     playerTurnCounter++;
                 } else {

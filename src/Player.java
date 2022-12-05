@@ -50,15 +50,6 @@ public class Player {
      * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
      */
     public boolean hasLettersNeededForWord(String input) {
-//        // iterate through the specified word
-//        for (char c : input.toCharArray()) {
-//            // determine if the char c is in the player's hand, returns false if not in hand
-//            if (!hand.contains(String.valueOf(c).toUpperCase())) {
-//                return false;
-//            }
-//        }
-//        return true;
-
         // create a HashMap to store all the occurrences of each letter in the Player's hand
         HashMap<String, Integer> letterOccurrencesInHand = new HashMap<>();
         for (String s : hand) {
@@ -72,17 +63,18 @@ public class Player {
         // create a HashMap to store all the occurrences of each letter in the inputted String
         HashMap<String, Integer> letterOccurrencesInInput = new HashMap<>();
         for (char c : input.toUpperCase().toCharArray()) {
-            if (letterOccurrencesInInput.containsKey(c + "")) {
-                letterOccurrencesInInput.put(c + "", letterOccurrencesInInput.get(c + "") + 1);
+            String s = c + "";
+            if (letterOccurrencesInInput.containsKey(s)) {
+                letterOccurrencesInInput.put(s, letterOccurrencesInInput.get(s) + 1);
             } else {
-                letterOccurrencesInInput.put(c + "", 1);
+                letterOccurrencesInInput.put(s, 1);
             }
         }
 
         // determine if the player has enough of each letter to create the inputted String
         for (String key : letterOccurrencesInInput.keySet()) {
             if (!letterOccurrencesInHand.containsKey(key)
-                || (letterOccurrencesInHand.containsKey(key) && letterOccurrencesInInput.get(key) > letterOccurrencesInHand.get(key))) {
+                || (letterOccurrencesInInput.get(key) > letterOccurrencesInHand.get(key))) { // cannot use more letters than you have
                 return false;
             }
         }

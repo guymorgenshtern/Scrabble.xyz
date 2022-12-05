@@ -195,8 +195,8 @@ public class BoardPanel extends JPanel implements ScrabbleView {
 
         // iterate through the letters that were placed on the board
         for (BoardClick boardClick : boardClicks) {
-            int x = boardClick.coords()[0];
-            int y = boardClick.coords()[1];
+            int x = boardClick.getCoords()[0];
+            int y = boardClick.getCoords()[1];
             if (scrabbleMove.isValid()) {
                 updateButton(x, y, event.getBoard().getTileOnBoard(x, y).getLetter() + "");
             } else {

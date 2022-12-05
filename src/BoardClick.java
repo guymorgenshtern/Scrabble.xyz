@@ -23,14 +23,14 @@ public class BoardClick {
     /**
      * @return An array of integers to represent a coordinate on the Board.
      */
-    public int[] coords() {
+    public int[] getCoords() {
         return coords;
     }
 
     /**
      * @return A String to represent a letter to place at coords on the Board.
      */
-    public String letter() {
+    public String getLetter() {
         return letter;
     }
 

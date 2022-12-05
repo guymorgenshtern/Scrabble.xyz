@@ -47,22 +47,22 @@ public class BotPlayerTest {
         // test board clicks
         ArrayList<BoardClick> actualBoardClicks = actualScrabbleMove.getCoords();
         for (int i = 0; i < actualBoardClicks.size(); i++) {
-            assertEquals(7, actualBoardClicks.get(i).coords()[1]);
+            assertEquals(7, actualBoardClicks.get(i).getCoords()[1]);
         }
-        assertEquals(3, actualBoardClicks.get(0).coords()[0]);
-        assertEquals(4, actualBoardClicks.get(1).coords()[0]);
-        assertEquals(5, actualBoardClicks.get(2).coords()[0]);
-        assertEquals(6, actualBoardClicks.get(3).coords()[0]);
-        assertEquals(8, actualBoardClicks.get(4).coords()[0]);
-        assertEquals(9, actualBoardClicks.get(5).coords()[0]);
-        assertEquals(10, actualBoardClicks.get(6).coords()[0]);
-        assertEquals("A", actualBoardClicks.get(0).letter());
-        assertEquals("B", actualBoardClicks.get(1).letter());
-        assertEquals("E", actualBoardClicks.get(2).letter());
-        assertEquals("R", actualBoardClicks.get(3).letter());
-        assertEquals("E", actualBoardClicks.get(4).letter());
-        assertEquals("E", actualBoardClicks.get(5).letter());
-        assertEquals("N", actualBoardClicks.get(6).letter());
+        assertEquals(3, actualBoardClicks.get(0).getCoords()[0]);
+        assertEquals(4, actualBoardClicks.get(1).getCoords()[0]);
+        assertEquals(5, actualBoardClicks.get(2).getCoords()[0]);
+        assertEquals(6, actualBoardClicks.get(3).getCoords()[0]);
+        assertEquals(8, actualBoardClicks.get(4).getCoords()[0]);
+        assertEquals(9, actualBoardClicks.get(5).getCoords()[0]);
+        assertEquals(10, actualBoardClicks.get(6).getCoords()[0]);
+        assertEquals("A", actualBoardClicks.get(0).getLetter());
+        assertEquals("B", actualBoardClicks.get(1).getLetter());
+        assertEquals("E", actualBoardClicks.get(2).getLetter());
+        assertEquals("R", actualBoardClicks.get(3).getLetter());
+        assertEquals("E", actualBoardClicks.get(4).getLetter());
+        assertEquals("E", actualBoardClicks.get(5).getLetter());
+        assertEquals("N", actualBoardClicks.get(6).getLetter());
     }
 
     /**
@@ -90,9 +90,9 @@ public class BotPlayerTest {
         assertEquals(7, bot.getAvailableLetters().size());
 
         ScrabbleMove actualMove = bot.play(board);
-        assertEquals(8, actualMove.getCoords().get(0).coords()[0]);
-        assertEquals(5, actualMove.getCoords().get(0).coords()[1]);
-        assertEquals("O", actualMove.getCoords().get(0).letter());
+        assertEquals(8, actualMove.getCoords().get(0).getCoords()[0]);
+        assertEquals(5, actualMove.getCoords().get(0).getCoords()[1]);
+        assertEquals("O", actualMove.getCoords().get(0).getLetter());
         assertEquals(ScrabbleModel.Direction.VERTICAL, actualMove.getDirection());
         assertEquals(bot, actualMove.getPlayer());
     }
@@ -121,9 +121,9 @@ public class BotPlayerTest {
         assertEquals(3, bot.getAvailableLetters().size());
 
         ScrabbleMove actualMove = bot.play(board);
-        assertEquals(8, actualMove.getCoords().get(0).coords()[0]);
-        assertEquals(8, actualMove.getCoords().get(0).coords()[1]);
-        assertEquals("A", actualMove.getCoords().get(0).letter());
+        assertEquals(8, actualMove.getCoords().get(0).getCoords()[0]);
+        assertEquals(8, actualMove.getCoords().get(0).getCoords()[1]);
+        assertEquals("A", actualMove.getCoords().get(0).getLetter());
         assertEquals(ScrabbleModel.Direction.HORIZONTAL, actualMove.getDirection());
         assertEquals(bot, actualMove.getPlayer());
     }
