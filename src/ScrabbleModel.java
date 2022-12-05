@@ -257,8 +257,8 @@ public class ScrabbleModel {
         //concat all letters to the right
         if(scrabbleMove.getDirection() == Direction.HORIZONTAL) {
             int walkingPointer = x;
-            while (walkingPointer < board.getNumCols() && Character.isAlphabetic(board.getTileOnBoard(walkingPointer,y).getLetter())) {
-                word += String.valueOf(board.getTileOnBoard(walkingPointer,y).getLetter());
+            while (walkingPointer < board.getNumCols() && Character.isAlphabetic(board.getTileOnBoard(walkingPointer, y).getLetter())) {
+                word += String.valueOf(board.getTileOnBoard(walkingPointer, y).getLetter());
                 walkingPointer++;
             }
 
@@ -475,7 +475,7 @@ public class ScrabbleModel {
                 //begin building the rest of the move
                 move.setPlayer(currentPlayer);
                 move.setWord(findFullWord(move));
-                System.out.println(move.getWord());
+                System.out.println("Word that " + currentPlayer.getName() + " is attempting to play is " + move.getWord() + ".");
                 move.setValid(checkMoveValidity(move));
 
                 //score the move if it is valid

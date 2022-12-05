@@ -22,7 +22,7 @@ public class BotPlayer extends Player {
     public enum SquareStatus { EMPTY, NOT_EMPTY, DOES_NOT_EXIST };
 
     /** A Library to use to create valid words. */
-    private final Library library;
+    private final ArrayList<String> library;
 
     /**
      * Creates a BotPlayer with the specified name. BotPlayer starts off with an empty hand and a score of zero.
@@ -32,7 +32,7 @@ public class BotPlayer extends Player {
      */
     public BotPlayer(String name) throws IOException {
         super(name);
-        library = new Library();
+        library = (new Library()).getValidWords();
     }
 
     /**
@@ -105,6 +105,15 @@ public class BotPlayer extends Player {
         return letter;
     }
 
+    private boolean containsBoardLetter(String wordToCheck, String boardLetter) {
+        for (char c : wordToCheck.toCharArray()) {
+            if (c == boardLetter.charAt(0)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @param row An integer representing the row on the board that the BotPlayer is adding the letter to.
      * @param col An integer representing the column on the board that the BotPlayer is adding the letter to.
@@ -144,12 +153,13 @@ public class BotPlayer extends Player {
 
                         // iterate through the list of valid words provided by the dictionary
                         String validWord = "";
-                        for (int i = 0; i < library.getValidWords().size() && validWord.equals(""); i++) {
-                            String s = library.getValidWords().get(i);
-                            if (hasLettersNeededForWord(s) && s.length() > 1 && s.contains(boardLetter.toLowerCase())) {
-                                validWord = s.toUpperCase(); // letters are displayed as uppercase on the board
+                        for (int i = 0; i < library.size() && validWord.equals(""); i++) {
+                            String s = library.get(i).toUpperCase(); // letters on board are displayed as uppercase
+                            if (containsBoardLetter(s, boardLetter) && hasLettersNeededForWord(s) && s.length() > 1) {
+                                validWord = s;
                             }
                         }
+                        System.out.println("validWord that BotPlayer has found is: " + validWord + ".");
 
                         // determine where the letter from the board is in the valid word
                         int index = -1;
@@ -163,8 +173,8 @@ public class BotPlayer extends Player {
                         ArrayList<BoardClick> boardClicks = new ArrayList<>();
                         for (int i = 0; i < validWord.length(); i++) {
                             if (i != index) { // do not add the pre-existing letter into ScrabbleMove
-                                boardClicks.add(new BoardClick(new int[] { board.getNumRows() / 2 - index + i, board.getNumCols() / 2 }, validWord.charAt(i) + ""));
-                                board.getTileOnBoard(board.getNumRows() / 2 - index + i, board.getNumCols() / 2).setLetter(validWord.charAt(i));
+                                boardClicks.add(new BoardClick(new int[] { board.getNumRows() / 2, board.getNumCols() / 2 - index + i }, validWord.charAt(i) + ""));
+                                board.getTileOnBoard(board.getNumRows() / 2, board.getNumCols() / 2 - index + i).setLetter(validWord.charAt(i));
                             }
                         }
 
@@ -197,9 +207,9 @@ public class BotPlayer extends Player {
                             // find a two-letter word that begins with the board letter
                             String validTwoLetterWord = "";
                             // start reading through the library at a random place
-                            int randomIndex = (int) (Math.random() * library.getValidWords().size() - 1);
-                            for (int i = randomIndex; i < library.getValidWords().size() && validTwoLetterWord.equals(""); i++) {
-                                String s = library.getValidWords().get(i);
+                            int randomIndex = (int) (Math.random() * library.size() - 1);
+                            for (int i = randomIndex; i < library.size() && validTwoLetterWord.equals(""); i++) {
+                                String s = library.get(i);
                                 if (hasLettersNeededForWord(s) && s.length() == 2
                                         && s.substring(0, 1).toUpperCase().equals(boardLetter)
                                         && !s.substring(1).toUpperCase().equals(boardLetter)) { // second letter used cannot be the board letter
@@ -208,7 +218,7 @@ public class BotPlayer extends Player {
                             }
                             // reading through the library from the start until you reach the random index
                             for (int i = 0; i < randomIndex && validTwoLetterWord.equals(""); i++) {
-                                String s = library.getValidWords().get(i);
+                                String s = library.get(i);
                                 if (hasLettersNeededForWord(s) && s.length() == 2
                                         && s.substring(0, 1).toUpperCase().equals(boardLetter)
                                         && !s.substring(1).toUpperCase().equals(boardLetter)) { // second letter used cannot be the board letter
