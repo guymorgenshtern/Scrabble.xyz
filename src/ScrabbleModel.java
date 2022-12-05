@@ -438,9 +438,8 @@ public class ScrabbleModel {
                         v.update(event);
                     }
                 } else {
-                    //if the player skipped but the game isn't over, skip to next player
+                    // if the player skipped but the game isn't over, skip to next player
                     int rand = (int)(Math.random() * 7);
-                    System.out.println("Current Player is: " + currentPlayer.getName() + ". They have " + currentPlayer.getAvailableLetters().size() + " letters in their hand.");
                     currentPlayer.removeLetter(rand);
                     currentPlayer.addLetter(letterBag.getRandomLetter());
                     playerTurnCounter++;
@@ -477,50 +476,44 @@ public class ScrabbleModel {
                 } else if (horizontal) {
                     move.setDirection(Direction.HORIZONTAL);
                 } else {
-                    System.out.println("this is an issue");
+                    System.out.println("This is an issue!");
                 }
 
                 //begin building the rest of the move
                 move.setPlayer(currentPlayer);
                 move.setWord(findFullWord(move));
-                System.out.println("The inputted word is: " + move.getWord());
+                System.out.println(currentPlayer.getName() + " is trying to play: " + move.getWord() + ".");
                 move.setValid(checkMoveValidity(move));
 
-                if (currentPlayer instanceof BotPlayer) {
-                    System.out.println("Is the move valid? " + move.isValid());
-                }
                 //score the move if it is valid
                 if (move.isValid()) {
                     numberOfTries = 0;
                     //calculate score
                     currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
 
-                    if (currentPlayer instanceof BotPlayer) {
-                        System.out.println("Before adding letters: The BotPlayer's move is valid and they now have " + currentPlayer.getAvailableLetters().size() + " letter(s) in their hand.");
+                    // remove played letters
+                    usedLetters.sort(Collections.reverseOrder());
+                    for (Integer index : usedLetters) {
+                        currentPlayer.removeLetter(index);
                     }
-
                     // BotPlayer never touches a JButton, so usedLetters is never added to
                     if (currentPlayer instanceof BotPlayer) {
-                        System.out.println("Removing letters from the BotPlayer's hand!");
                         // remove used letters from the BotPlayer's hand
                         for (BoardClick boardClick : move.getCoords()) {
                             currentPlayer.removeLetter(boardClick.getLetter());
                         }
                     }
 
-                    //removed played letters
-                    usedLetters.sort(Collections.reverseOrder());
-                    for (Integer index : usedLetters) {
-                        currentPlayer.removeLetter(index);
+                    // deal new letters to player
+                    int numberOfBoardClicksUsed = move.getCoords().size();
+                    // must account for the additional boardLetter that was added to the BotPlayer's hand
+                    if (currentPlayer instanceof BotPlayer) {
+                        numberOfBoardClicksUsed--;
                     }
-
-                    //give new letters to player
-                    for (int i = 0; i < move.getCoords().size(); i++) {
+                    for (int i = 0; i < numberOfBoardClicksUsed; i++) {
                         currentPlayer.addLetter(letterBag.getRandomLetter());
                     }
-                    if (currentPlayer instanceof BotPlayer) {
-                        System.out.println("The BotPlayer's move is valid and they now have " + currentPlayer.getAvailableLetters().size() + " letter(s) in their hand.");
-                    }
+
                     //next player
                     playerTurnCounter++;
                 } else {

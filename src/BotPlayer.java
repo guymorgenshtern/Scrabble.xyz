@@ -108,46 +108,142 @@ public class BotPlayer extends Player {
         return letter;
     }
 
+    /**
+     * @param statusOfSurroundingSquares A SquareStatus array representing the status of the surrounding spaces to check.
+     * @param dir1 An integer representing the first direction to check.
+     * @param dir2 An integer representing the second direction to check.
+     * @param dir3 An integer representing the third direction to check.
+     * @return True, if a letter can be added to the Square queried by the specified SquareStatus[]. False, if not.
+     * @author Emily Tang 101192604
+     */
     private boolean canAddLetter(SquareStatus[] statusOfSurroundingSquares, int dir1, int dir2, int dir3) {
         return statusOfSurroundingSquares[dir1] != SquareStatus.NOT_EMPTY
                 && statusOfSurroundingSquares[dir2] != SquareStatus.NOT_EMPTY
                 && statusOfSurroundingSquares[dir3] != SquareStatus.NOT_EMPTY;
     }
 
+    /**
+     * @param statusOfSurroundingSquares A SquareStatus array representing the status of the surrounding spaces to check.
+     * @return True, if a letter can be added to the Square queried by the specified SquareStatus array to make a
+     * horizontal word. False, it not.
+     * @author Emily Tang 101192604
+     */
     private boolean canAddLetterHorizontally(SquareStatus[] statusOfSurroundingSquares) {
         return canAddLetter(statusOfSurroundingSquares, TOP, RIGHT, BOTTOM);
     }
 
+    /**
+     * @param statusOfSurroundingSquares A SquareStatus array representing the status of the surrounding spaces to check.
+     * @return True, if a letter can be added to the Square queried by the specified SquareStatus array to make a
+     * vertical word. False, it not.
+     * @author Emily Tang 101192604
+     */
     private boolean canAddLetterVertically(SquareStatus[] statusOfSurroundingSquares) {
         return canAddLetter(statusOfSurroundingSquares, RIGHT, BOTTOM, LEFT);
     }
 
-    private int numOccurrencesOfCharInWord(String word, String check) {
+    /**
+     * @param direction A Direction representing the orientation of the word that the BotPlayer will play.
+     * @param board The Board that is currently in play.
+     * @param row An integer representing the row on the board to check.
+     * @param col An integer representing the column on the board to check.
+     * @return An integer representing the max length of the word the BotPlayer can play.
+     * @author Emily Tang 101192604
+     */
+    private int getMaxLengthOfWord(ScrabbleModel.Direction direction, Board board, int row, int col) {
+        int maxLengthOfWord = 1; // must account for the pre-existing boardLetter
+        if (direction == ScrabbleModel.Direction.HORIZONTAL) {
+            int j = col;
+            while (j < board.getNumCols() && canAddLetterHorizontally(getStatusOfSurroundingSquares(board, row, j))) {
+                j++; // move towards the right
+                maxLengthOfWord++;
+            }
+        } else {
+            int i = row;
+            while (i < board.getNumRows() && canAddLetterVertically(getStatusOfSurroundingSquares(board, i, col))) {
+                i++; // move towards the bottom
+                maxLengthOfWord++;
+            }
+        }
+        return maxLengthOfWord;
+    }
+
+    /**
+     * @param word A String representing the word to check if there are any occurrences of the specified char.
+     * @param c A char representing the character to check for in the specified String.
+     * @return An integer representing the number of occurrences of the specified char there are in the specified
+     * String.
+     * @author Emily Tang 101192604
+     */
+    private int numOccurrencesOfCharInWord(String word, char c) {
         int numOccurrences = 0;
-        char checkChar = check.charAt(0);
-        for (char c : word.toCharArray()) {
-            if (c == checkChar) {
+        for (char ch : word.toCharArray()) { // convert the specified word to a char array and iterate through it
+            if (ch == c) {
                 numOccurrences++;
             }
         }
         return numOccurrences;
     }
 
-    private String getLongestWord(ArrayList<String> validWords, int lengthOfLongestWordToBePlayed) {
+    /**
+     * @param validWords An ArrayList of Strings.
+     * @param maxLengthOfWord An integer representing the maximum length of the word that the BotPlayer can play.
+     * @return A String representing the longest word in the specified ArrayList of Strings.
+     * @author Emily Tang 101192604
+     */
+    private String getLongestWord(ArrayList<String> validWords, int maxLengthOfWord) {
         if (validWords.size() > 0) {
             int indexOfLongestWord = 0;
-            int lengthOfLongestWordInList = 0;
+            int lengthOfLongestWord = 0;
             for (int i = 0; i < validWords.size(); i++) {
-                if (validWords.get(i).length() == lengthOfLongestWordToBePlayed) {
-                    return validWords.get(i);
-                } else if (validWords.get(i).length() > lengthOfLongestWordInList) {
-                    lengthOfLongestWordInList = validWords.get(i).length();
+                String currentWord = validWords.get(i);
+                int currentLength = currentWord.length();
+                if (currentLength == maxLengthOfWord) {
+                    return currentWord;
+                } else if (currentLength > lengthOfLongestWord) {
+                    // save the length of the current word and its index
+                    lengthOfLongestWord = currentLength;
                     indexOfLongestWord = i;
                 }
             }
             return validWords.get(indexOfLongestWord);
         }
         return null;
+    }
+
+    /**
+     * @param validWord A String representing a valid word that the BotPlayer would like to play.
+     * @param boardLetter A character to determine the index of in the specified String.
+     * @return An integer representing the index of the specified character in the specified String.
+     * @author Emily Tang 101192604
+     */
+    private int getIndexOfBoardLetter(String validWord, char boardLetter) {
+        int index = -1;
+        for (int i = 0; i < validWord.length(); i++) {
+            if (validWord.charAt(i) == boardLetter) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    /**
+     * @param board The Board that is currently in play.
+     * @param validWord A String representing the valid word that the BotPlayer would like to play.
+     * @param index An index representing where the pre-existing board letter is in the specified valid word.
+     * @return An ArrayList of BoardClicks representing the BotPlayer's turn (if the BotPlayer is playing the first move
+     * of the game).
+     * @author Emily Tang 101192604
+     */
+    private ArrayList<BoardClick> getBoardClicksForFirstMove(Board board, String validWord, int index) {
+        ArrayList<BoardClick> boardClicks = new ArrayList<>();
+        for (int i = 0; i < validWord.length(); i++) {
+            if (i != index) { // do not add the pre-existing letter into ScrabbleMove
+                boardClicks.add(new BoardClick(new int[] { board.getNumRows() / 2, board.getNumCols() / 2 - index + i }, validWord.charAt(i) + ""));
+                board.getTileOnBoard(board.getNumRows() / 2, board.getNumCols() / 2 - index + i).setLetter(validWord.charAt(i));
+            }
+        }
+        return boardClicks;
     }
 
     /**
@@ -164,14 +260,14 @@ public class BotPlayer extends Player {
         for (int row = 0; row < board.getNumRows(); row++) {
             for (int col = 0; col < board.getNumCols(); col++) {
                 if (scrabbleBoard[row][col].getLetter() != ' ') { // found a square with a letter
-                    System.out.println("BotPlayer found '" + scrabbleBoard[row][col].getLetter() + "' at square " + row + " " + col + ".");
+                    System.out.println("BotPlayer found the letter '" + scrabbleBoard[row][col].getLetter() + "' at square " + row + " " + col + ".");
+
                     // check the status of the surrounding squares and determine the number of surrounding empty squares
                     SquareStatus[] statusOfSurroundingSquares = getStatusOfSurroundingSquares(board, row, col);
                     int numOfSurroundingEmptySquares = getNumSurroundingEmptySquares(statusOfSurroundingSquares);
 
-                    if (numOfSurroundingEmptySquares == 4) { // this means we're at the beginning of the game
+                    if (numOfSurroundingEmptySquares == 4) { // this means we're playing the first turn
                         String boardLetter = addBoardLetterToHand(scrabbleBoard[row][col].getLetter());
-                        System.out.println("The boardLetter is " + boardLetter + ".");
 
                         // iterate through the list of valid words provided by the dictionary
                         ArrayList<String> validWords = new ArrayList<>();
@@ -179,32 +275,16 @@ public class BotPlayer extends Player {
                             String s = library.get(i).toUpperCase();
                             if (hasLettersNeededForWord(s) && s.length() > 1 && s.contains(boardLetter)) {
                                 validWords.add(s);
-                                System.out.println("Adding " + s + " to the list of valid words.");
                             }
                         }
+
                         String validWord = getLongestWord(validWords, board.getNumCols());
 
                         if (validWord != null) {
                             // determine where the letter from the board is in the valid word
-                            int index = -1;
-                            for (int i = 0; i < validWord.length(); i++) {
-                                if (boardLetter.equals((validWord.charAt(i) + "").toUpperCase())) {
-                                    index = i;
-                                }
-                            }
-
-                            // create an ArrayList of BoardClicks
-                            ArrayList<BoardClick> boardClicks = new ArrayList<>();
-                            for (int i = 0; i < validWord.length(); i++) {
-//                                removeLetter(validWord.charAt(i) + ""); // remove the letter from the BotPlayer's hand
-                                if (i != index) { // do not add the pre-existing letter into ScrabbleMove
-                                    boardClicks.add(new BoardClick(new int[] { board.getNumRows() / 2 - index, board.getNumCols() / 2 + i }, validWord.charAt(i) + ""));
-                                    board.getTileOnBoard(board.getNumRows() / 2 - index, board.getNumCols() / 2 + i).setLetter(validWord.charAt(i));
-                                }
-                            }
-                            System.out.println("I have " + hand.size() + " letters in my hand!");
-
-                            return new ScrabbleMove(boardClicks, ScrabbleModel.Direction.HORIZONTAL, this);
+                            int index = getIndexOfBoardLetter(validWord, boardLetter.charAt(0));
+                            // create an ArrayList of BoardClicks, BotPlayer will add this word horizontally
+                            return new ScrabbleMove(getBoardClicksForFirstMove(board, validWord, index), ScrabbleModel.Direction.HORIZONTAL, this);
                         }
 
                     } else if (numOfSurroundingEmptySquares == 2 || numOfSurroundingEmptySquares == 3) {
@@ -233,63 +313,51 @@ public class BotPlayer extends Player {
                             colToPlaceLetter = col + 1;
                         }
 
-                        // determine the length of the longest word the BotPlayer can place
-                        int lengthOfLongestWord = 1;
-                        if (direction == ScrabbleModel.Direction.HORIZONTAL) {
-                            int j = colToPlaceLetter;
-                            while (j < board.getNumCols()
-                                && canAddLetterHorizontally(getStatusOfSurroundingSquares(board, rowToPlaceLetter, j))) {
-                                j++;
-                                lengthOfLongestWord++;
-                            }
-                        } else {
-                            int i = rowToPlaceLetter;
-                            while (i < board.getNumRows()
-                                && canAddLetterVertically(getStatusOfSurroundingSquares(board, i, colToPlaceLetter))) {
-                                i++;
-                                lengthOfLongestWord++;
-                            }
-                        }
-                        System.out.println("The length of the longest word I can make is " + lengthOfLongestWord + "!");
+                        // determine if there is a word in front of the boardLetter
+                        boolean wordInFrontOfBoardLetter = (direction == ScrabbleModel.Direction.HORIZONTAL && statusOfSurroundingSquares[LEFT] == SquareStatus.NOT_EMPTY)
+                                || (direction == ScrabbleModel.Direction.VERTICAL && statusOfSurroundingSquares[TOP] == SquareStatus.NOT_EMPTY);
 
-                        if (rowToPlaceLetter < board.getNumRows() && colToPlaceLetter < board.getNumCols()
-                                && scrabbleBoard[rowToPlaceLetter][colToPlaceLetter].getLetter() == ' ' && lengthOfLongestWord > 1) {
-                            // find a valid word that begins with the board letter
+                        // determine the length of the longest word the BotPlayer can place
+                        int maxLengthOfWord = getMaxLengthOfWord(direction, board, rowToPlaceLetter, colToPlaceLetter);
+
+                        if (rowToPlaceLetter < board.getNumRows() && colToPlaceLetter < board.getNumCols() // do not add a word past the right and bottom edges of the board
+                                && scrabbleBoard[rowToPlaceLetter][colToPlaceLetter].getLetter() == ' '
+                                && maxLengthOfWord > 1
+                                && !wordInFrontOfBoardLetter) { // do not add onto a pre-existing word
+                            // find 100 valid words that begin with the pre-existing letter on the board
                             ArrayList<String> validWords = new ArrayList<>();
                             for (int i = 0; i < library.size() && validWords.size() < 101; i++) {
                                 String s = library.get(i).toUpperCase(); // letters in BotPlayer's hand are in uppercase
                                 int length = s.length(); // determine the length of the selected word from the library
                                 if (hasLettersNeededForWord(s) // determine if the BotPlayer has the letters needed to make the selected word
-                                        && length > 1 && length <= lengthOfLongestWord
+                                        && length > 1 && length <= maxLengthOfWord
                                         && s.substring(0, 1).equals(boardLetter) // first letter of word must be the letter that's already on the board
-                                        && numOccurrencesOfCharInWord(s, boardLetter) <= numOfBoardLetterInHand) {
+                                        && numOccurrencesOfCharInWord(s, boardLetter.charAt(0)) <= numOfBoardLetterInHand) {
                                     validWords.add(s);
                                 }
                             }
 
-                            String validWord = getLongestWord(validWords, lengthOfLongestWord);
+                            // determine the longest word out of the ones that were found
+                            String validWord = getLongestWord(validWords, maxLengthOfWord);
 
                             if (validWord != null) {
-                                System.out.println("Found a valid word! The word is: " + validWord + "!");
-                                System.out.println("I have " + hand.size() + " letters in my hand!");
-//                                removeLetter(validWord.charAt(0) + "");
+                                System.out.println("BotPlayer found a valid word! The word is: " + validWord + "!");
+
                                 // create an ArrayList of BoardClicks (do not include the letter that's already on the board in this ArrayList)
                                 ArrayList<BoardClick> boardClicks = new ArrayList<>();
                                 for (int i = 1; i < validWord.length(); i++) {
                                     boardClicks.add(new BoardClick(new int[] { rowToPlaceLetter, colToPlaceLetter }, validWord.charAt(i) + ""));
                                     board.getTileOnBoard(rowToPlaceLetter, colToPlaceLetter).setLetter(validWord.charAt(i));
-//                                    removeLetter(validWord.charAt(i) + "");
                                     if (direction == ScrabbleModel.Direction.HORIZONTAL) {
-                                        colToPlaceLetter++;
+                                        colToPlaceLetter++; // move towards the right
                                     } else {
-                                        rowToPlaceLetter++;
+                                        rowToPlaceLetter++; // move towards the bottom
                                     }
                                 }
 
                                 return new ScrabbleMove(boardClicks, direction, this);
                             }
                         }
-
                         // could not find a valid word to add to the board, remove the board letter from the hand
                         removeLetter(boardLetter);
                     }
