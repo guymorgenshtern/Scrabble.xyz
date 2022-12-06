@@ -237,10 +237,13 @@ public class BotPlayer extends Player {
      */
     private ArrayList<BoardClick> getBoardClicksForFirstMove(Board board, String validWord, int index) {
         ArrayList<BoardClick> boardClicks = new ArrayList<>();
+        int rowMiddleSquare = board.getNumRows() % 2 == 0 ? board.getNumRows() / 2 - 1 : board.getNumRows() / 2;
+        int colMiddleSquare = board.getNumCols() % 2 == 0 ? board.getNumCols() / 2 - 1 : board.getNumCols() / 2;
         for (int i = 0; i < validWord.length(); i++) {
             if (i != index) { // do not add the pre-existing letter into ScrabbleMove
-                boardClicks.add(new BoardClick(new int[] { board.getNumRows() / 2, board.getNumCols() / 2 - index + i }, validWord.charAt(i) + ""));
-                board.getTileOnBoard(board.getNumRows() / 2, board.getNumCols() / 2 - index + i).setLetter(validWord.charAt(i));
+                int col = colMiddleSquare - index + i;
+                boardClicks.add(new BoardClick(new int[] { rowMiddleSquare, col }, validWord.charAt(i) + ""));
+                board.getTileOnBoard(rowMiddleSquare, col).setLetter(validWord.charAt(i));
             }
         }
         return boardClicks;
@@ -278,7 +281,7 @@ public class BotPlayer extends Player {
                             }
                         }
 
-                        String validWord = getLongestWord(validWords, board.getNumCols());
+                        String validWord = getLongestWord(validWords, board.getNumCols() / 2);
                         System.out.println("BotPlayer found a valid word: " + validWord + ".");
 
                         if (validWord != null) {

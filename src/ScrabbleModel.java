@@ -30,7 +30,7 @@ public class ScrabbleModel {
     private ArrayList<ScrabbleView> views;
 
     /** An integer representing the number of tries the current player has made to add a word to the board. */
-    private int numberOfTries;
+//    private int numberOfTries;
 
     /** A PlayerComparator to compare the scores of players. */
     private PlayerComparator playerComparator;
@@ -98,7 +98,7 @@ public class ScrabbleModel {
         letterBag = new LetterBag();
         usedLetters = new ArrayList<>();
         status = GameStatus.NOT_FINISHED;
-        numberOfTries = 0;
+//        numberOfTries = 0;
         playerComparator = new PlayerComparator();
         initializeLetterBag("/letters_by_quantity");
     }
@@ -422,7 +422,7 @@ public class ScrabbleModel {
         Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
         boolean horizontal = true;
         boolean vertical = true;
-        numberOfTries++;
+//        numberOfTries++;
 
         // coords is checking letters on the board
 
@@ -487,7 +487,7 @@ public class ScrabbleModel {
 
                 //score the move if it is valid
                 if (move.isValid()) {
-                    numberOfTries = 0;
+//                    numberOfTries = 0;
                     //calculate score
                     currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
 
@@ -520,13 +520,13 @@ public class ScrabbleModel {
                     deleteInvalidWordFromBoard(move);
                     move.setValid(false);
                     // boardSize squared
-                    int MAX_ATTEMPTS = 100;
-                    if (numberOfTries == MAX_ATTEMPTS) {
-                        playerTurnCounter++;
-                        haveAllPlayerSkipped();
-                        numberOfTries = 0;
-                        System.out.println("Player attempted too many turns");
-                    }
+//                    int MAX_ATTEMPTS = 100;
+//                    if (numberOfTries == MAX_ATTEMPTS) {
+//                        playerTurnCounter++;
+//                        haveAllPlayerSkipped();
+//                        numberOfTries = 0;
+//                        System.out.println("Player attempted too many turns");
+//                    }
                 }
                 getUsedLetters().clear();
 
