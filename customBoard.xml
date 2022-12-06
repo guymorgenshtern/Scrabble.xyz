@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<CustomBoard>
+    <Size row="12" col="12"/>
+    <PremiumSquare multiplier="1L" square="0,0"/>
+    <PremiumSquare multiplier="2L" square="0,10"/>
+    <PremiumSquare multiplier="3L" square="0,11"/>
+</CustomBoard>
