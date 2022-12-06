@@ -1,10 +1,20 @@
 import org.json.simple.JSONObject;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
 
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.awt.*;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * A JFrame to display when the user would like to create or load in their own custom board to play a game of Scrabble
@@ -214,18 +224,6 @@ public class CustomizationFrame extends JFrame {
     }
 
     /**
-     * Updates the boardPanel to display the appropriate number of rows and columns.
-     * @author Emily Tang 101192604
-     */
-    private void updateCustomBoardPanel() {
-        customBoardPanel.removeAll(); // remove all components currently on the board panel
-        customBoardPanel.setLayout(new GridLayout(numRows, numCols)); // update layout to current number of rows and columns
-        addButtonsToCustomBoardPanel(); // add the appropriate number of buttons to the board panel
-        customBoardPanel.revalidate();
-        customBoardPanel.repaint();
-    }
-
-    /**
      * Adds the appropriate number of buttons to the boardPanel.
      * @author Emily Tang 101192604
      */
@@ -235,6 +233,18 @@ public class CustomizationFrame extends JFrame {
                 customBoardPanel.add(buttons[i][j]);
             }
         }
+    }
+
+    /**
+     * Updates the boardPanel to display the appropriate number of rows and columns.
+     * @author Emily Tang 101192604
+     */
+    private void updateCustomBoardPanel() {
+        customBoardPanel.removeAll(); // remove all components currently on the board panel
+        customBoardPanel.setLayout(new GridLayout(numRows, numCols)); // update layout to current number of rows and columns
+        addButtonsToCustomBoardPanel(); // add the appropriate number of buttons to the board panel
+        customBoardPanel.revalidate();
+        customBoardPanel.repaint();
     }
 
     /**
@@ -273,6 +283,71 @@ public class CustomizationFrame extends JFrame {
     }
 
     /**
+     * Clears all premium squares from the custom board panel.
+     * @author Emily Tang 101192604
+     */
+    private void clearCustomBoardPanel() {
+        for (int i = 0; i < MAX_NUM_ROWS_OR_COLS; i++) {
+            for (int j = 0; j < MAX_NUM_ROWS_OR_COLS; j++) {
+                buttons[i][j].setText("");
+            }
+        }
+    }
+
+    /**
+     * Loads a custom board from the specified XML file.
+     * @param fileName A String representing the name of the XML file with a custom board.
+     * @throws ParserConfigurationException Indicates a serious configuration error.
+     * @throws SAXException Encapsulates a general SAX error or warning.
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @author Emily Tang 101192604
+     */
+    private void importFromXMLFile(String fileName) throws ParserConfigurationException, SAXException, IOException {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true); // factory is set up to support XML namespaces
+        SAXParser parser = factory.newSAXParser();
+
+        XMLReader xmlReader = parser.getXMLReader();
+
+        DefaultHandler handler = new DefaultHandler() {
+
+            private Hashtable tags;
+
+            public void startDocument() {
+                tags = new Hashtable();
+            }
+
+            public void startElement(String namespaceURI, String localName, String qName, Attributes attributes) {
+                if (localName.equals("Size")) {
+                    numRows = Integer.parseInt(attributes.getValue(0));
+                    numCols = Integer.parseInt(attributes.getValue(1));
+                    numRowsLabel.setText(numRows + "");
+                    numColsLabel.setText(numCols + "");
+                    updateCustomBoardPanel();
+                    clearCustomBoardPanel();
+                } else if (localName.equals("PremiumSquare")) {
+                    String[] premiumSquareCoordinates = attributes.getValue(1).split(",");
+                    int row = Integer.parseInt(premiumSquareCoordinates[0]);
+                    int col = Integer.parseInt(premiumSquareCoordinates[1]);
+                    buttons[row][col].setText(attributes.getValue(0));
+                }
+            }
+
+            public void endDocument() {
+                Enumeration e = tags.keys();
+                while (e.hasMoreElements()) {
+                    String tag = (String) e.nextElement();
+                    int count = (Integer) tags.get(tag);
+                }
+            }
+
+        };
+
+        xmlReader.setContentHandler(handler);
+        xmlReader.parse(fileName);
+    }
+
+    /**
      * Initializes a JPanel for navigation purposes.
      * @author Emily Tang 101192604
      */
@@ -300,11 +375,7 @@ public class CustomizationFrame extends JFrame {
         // ActionListener for when user would like to reset to a blank 15x15 board
         resetButton.addActionListener(e -> {
             // clear the entire board
-            for (int i = 0; i < MAX_NUM_ROWS_OR_COLS; i++) {
-                for (int j = 0; j < MAX_NUM_ROWS_OR_COLS; j++) {
-                    buttons[i][j].setText("");
-                }
-            }
+            clearCustomBoardPanel();
             numRows = 15;
             numCols = 15;
             numRowsLabel.setText(numRows + "");
@@ -314,47 +385,46 @@ public class CustomizationFrame extends JFrame {
 
         // ActionListener for when user would like to load in an XML file of a custom board
         loadButton.addActionListener(e -> {
-            System.out.println("Load button was pressed!");
+            // ask the user which XML file they would like to load in
+            String fileName = JOptionPane.showInputDialog("Please enter the name of the XML file you would like to " +
+                    "load your custom board from: ");
+
+            try {
+                importFromXMLFile(fileName);
+            } catch (ParserConfigurationException | SAXException | IOException ex) {
+                throw new RuntimeException(ex);
+            }
         });
 
         // ActionListener for when user would like to start the game with their current customized board
         doneButton.addActionListener(e -> {
-            // FIXME: add functionality for saving the custom board to an XML file
-
-            // create a JSON representation of the user's custom board
-            JSONObject customBoardJSON = new JSONObject();
-            customBoardJSON.put("numRows", numRows);
-            customBoardJSON.put("numCols", numCols);
-            ArrayList<JSONObject> premiumSquareJSONList = new ArrayList<>();
+            // determine if user would like to save their custom board
+            String fileName = JOptionPane.showInputDialog("Please enter the name of the XML file you would like to " +
+                    "save your custom board to.\nIf not, please ignore this message.");
 
             // create a 2D String array representation of the board the user created
             String[][] customBoard = new String[numRows][numCols];
+            StringBuilder premiumSquareXML = new StringBuilder();
             for (int i = 0; i < numRows; i++) {
                 for (int j = 0; j < numCols; j++) {
                     customBoard[i][j] = buttons[i][j].getText();
 
-                    if (!customBoard[i][j].equals("")) {
-                        JSONObject premiumSquareJSON = new JSONObject();
-                        premiumSquareJSON.put("Square", i + " " + j);
-                        premiumSquareJSON.put("Multiplier", customBoard[i][j]);
-                        premiumSquareJSONList.add(premiumSquareJSON);
+                    // save premium squares in XML format if the user provided a file name
+                    if (!fileName.equals("") && !customBoard[i][j].equals("")) {
+                        premiumSquareXML.append("    <PremiumSquare multiplier=\"").append(customBoard[i][j])
+                                .append("\" square=\"").append(i).append(",").append(j).append("\"/>\n");
                     }
                 }
             }
 
-            for (JSONObject o : premiumSquareJSONList) {
-                customBoardJSON.put("PremiumSquare", o);
-            }
-
-            // determine if user would like to save their custom board
-            String fileName = JOptionPane.showInputDialog("Please enter the name of the JSON file you would like to" +
-                    " save your custom board to.\nIf not, please ignore this message.");
-
-            // save the user's custom board if they provided a fileName
+            // create an XML file if the user provided a file name
             if (!fileName.equals("")) {
-                System.out.println(customBoardJSON);
-                try (FileOutputStream fos = new FileOutputStream(fileName)) {
-                    fos.write(customBoardJSON.toString().getBytes());
+                try (FileWriter fileWriter = new FileWriter(fileName)) {
+                    fileWriter.write("<?xml version=\"1.0\"?>\n");
+                    fileWriter.write("<CustomBoard>\n");
+                    fileWriter.write("    <Size row=\"" + numRows + "\" col=\"" + numCols + "\"/>\n");
+                    fileWriter.write(premiumSquareXML.toString());
+                    fileWriter.write("</CustomBoard>");
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }

@@ -279,6 +279,7 @@ public class BotPlayer extends Player {
                         }
 
                         String validWord = getLongestWord(validWords, board.getNumCols());
+                        System.out.println("BotPlayer found a valid word: " + validWord + ".");
 
                         if (validWord != null) {
                             // determine where the letter from the board is in the valid word
