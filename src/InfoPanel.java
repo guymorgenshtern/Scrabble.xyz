@@ -15,6 +15,9 @@ public class InfoPanel extends JPanel implements ScrabbleView {
     /** JLabel for the current players name */
     private final JLabel playerScore;
 
+    /** JLabel for displaying players names and scores */
+    private final JLabel playerNamesScores;
+
     /**
      * InfoPanel creates the layout and location for thr buttons and labels.
      * @param scrabbleModel The Game of Scrabble to update
@@ -22,16 +25,19 @@ public class InfoPanel extends JPanel implements ScrabbleView {
      */
     public InfoPanel(ScrabbleModel scrabbleModel) {
         super();
-        this.setLayout(new GridLayout(1, 3));
-        this.setSize(900,100);
+        this.setLayout(new GridLayout(1, 4));
+        this.setSize(1000,100);
 
         // creates the labels
         playerName = new JLabel("", SwingConstants.CENTER);
         playerScore = new JLabel();
+        playerNamesScores = new JLabel("");
         JLabel currentNameLabel = new JLabel("Current Player Name:", SwingConstants.RIGHT);
         currentNameLabel.setForeground(Color.BLACK);
         JLabel currentScoreLabel = new JLabel("Score: ", SwingConstants.RIGHT);
         currentScoreLabel.setForeground(Color.BLACK);
+        JLabel currentPlayerNamesScores = new JLabel("Player X: " + "Player Y: ", SwingConstants.RIGHT);
+        currentPlayerNamesScores.setForeground(Color.BLACK);
         JButton endTurn = new JButton("End Turn");
         // action listener for what happens when the user clicks on the end turn button
         endTurn.addActionListener(e -> {
@@ -56,18 +62,21 @@ public class InfoPanel extends JPanel implements ScrabbleView {
             }
         });
 
-        //adds labels and buttons to the panel
+        //  Add labels and buttons to the panel
         this.add(currentNameLabel);
         this.add(playerName);
         playerName.setForeground(Color.BLACK);
         this.add(currentScoreLabel);
         this.add(playerScore);
         playerScore.setForeground(Color.BLACK);
+        this.add(currentPlayerNamesScores);
+        this.add(playerNamesScores);
+        playerNamesScores.setForeground(Color.BLACK);
         this.add(endTurn);
         this.add(undoButton);
         this.add(redoButton);
 
-        // set background colour
+        //  Set background colour
         this.setBackground(new Color(253, 239, 117));
 
         this.setVisible(true);
@@ -84,5 +93,7 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         playerName.setText(event.getCurrentPlayer().getName());
         // sets text for the players score
         playerScore.setText(Integer.toString(event.getCurrentPlayer().getScore()));
+        // sets text for all players score
+        playerNamesScores.setText(Integer.toString(event.getCurrentPlayer().getScore())); // Create Method in ScrabbleEvent
     }
 }
