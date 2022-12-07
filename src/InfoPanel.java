@@ -39,11 +39,21 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         });
         JButton undoButton = new JButton("Undo");
         undoButton.addActionListener(e -> {
-            scrabbleModel.undo();
+            String undoMessage = "At this time there are no plays to Undo";
+            if(scrabbleModel.getNumberOfUndoStack() == 0) {
+                JOptionPane.showMessageDialog(this, undoMessage);
+            } else {
+                scrabbleModel.undo();
+            }
         });
         JButton redoButton = new JButton("Redo");
         redoButton.addActionListener(e -> {
-            scrabbleModel.redo();
+            String redoMessage = "At this time there are no plays to Redo";
+            if(scrabbleModel.getNumberOfRedoStack() == 0) {
+                JOptionPane.showMessageDialog(this, redoMessage);
+            } else {
+                scrabbleModel.redo();
+            }
         });
 
         //adds labels and buttons to the panel
@@ -56,7 +66,6 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         this.add(endTurn);
         this.add(undoButton);
         this.add(redoButton);
-
 
         // set background colour
         this.setBackground(new Color(253, 239, 117));
