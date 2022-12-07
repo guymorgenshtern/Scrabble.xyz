@@ -63,8 +63,8 @@ public class WelcomeFrame extends JFrame {
                 String filePath = file.getPath();
 
                 try {
-                    ScrabbleModel.loadScrabble(filePath);
-                    //model.initializeLoadedGame();
+                    model = ScrabbleModel.loadScrabble(filePath);
+                    model.initializeLoadedGame();
                     dispose(); // destroy the WelcomeFrame
                 } catch (IOException ioException) {
                     ioException.printStackTrace();

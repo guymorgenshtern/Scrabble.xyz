@@ -142,7 +142,7 @@ public class ScrabbleModelTest {
     }
 
     @org.junit.Test
-    public void testSaveScrabble() throws IOException {
+    public void testSaveAndLoadScrabble() throws IOException {
         ScrabbleModel scrabbleModel = new ScrabbleModel();
 
         String[] playerNames = new String[] { "Guy", "Francisco", "Emily" };
@@ -150,10 +150,57 @@ public class ScrabbleModelTest {
         scrabbleModel.getPlayerList().get(0).setScore(10);
         scrabbleModel.saveScrabble("test");
 
-        FileInputStream fileIn = new FileInputStream("test_player_list.ser");
-        ObjectInputStream in = new ObjectInputStream(fileIn);
-        ScrabbleModel newModel = ScrabbleModel.loadScrabble("test");
+        ScrabbleModel newModel = ScrabbleModel.loadScrabble("test_sxyz.ser");
 
-        assert(in instanceof ObjectInputStream);
+        boolean playersLoadedCorrectly = testSaveAndLoadPlayers(scrabbleModel, newModel);
+        System.out.println(playersLoadedCorrectly);
+
+        boolean boardLoadedCorrectly = testSaveAndLoadBoard(scrabbleModel, newModel);
+        System.out.println(boardLoadedCorrectly);
+
+        assert (boardLoadedCorrectly && playersLoadedCorrectly);
+    }
+
+    private boolean testSaveAndLoadBoard(ScrabbleModel saved, ScrabbleModel loaded) {
+        for (int i = 0; i < saved.getBoard().getScrabbleBoard().length;i++) {
+            for (int j = 0; j < saved.getBoard().getScrabbleBoard()[0].length;j++) {
+                if (saved.getBoard().getTileOnBoard(i,j).getLetter() != loaded.getBoard().getTileOnBoard(i,j).getLetter()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    private boolean testSaveAndLoadPlayers(ScrabbleModel saved, ScrabbleModel loaded) {
+        boolean sameLengthPlayerList = saved.getPlayerList().size() == loaded.getPlayerList().size();
+        boolean sameName = true;
+        boolean sameScore = true;
+        boolean sameHand = true;
+        if (sameLengthPlayerList) {
+            for (int i = 0; i < saved.getPlayerList().size(); i++) {
+                if (!(saved.getPlayerList().get(i).getName().equals(loaded.getPlayerList().get(i).getName()))) {
+                    sameName = false;
+                    break;
+                }
+
+                if (saved.getPlayerList().get(i).getScore() != loaded.getPlayerList().get(i).getScore()) {
+                    sameScore = false;
+                    break;
+                }
+
+                for (int j = 0 ; j<saved.getPlayerList().get(i).getAvailableLetters().size(); j++) {
+                    if (!(saved.getPlayerList().get(i).getAvailableLetters().get(j).equals(
+                            loaded.getPlayerList().get(i).getAvailableLetters().get(j)))) {
+                        sameHand = false;
+                        break;
+                    }
+                    if (!sameHand) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return (sameName && sameLengthPlayerList && sameScore && sameHand);
     }
 }

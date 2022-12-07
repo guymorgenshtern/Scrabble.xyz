@@ -724,7 +724,6 @@ public class ScrabbleModel implements Serializable {
             exc.printStackTrace();
         }
 
-        m.initializeLoadedGame();
         return m;
     }
 }
