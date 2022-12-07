@@ -26,7 +26,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         this.setFont(new Font("Helvetica", Font.PLAIN, 12));
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new BorderLayout(5, 5));
+        this.setLayout(new BorderLayout(5, 5)); // Change to use VerticalBoxLayout + BorderLayout
         this.model = model;
         this.infoPanel = new InfoPanel(model);
         this.handPanel = new HandPanel(model);
@@ -41,6 +41,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         score.setText("Score:    \n");
         score.setSize(350,100);
 
+        // VerticalBoxLayout + BorderLayout  changes here
         this.add(boardPanel, BorderLayout.CENTER);
         this.add(handPanel, BorderLayout.SOUTH);
         this.add(infoPanel, BorderLayout.NORTH);
