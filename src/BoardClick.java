@@ -1,7 +1,9 @@
+import java.io.Serializable;
+
 /**
  * A BoardClick holds a coordinate on the Board, and a Letter to place at that coordinate.
  */
-public class BoardClick {
+public class BoardClick implements Serializable {
 
     /** An array of integers representing the coordinates to place a letter at. The integer at index 0 represents the
      * x-coordinate. The integer at index 1 represents the y-coordinate.

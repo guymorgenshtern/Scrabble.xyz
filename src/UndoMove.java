@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UndoMove {
+public class UndoMove implements Serializable {
     private ArrayList<Integer> indexOfUsedLetters;
     private int score;
     private ScrabbleMove move;

@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.io.InvalidClassException;
+import java.util.ArrayList;
 
 /**
  * A JFrame to welcome the users to the game of Scrabble.
@@ -24,6 +27,7 @@ public class WelcomeFrame extends JFrame {
         // initializes a JFrame with a vertical BoxLayout
         super("Welcome");
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        ScrabbleFileFilter ff = new ScrabbleFileFilter();
 
         // set the welcomePanel in the center of the JFrame
         add(Box.createVerticalGlue());
@@ -50,7 +54,23 @@ public class WelcomeFrame extends JFrame {
 
         // ActionListener for when loadGameButton is pressed
         loadGameButton.addActionListener(e -> {
-            // TODO: add load game functionality
+            JFileChooser fc = new JFileChooser();
+            fc.addChoosableFileFilter(ff);
+            int i = fc.showOpenDialog(this);
+            ScrabbleModel model;
+            if (i == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                String filePath = file.getPath();
+
+                try {
+                    ScrabbleModel.loadScrabble(filePath);
+                    //model.initializeLoadedGame();
+                    dispose(); // destroy the WelcomeFrame
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+
             System.out.println("Load Game button was clicked!");
         });
 

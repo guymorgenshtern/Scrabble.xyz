@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class PlayerComparator implements Comparator<Player> {
+public class PlayerComparator implements Comparator<Player>, Serializable {
 
     /**
      * Compares the scores of the specified players.

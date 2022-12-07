@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * A Board in the game of Scrabble.
@@ -188,9 +189,4 @@ public class Board implements Serializable {
             System.out.println(" ");
         }
     }
-
-    public void serialize(String prefix) {
-
-    }
-
 }

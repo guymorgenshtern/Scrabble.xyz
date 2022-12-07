@@ -1,8 +1,10 @@
+import java.io.Serializable;
+
 /**
  * A Multiplier can be added to a Square to multiply how many points a letter/word is worth. A Multiplier counts only on
  * the turn in which it is played.
  */
-public class Multiplier {
+public class Multiplier implements Serializable {
 
     /** An enumeration to represent the type of the multiplier. */
     public enum Type { LETTER, WORD }

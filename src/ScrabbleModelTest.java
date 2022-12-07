@@ -152,18 +152,8 @@ public class ScrabbleModelTest {
 
         FileInputStream fileIn = new FileInputStream("test_player_list.ser");
         ObjectInputStream in = new ObjectInputStream(fileIn);
-        ArrayList<Player> newList = Player.deserialize(in);
+        ScrabbleModel newModel = ScrabbleModel.loadScrabble("test");
 
-        boolean isEqual = true;
-        System.out.println(newList.size());
-        for (int i = 0; i < newList.size(); i++) {
-            System.out.println("Old " + scrabbleModel.getPlayerList().get(i).getName() + " " + scrabbleModel.getPlayerList().get(i).getScore());
-            System.out.println("New " + newList.get(i).getName() + " " + newList.get(i).getScore());
-            if (!(newList.get(i).getName().equals(scrabbleModel.getPlayerList().get(i).getName()))
-                    || newList.get(i).getScore() != scrabbleModel.getPlayerList().get(i).getScore()) {
-                isEqual = false;
-            }
-        }
-        assert(isEqual);
+        assert(in instanceof ObjectInputStream);
     }
 }

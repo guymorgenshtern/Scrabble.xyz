@@ -169,17 +169,37 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     }
 
     /**
+     * Reinitializes a newly loaded board to resume game state
+     */
+    private void initializeLoadedBoard(ScrabbleMove move) {
+        for (int x = 0; x < board.getNumRows(); x++) {
+            for (int y = 0; y < board.getNumCols(); y++) {
+                initializeButtonColor(x,y);
+                char charOnBoard = board.getTileOnBoard(x,y).getLetter();
+                if (charOnBoard != ' ') {
+                    updateButton(x,y,String.valueOf(charOnBoard), move);
+                }
+
+            }
+        }
+    }
+
+    /**
      * update board
      * @param event
      * @author Guy Morgenshtern 101151430
      */
     @Override
     public void update(ScrabbleEvent event) { // Update Game Model
-        for (int i = 0; i < event.getMove().getCoords().size(); i++) {
-            int x = event.getMove().getCoords().get(i).coords()[0];
-            int y = event.getMove().getCoords().get(i).coords()[1];
-            updateButton(x, y, String.valueOf(event.getBoard().getTileOnBoard(x,y).getLetter()), event.getMove());
+
+        if (event.getGameStatus() == ScrabbleModel.GameStatus.LOADED) {
+            initializeLoadedBoard(event.getMove());
+        } else {
+            for (int i = 0; i < event.getMove().getCoords().size(); i++) {
+                int x = event.getMove().getCoords().get(i).coords()[0];
+                int y = event.getMove().getCoords().get(i).coords()[1];
+                updateButton(x, y, String.valueOf(event.getBoard().getTileOnBoard(x,y).getLetter()), event.getMove());
+            }
         }
     }
-
 }

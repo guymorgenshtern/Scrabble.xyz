@@ -1,10 +1,11 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * ScrabbleMove represents a move a player made in Scrabble.
  * @author Guy Morgenshtern 101151430
  */
-public class ScrabbleMove {
+public class ScrabbleMove implements Serializable {
 
     /** A String representing a word. */
     private String word;

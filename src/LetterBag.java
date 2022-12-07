@@ -1,10 +1,11 @@
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Letter Bag that will hold letters and the quantity
  */
-public class LetterBag  {
+public class LetterBag implements Serializable {
 
     /** A HashMap for the letter map */
     private HashMap<String, Integer> letterBag;
