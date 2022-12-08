@@ -46,6 +46,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         this.add(handPanel, BorderLayout.SOUTH);
         this.add(infoPanel, BorderLayout.NORTH);
 
+
         JTextField saveScrabble = new JTextField(15);
 
         JMenuBar menuBar = new JMenuBar();

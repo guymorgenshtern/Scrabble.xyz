@@ -16,7 +16,7 @@ public class InfoPanel extends JPanel implements ScrabbleView {
     private final JLabel playerScore;
 
     /** JLabel for displaying players names and scores */
-    private final JLabel playerNamesScores;
+    private final JLabel allPlayersScores;
 
     /**
      * InfoPanel creates the layout and location for thr buttons and labels.
@@ -31,7 +31,7 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         // creates the labels
         playerName = new JLabel("", SwingConstants.CENTER);
         playerScore = new JLabel();
-        playerNamesScores = new JLabel("");
+        allPlayersScores = new JLabel("");
         JLabel currentNameLabel = new JLabel("Current Player Name:", SwingConstants.RIGHT);
         currentNameLabel.setForeground(Color.BLACK);
         JLabel currentScoreLabel = new JLabel("Score: ", SwingConstants.RIGHT);
@@ -70,8 +70,8 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         this.add(playerScore);
         playerScore.setForeground(Color.BLACK);
         this.add(currentPlayerNamesScores);
-        this.add(playerNamesScores);
-        playerNamesScores.setForeground(Color.BLACK);
+        this.add(allPlayersScores);
+        allPlayersScores.setForeground(Color.BLACK);
         this.add(endTurn);
         this.add(undoButton);
         this.add(redoButton);
@@ -94,6 +94,6 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         // sets text for the players score
         playerScore.setText(Integer.toString(event.getCurrentPlayer().getScore()));
         // sets text for all players score
-        playerNamesScores.setText(event.getCurrentPlayer().getName() + event.getCurrentPlayer().getScore());
+        allPlayersScores.setText(event.getCurrentPlayer().getName() + event.getCurrentPlayer().getScore());
     }
 }
