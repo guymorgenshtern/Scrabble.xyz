@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-
+// init Commit
 /**
  * A JPanel representation of the Board.
  */

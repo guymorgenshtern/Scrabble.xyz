@@ -3,7 +3,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InvalidClassException;
-import java.util.ArrayList;
+
 
 /**
  * A JFrame to welcome the users to the game of Scrabble.
