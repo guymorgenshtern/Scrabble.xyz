@@ -8,6 +8,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
     private BoardPanel boardPanel;
     private HandPanel handPanel;
     private InfoPanel infoPanel;
+    private ScorePanel scorePanel;
 
     private ScrabbleModel model;
 
@@ -31,6 +32,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         this.infoPanel = new InfoPanel(model);
         this.handPanel = new HandPanel(model);
         this.boardPanel = new BoardPanel(model);
+        this.scorePanel = new ScorePanel(model);
         JButton endTurn = new JButton();
         this.textBoard = model.getBoard();
         endTurn.setText("End Turn");
@@ -45,6 +47,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         this.add(boardPanel, BorderLayout.CENTER);
         this.add(handPanel, BorderLayout.SOUTH);
         this.add(infoPanel, BorderLayout.NORTH);
+        this.add(scorePanel, BorderLayout.SOUTH);
 
 
         JTextField saveScrabble = new JTextField(15);
@@ -87,6 +90,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         boardPanel.update(event);
         handPanel.update(event);
         infoPanel.update(event);
+        scorePanel.update(event);
 
 
         if (event.getGameStatus() == ScrabbleModel.GameStatus.FINISHED || event.getGameStatus() == ScrabbleModel.GameStatus.TIE) {

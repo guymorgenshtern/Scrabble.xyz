@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Creates the JPanel for the top of the program. It includes the players name, score, and an end turn button when
@@ -15,8 +16,8 @@ public class InfoPanel extends JPanel implements ScrabbleView {
     /** JLabel for the current players name */
     private final JLabel playerScore;
 
-    /** JLabel for displaying players names and scores */
-    private final JLabel allPlayersScores;
+    /* JLabel for displaying players names and scores */
+    //private final JLabel allPlayersScores;
 
     /**
      * InfoPanel creates the layout and location for thr buttons and labels.
@@ -25,19 +26,16 @@ public class InfoPanel extends JPanel implements ScrabbleView {
      */
     public InfoPanel(ScrabbleModel scrabbleModel) {
         super();
-        this.setLayout(new GridLayout(1, 4));
+        this.setLayout(new GridLayout(1, 1));
         this.setSize(1000,100);
 
         // creates the labels
         playerName = new JLabel("", SwingConstants.CENTER);
         playerScore = new JLabel();
-        allPlayersScores = new JLabel("");
         JLabel currentNameLabel = new JLabel("Current Player Name:", SwingConstants.RIGHT);
         currentNameLabel.setForeground(Color.BLACK);
         JLabel currentScoreLabel = new JLabel("Score: ", SwingConstants.RIGHT);
         currentScoreLabel.setForeground(Color.BLACK);
-        JLabel currentPlayerNamesScores = new JLabel("", SwingConstants.RIGHT);
-        currentPlayerNamesScores.setForeground(Color.BLACK);
         JButton endTurn = new JButton("End Turn");
         // action listener for what happens when the user clicks on the end turn button
         endTurn.addActionListener(e -> {
@@ -69,9 +67,6 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         this.add(currentScoreLabel);
         this.add(playerScore);
         playerScore.setForeground(Color.BLACK);
-        this.add(currentPlayerNamesScores);
-        this.add(allPlayersScores);
-        allPlayersScores.setForeground(Color.BLACK);
         this.add(endTurn);
         this.add(undoButton);
         this.add(redoButton);
@@ -89,11 +84,10 @@ public class InfoPanel extends JPanel implements ScrabbleView {
      */
     @Override
     public void update(ScrabbleEvent event) {
+        //ArrayList<Player> allPlayers = event.getScrabbleModel().getPlayerList();
         // sets text for players name
         playerName.setText(event.getCurrentPlayer().getName());
         // sets text for the players score
         playerScore.setText(Integer.toString(event.getCurrentPlayer().getScore()));
-        // sets text for all players score
-        allPlayersScores.setText(event.getCurrentPlayer().getName() + event.getCurrentPlayer().getScore());
     }
 }
