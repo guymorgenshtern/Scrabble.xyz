@@ -31,9 +31,6 @@ public class ScrabbleModel implements Serializable {
     /** An ArrayList of ScrabbleViews that subscribes to the model. */
     private transient ArrayList<ScrabbleView> views;
 
-    /** An integer representing the number of tries the current player has made to add a word to the board. */
-//    private int numberOfTries;
-
     /** A PlayerComparator to compare the scores of players. */
     private PlayerComparator playerComparator;
 
@@ -69,6 +66,7 @@ public class ScrabbleModel implements Serializable {
 
     /** A stack with UndoMove's for undo */
     private transient Stack<UndoMove> undoStack;
+
     /** A stack with UndoMove's for redo */
     private transient Stack<UndoMove> redoStack;
 
@@ -120,7 +118,6 @@ public class ScrabbleModel implements Serializable {
         letterBag = new LetterBag();
         usedLetters = new ArrayList<>();
         status = GameStatus.NOT_FINISHED;
-//        numberOfTries = 0;
         playerComparator = new PlayerComparator();
         initializeLetterBag("/letters_by_quantity");
     }
@@ -468,42 +465,53 @@ public class ScrabbleModel implements Serializable {
      * @author Alexander Hum 101180821
      */
     public void undo() {
+        if (!(undoStack.peek().getMove().getPlayer() instanceof BotPlayer)) {
+            UndoMove m = undoStack.pop();
+            UndoMove m2 = redoStack.push(m);
+            playerTurnCounter--;
 
-        UndoMove m = undoStack.pop();
-        UndoMove m2 = redoStack.push(m);
-        playerTurnCounter--;
+            // sets squares on the board to be blank
+            for (int i = 0; i < m.getMove().getCoords().size(); i++) {
+                board.getTileOnBoard(m.getMove().getCoords().get(i).getCoords()[0], m.getMove().getCoords().get(i).getCoords()[1]).setLetter(' ');
+            }
 
-        for (int i = 0; i < m.getMove().getCoords().size(); i++) {
-            board.getTileOnBoard(m.getMove().getCoords().get(i).getCoords()[0], m.getMove().getCoords().get(i).getCoords()[1]).setLetter(' ');
-        }
+            Player currentPlayer = m.getMove().getPlayer();
+            System.out.println("Current player is: " + currentPlayer);
+            for (int i = 0; i < m.getMove().getCoords().size(); i++) {
+                System.out.println("currentPlayer.getAvailableLetters().size() - 1 - i: " + (currentPlayer.getAvailableLetters().size() - 1 - i));
+                this.letterBag.addLetter(currentPlayer.getAvailableLetters().get(currentPlayer.getAvailableLetters().size() - 1 - i), 1);
+                currentPlayer.getAvailableLetters().remove(currentPlayer.getAvailableLetters().size() - 1 - i);
+            }
 
-        Player currentPlayer = m.getMove().getPlayer();
-        for (int i = 0; i < m.getMove().getCoords().size(); i++) {
-            this.letterBag.addLetter(currentPlayer.getAvailableLetters().get(currentPlayer.getAvailableLetters().size() - 1 - i), 1);
-            currentPlayer.getAvailableLetters().remove(currentPlayer.getAvailableLetters().size() - 1 - i);
-        }
+            // letters in current players hand
+            String letters = currentPlayer.getAvailableLetters().size() + " Letters in " + currentPlayer.getName() + "'s hand: ";
+            for (String s : currentPlayer.getAvailableLetters()) {
+                letters += s + " ";
+            }
+            System.out.println(letters);
 
-        for (BoardClick b : m.getMove().getCoords()) {
-            currentPlayer.addLetter(b.getLetter());
-        }
+            for (BoardClick b : m.getMove().getCoords()) {
+                currentPlayer.addLetter(b.getLetter());
+            }
 
-        m.getMove().setMoveType(ScrabbleMove.MoveType.UNDO);
-        currentPlayer.setScore(m.getScore());
+            m.getMove().setMoveType(ScrabbleMove.MoveType.UNDO);
+            currentPlayer.setScore(m.getScore());
 
-        for (ScrabbleView v : views) {
-            v.update(new ScrabbleEvent(this, m.getMove(), m.getMove().getPlayer(), board, GameStatus.NOT_FINISHED));
-        }
+            for (ScrabbleView v : views) {
+                v.update(new ScrabbleEvent(this, m.getMove(), m.getMove().getPlayer(), board, GameStatus.NOT_FINISHED));
+            }
 
-        System.out.println(getCurrentPlayer().getScore());
+            System.out.println(getCurrentPlayer().getScore());
 
-        ScrabbleEvent event = new ScrabbleEvent(this, m.getMove(), playerList.get(playerTurnCounter % playerList.size()), this.board, GameStatus.NOT_FINISHED);
-        currentMove = new ScrabbleMove();
-        for (ScrabbleView v : this.getViews()) {
+            ScrabbleEvent event = new ScrabbleEvent(this, m.getMove(), playerList.get(playerTurnCounter % playerList.size()), this.board, GameStatus.NOT_FINISHED);
+            currentMove = new ScrabbleMove();
+            for (ScrabbleView v : this.getViews()) {
                 v.update(event);
+            }
+            System.out.println("Popped " + m);
+            System.out.println(undoStack.size());
+            System.out.println("Redo Stack:\n" + m2);
         }
-        System.out.println("Popped " + m);
-        System.out.println(undoStack.size());
-        System.out.println("Redo Stack:\n" + m2);
     }
 
     /**
@@ -615,8 +623,7 @@ public class ScrabbleModel implements Serializable {
                     ArrayList<Integer> indexesOfUsedLetters = (ArrayList<Integer>) usedLetters.clone();
 
                     UndoMove undoMove = new UndoMove(move, currentPlayer.getScore(), indexesOfUsedLetters);
-                    // this.numberOfTries = 0;
-//                    numberOfTries = 0;
+
                     //calculate score
                     currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
 
@@ -650,14 +657,6 @@ public class ScrabbleModel implements Serializable {
                 } else {
                     deleteInvalidWordFromBoard(move);
                     move.setValid(false);
-                    // boardSize squared
-//                    int MAX_ATTEMPTS = 100;
-//                    if (numberOfTries == MAX_ATTEMPTS) {
-//                        playerTurnCounter++;
-//                        haveAllPlayerSkipped();
-//                        numberOfTries = 0;
-//                        System.out.println("Player attempted too many turns");
-//                    }
                 }
                 getUsedLetters().clear();
 
@@ -672,7 +671,7 @@ public class ScrabbleModel implements Serializable {
 
             // BotPlayer will play next if they're the next player
             Player nextPlayer = playerList.get(playerTurnCounter % playerList.size());
-            if (nextPlayer instanceof BotPlayer) {
+            if (nextPlayer instanceof BotPlayer && move.getMoveType() != ScrabbleMove.MoveType.REDO) {
                 play(((BotPlayer) nextPlayer).play(board));
             }
         }

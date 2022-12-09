@@ -281,6 +281,7 @@ public class BotPlayer extends Player {
     private ArrayList<BoardClick> getBoardClicks(Board board, String validWord, ScrabbleModel.Direction direction, int row, int col) {
         ArrayList<BoardClick> boardClicks = new ArrayList<>();
         for (int i = 1; i < validWord.length(); i++) { // do not include the letter that's already on the board
+            System.out.println("Adding letter " + validWord.charAt(i) + " to BoardClick at " + row + " " + col + ".");
             boardClicks.add(new BoardClick(new int[] { row, col }, validWord.charAt(i) + ""));
             board.getTileOnBoard(row, col).setLetter(validWord.charAt(i));
             if (direction == ScrabbleModel.Direction.HORIZONTAL) {
@@ -301,6 +302,13 @@ public class BotPlayer extends Player {
         Square[][] scrabbleBoard = board.getScrabbleBoard();
 
         System.out.println("BotPlayer is at the beginning of their turn! They have " + hand.size() + " letters in their hand!");
+
+        // letters in BotPlayer's hand
+        String letters = getAvailableLetters().size() + " Letters in " + getName() + "'s hand: ";
+        for (String s : getAvailableLetters()) {
+            letters += s + " ";
+        }
+        System.out.println(letters);
 
         // iterate through the board from left-to-right, top-to-bottom looking for a square with a letter
         for (int row = 0; row < board.getNumRows(); row++) {

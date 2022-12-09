@@ -1,4 +1,3 @@
-import org.jetbrains.annotations.NotNull;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -325,7 +324,7 @@ public class CustomizationFrame extends JFrame {
             }
 
             @Override
-            public void startElement(String namespaceURI, @NotNull String localName, String qName, Attributes attributes) {
+            public void startElement(String namespaceURI, String localName, String qName, Attributes attributes) {
                 if (localName.equals("Size")) {
                     // update the size of the custom board
                     numRows = Integer.parseInt(attributes.getValue(0));

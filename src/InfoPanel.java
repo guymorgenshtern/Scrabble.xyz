@@ -21,7 +21,7 @@ public class InfoPanel extends JPanel implements ScrabbleView {
      */
     public InfoPanel(ScrabbleModel scrabbleModel) {
         super();
-        setLayout(new GridLayout(1, 3));
+        setLayout(new GridLayout(1, 7));
         setSize(900,100);
 
         // creates the labels
