@@ -22,7 +22,7 @@ public class BotPlayer extends Player {
 
     /** A Square can either be empty (has a letter), not empty (does not have a letter), or does not exist (out of
      * bounds). */
-    public enum SquareStatus { EMPTY, NOT_EMPTY, DOES_NOT_EXIST };
+    public enum SquareStatus { EMPTY, NOT_EMPTY, DOES_NOT_EXIST }
 
     /** An ArrayList of Strings representing all the valid words. */
     private final ArrayList<String> library;
@@ -169,23 +169,6 @@ public class BotPlayer extends Player {
     }
 
     /**
-     * @param word A String representing the word to check if there are any occurrences of the specified char.
-     * @param c A char representing the character to check for in the specified String.
-     * @return An integer representing the number of occurrences of the specified char there are in the specified
-     * String.
-     * @author Emily Tang 101192604
-     */
-    private int numOccurrencesOfCharInWord(String word, char c) {
-        int numOccurrences = 0;
-        for (char ch : word.toCharArray()) { // convert the specified word to a char array and iterate through it
-            if (ch == c) {
-                numOccurrences++;
-            }
-        }
-        return numOccurrences;
-    }
-
-    /**
      * @param validWords An ArrayList of Strings.
      * @param maxLengthOfWord An integer representing the maximum length of the word that the BotPlayer can play.
      * @return A String representing the longest word in the specified ArrayList of Strings.
@@ -248,19 +231,19 @@ public class BotPlayer extends Player {
      * @param board The Board that is currently in play.
      * @param validWord A String representing the valid word that the BotPlayer would like to play.
      * @param index An index representing where the pre-existing board letter is in the specified valid word.
+     * @param row An integer representing the row where the pre-existing board letter is on the board.
+     * @param col An integer representing the column where the pre-existing board letter is on the board.
      * @return An ArrayList of BoardClicks representing the BotPlayer's turn (if the BotPlayer is playing the first move
      * of the game).
      * @author Emily Tang 101192604
      */
-    private ArrayList<BoardClick> getBoardClicksForFirstMove(Board board, String validWord, int index) {
+    private ArrayList<BoardClick> getBoardClicksForFirstMove(Board board, String validWord, int index, int row, int col) {
         ArrayList<BoardClick> boardClicks = new ArrayList<>();
-        int rowMiddleSquare = board.getNumRows() % 2 == 0 ? board.getNumRows() / 2 - 1 : board.getNumRows() / 2;
-        int colMiddleSquare = board.getNumCols() % 2 == 0 ? board.getNumCols() / 2 - 1 : board.getNumCols() / 2;
         for (int i = 0; i < validWord.length(); i++) {
             if (i != index) { // do not add the pre-existing letter into ScrabbleMove
-                int col = colMiddleSquare - index + i;
-                boardClicks.add(new BoardClick(new int[] { rowMiddleSquare, col }, validWord.charAt(i) + ""));
-                board.getTileOnBoard(rowMiddleSquare, col).setLetter(validWord.charAt(i));
+                int walkingColumn = col - index + i;
+                boardClicks.add(new BoardClick(new int[] { row, walkingColumn }, validWord.charAt(i) + ""));
+                board.getTileOnBoard(row, walkingColumn).setLetter(validWord.charAt(i));
             }
         }
         return boardClicks;
@@ -280,7 +263,6 @@ public class BotPlayer extends Player {
             if (hasLettersNeededForWord(s) // determine if the BotPlayer has the letters needed to make the selected word
                     && length > 1 && length <= maxLengthOfWord
                     && s.substring(0, 1).equals(boardLetter)) { // first letter of word must be the letter that's already on the board
-                    // && numOccurrencesOfCharInWord(s, boardLetter.charAt(0)) <= numOfBoardLetterInHand) {
                 validWords.add(s);
             }
         }
@@ -344,7 +326,7 @@ public class BotPlayer extends Player {
                             // determine where the letter from the board is in the valid word
                             int index = getIndexOfBoardLetter(validWord, boardLetter.charAt(0));
                             // create an ArrayList of BoardClicks, BotPlayer will add this word horizontally
-                            return new ScrabbleMove(getBoardClicksForFirstMove(board, validWord, index), ScrabbleModel.Direction.HORIZONTAL, this);
+                            return new ScrabbleMove(getBoardClicksForFirstMove(board, validWord, index, row, col), ScrabbleModel.Direction.HORIZONTAL, this);
                         }
 
                     } else if (numOfSurroundingEmptySquares == 2 || numOfSurroundingEmptySquares == 3) {

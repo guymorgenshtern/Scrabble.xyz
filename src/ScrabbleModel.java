@@ -393,7 +393,6 @@ public class ScrabbleModel {
             for (char c : s.toCharArray()) {
                 total += scorePerLetter.get(c + "");
             }
-
         }
 
         for (Multiplier m : wordMultipliers) {
@@ -539,9 +538,10 @@ public class ScrabbleModel {
                 }
             }
 
-            //bot play
-            if (playerList.get(playerTurnCounter % playerList.size()) instanceof BotPlayer) {
-                play(((BotPlayer) playerList.get(playerTurnCounter % playerList.size())).play(board));
+            // BotPlayer will play next if they're the next player
+            Player nextPlayer = playerList.get(playerTurnCounter % playerList.size());
+            if (nextPlayer instanceof BotPlayer) {
+                play(((BotPlayer) nextPlayer).play(board));
             }
         }
     }

@@ -79,8 +79,4 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         }
     }
 
-    public static void main (String[] args) throws IOException {
-        new ScrabbleGameFrame(new ScrabbleModel());
-    }
-
 }

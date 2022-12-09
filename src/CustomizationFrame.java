@@ -1,3 +1,4 @@
+import org.jetbrains.annotations.NotNull;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -67,9 +68,7 @@ public class CustomizationFrame extends JFrame {
                 int y = j;
 
                 // ActionListener for when user presses a JButton
-                buttons[i][j].addActionListener(e -> {
-                    askUserToInputMultiplier(x, y);
-                });
+                buttons[i][j].addActionListener(e -> askUserToInputMultiplier(x, y));
             }
         }
 
@@ -82,7 +81,8 @@ public class CustomizationFrame extends JFrame {
         ArrayList<JLabel> instructionLabels = new ArrayList<>();
         instructionLabels.add(new JLabel("Customize your own board by adding or removing rows and columns!"));
         instructionLabels.add(new JLabel("Click on a button to add a multiplier to the board."));
-        instructionLabels.add(new JLabel("Press 'CANCEL' to go back to the home screen, 'RESTART' to reset the board, and 'DONE' when you would like to play!"));
+        instructionLabels.add(new JLabel("Press 'CANCEL' to go back to the home screen, 'RESTART' to reset the board,"));
+        instructionLabels.add(new JLabel("'LOAD' to load in your own custom board, and 'DONE' when you would like to play!"));
         for (JLabel instructionLabel : instructionLabels) {
             instructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             add(instructionLabel);
@@ -246,6 +246,15 @@ public class CustomizationFrame extends JFrame {
     }
 
     /**
+     * Updates the number of rows and columns labels.
+     * @author Emily Tang 101192604
+     */
+    private void updateRowAndColLabels() {
+        numRowsLabel.setText(numRows + "");
+        numColsLabel.setText(numCols + "");
+    }
+
+    /**
      * Updates the JLabel displaying the number of rows and columns the board has, and updates the board.
      * @param isRow True, if the number of rows has been modified. False, if number of columns.
      * @param increment True, if the number of rows or columns has been incremented. False, if decremented.
@@ -262,8 +271,7 @@ public class CustomizationFrame extends JFrame {
         } else {
             numCols--;
         }
-        numRowsLabel.setText(numRows + "");
-        numColsLabel.setText(numCols + "");
+        updateRowAndColLabels();
         updateCustomBoardPanel();
     }
 
@@ -311,19 +319,22 @@ public class CustomizationFrame extends JFrame {
 
             private Hashtable tags;
 
+            @Override
             public void startDocument() {
                 tags = new Hashtable();
             }
 
-            public void startElement(String namespaceURI, String localName, String qName, Attributes attributes) {
+            @Override
+            public void startElement(String namespaceURI, @NotNull String localName, String qName, Attributes attributes) {
                 if (localName.equals("Size")) {
+                    // update the size of the custom board
                     numRows = Integer.parseInt(attributes.getValue(0));
                     numCols = Integer.parseInt(attributes.getValue(1));
-                    numRowsLabel.setText(numRows + "");
-                    numColsLabel.setText(numCols + "");
+                    updateRowAndColLabels();
                     updateCustomBoardPanel();
                     clearCustomBoardPanel();
                 } else if (localName.equals("PremiumSquare")) {
+                    // add a multiplier to a JButton if a premium square is found
                     String[] premiumSquareCoordinates = attributes.getValue(1).split(",");
                     int row = Integer.parseInt(premiumSquareCoordinates[0]);
                     int col = Integer.parseInt(premiumSquareCoordinates[1]);
@@ -331,6 +342,7 @@ public class CustomizationFrame extends JFrame {
                 }
             }
 
+            @Override
             public void endDocument() {
                 Enumeration e = tags.keys();
                 while (e.hasMoreElements()) {
@@ -376,8 +388,7 @@ public class CustomizationFrame extends JFrame {
             clearCustomBoardPanel();
             numRows = 15;
             numCols = 15;
-            numRowsLabel.setText(numRows + "");
-            numColsLabel.setText(numCols + "");
+            updateRowAndColLabels();
             updateCustomBoardPanel();
         });
 
