@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Library {
 
     /** An ArrayList of Strings to store all valid words. */
-    private ArrayList<String> validWords;
+    private final ArrayList<String> validWords;
 
     /**
      * Creates a Library with all valid words.
@@ -37,7 +37,7 @@ public class Library {
      * @author Alexander Hum 101180821
      */
     public boolean isValidWord(String word) {
-        return this.validWords.contains(word);
+        return validWords.contains(word);
     }
 
     /**
