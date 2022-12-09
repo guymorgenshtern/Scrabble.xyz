@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Creates a JPanel to display all the Players Scores in the game.
- * @author Francisco De Grano 101147447
+ * @author Francisco De Grano 101147447 Blah
  */
 public class ScorePanel extends JPanel implements ScrabbleView {
 
