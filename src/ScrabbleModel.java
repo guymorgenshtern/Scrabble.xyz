@@ -300,6 +300,7 @@ public class ScrabbleModel implements Serializable {
             letterBag.addLetter(" ", 1); // add the blank letter back into the letterBag
             firstLetter = letterBag.getRandomLetter(); // pull another letter from the letterBag
         }
+
         int rowCenterSquare = (board.getNumRows() - 1) / 2;
         int columnCenterSquare = (board.getNumCols() - 1) / 2;
         board.setSquare(firstLetter.toCharArray()[0], rowCenterSquare, columnCenterSquare);

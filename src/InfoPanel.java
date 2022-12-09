@@ -93,7 +93,12 @@ public class InfoPanel extends JPanel implements ScrabbleView {
             setEnabled = true;
         }
         undoButton.setEnabled(setEnabled);
-        redoButton.setEnabled(setEnabled);
+
+        if (event.getScrabbleModel().getNumberOfRedoStack() > 0) {
+            redoButton.setEnabled(true);
+        } else {
+            redoButton.setEnabled(false);
+        }
     }
 
 }
