@@ -16,8 +16,8 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
 
     /**
      * Constructor
-     * @param model
-     * @throws IOException
+     * @param model represents the Scrabble Game
+     * @throws IOException Thrown when an error occurs
      * @author Guy Morgenshtern - 101151430
      */
     public ScrabbleGameFrame(ScrabbleModel model) throws IOException {
@@ -27,7 +27,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         this.setFont(new Font("Helvetica", Font.PLAIN, 12));
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new BorderLayout(5, 5)); // Change to use VerticalBoxLayout + BorderLayout
+        this.setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         this.model = model;
         this.infoPanel = new InfoPanel(model);
         this.handPanel = new HandPanel(model);
@@ -39,15 +39,16 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         endTurn.addActionListener(e -> {
             model.play(model.getCurrentMove());
         });
+        /*
         JLabel score = new JLabel();
         score.setText("Score:    \n");
-        score.setSize(350,100);
+        score.setSize(1000,100);
+         */
 
-        // VerticalBoxLayout + BorderLayout  changes here
-        this.add(boardPanel, BorderLayout.CENTER);
-        this.add(handPanel, BorderLayout.SOUTH);
-        this.add(infoPanel, BorderLayout.NORTH);
-        this.add(scorePanel, BorderLayout.SOUTH);
+        this.add(infoPanel);
+        this.add(boardPanel);
+        this.add(scorePanel);
+        this.add(handPanel);
 
 
         JTextField saveScrabble = new JTextField(15);

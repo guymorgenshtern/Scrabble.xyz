@@ -1,4 +1,3 @@
-import javax.naming.Name;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -20,18 +19,19 @@ public class ScorePanel extends JPanel implements ScrabbleView {
      */
     public ScorePanel(ScrabbleModel scrabbleModel) {
         super();
-        this.setLayout(new GridLayout(1, 4));
+        this.setLayout(new GridLayout(1, 1));
         this.setSize(500, 250);
 
         // Player Score Label
-        allPlayersScores = new JLabel("");
-        JLabel scoreViewLabel = new JLabel("LEADERBOARD", SwingConstants.LEFT);
+        allPlayersScores = new JLabel(" ", JLabel.LEFT);
+        JLabel scoreViewLabel = new JLabel("LEADERBOARD", JLabel.CENTER);
         scoreViewLabel.setForeground(Color.BLACK);
 
+        this.add(scoreViewLabel);
         this.add(allPlayersScores);
         allPlayersScores.setForeground(Color.BLACK);
 
-        this.setBackground(new Color(122, 117, 253));
+        this.setBackground(new Color(253, 239, 117));
         this.setVisible(true);
     }
 
@@ -41,8 +41,8 @@ public class ScorePanel extends JPanel implements ScrabbleView {
         ArrayList<Player> allPlayers = event.getScrabbleModel().getPlayerList();
 
         for (int i = allPlayers.size() - 1; i >= 0; i--) {
-        allPlayersScores.setText(allPlayers.get(i).getName() + " " + allPlayers.get(i).getScore());
-
+        allPlayersScores.setText(allPlayers.get(i).getName() + ": " + allPlayers.get(i).getScore() + "\n" +
+                allPlayers.get(allPlayers.size()-1).getName() + ": " + allPlayers.get(allPlayers.size()-1).getScore());
         }
 
     }

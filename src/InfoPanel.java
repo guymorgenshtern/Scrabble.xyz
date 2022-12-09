@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Creates the JPanel for the top of the program. It includes the players name, score, and an end turn button when
@@ -26,7 +25,7 @@ public class InfoPanel extends JPanel implements ScrabbleView {
      */
     public InfoPanel(ScrabbleModel scrabbleModel) {
         super();
-        this.setLayout(new GridLayout(1, 1));
+        this.setLayout(new GridLayout(1, 7));
         this.setSize(1000,100);
 
         // creates the labels
@@ -84,7 +83,6 @@ public class InfoPanel extends JPanel implements ScrabbleView {
      */
     @Override
     public void update(ScrabbleEvent event) {
-        //ArrayList<Player> allPlayers = event.getScrabbleModel().getPlayerList();
         // sets text for players name
         playerName.setText(event.getCurrentPlayer().getName());
         // sets text for the players score

@@ -19,7 +19,7 @@ public class HandPanel extends JPanel implements ScrabbleView {
     public HandPanel(ScrabbleModel scrabbleModel){
         super();
         this.setLayout(new GridLayout(1, 7)); // Place handsize
-        this.setSize(900,100);
+        this.setSize(50,50);
 
         this.scrabbleModel = scrabbleModel;
 
