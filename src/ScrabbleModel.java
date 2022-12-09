@@ -212,7 +212,7 @@ public class ScrabbleModel implements Serializable {
         undoStack = new Stack<>();
         redoStack = new Stack<>();
         usedLetters = new ArrayList<>();
-        numberOfTries = 0;
+        // numberOfTries = 0;
         ScrabbleMove initMove = new ScrabbleMove();
         initMove.setValid(true);
         new ScrabbleGameFrame(this); // navigate to the default game of Scrabble
@@ -299,6 +299,7 @@ public class ScrabbleModel implements Serializable {
 
 
         // Game is initialized with a singular letter in the centre of the board
+        ArrayList<BoardClick> coordsList = new ArrayList<>();
         int[] coords = new int[2];
         coords[0] = rowCenterSquare;
         coords[1] = columnCenterSquare;
@@ -311,7 +312,7 @@ public class ScrabbleModel implements Serializable {
 
         // update the views to display the letter at the centre of the board
         for (ScrabbleView v : getViews()) {
-            v.update(new ScrabbleEvent(this, move, playerList.get(0), board, GameStatus.NOT_FINISHED));
+            v.update(new ScrabbleEvent(this, m, playerList.get(0), board, GameStatus.NOT_FINISHED));
         }
     }
 
@@ -473,7 +474,7 @@ public class ScrabbleModel implements Serializable {
         playerTurnCounter--;
 
         for (int i = 0; i < m.getMove().getCoords().size(); i++) {
-            board.getTileOnBoard(m.getMove().getCoords().get(i).coords()[0], m.getMove().getCoords().get(i).coords()[1]).setLetter(' ');
+            board.getTileOnBoard(m.getMove().getCoords().get(i).getCoords()[0], m.getMove().getCoords().get(i).getCoords()[1]).setLetter(' ');
         }
 
         Player currentPlayer = m.getMove().getPlayer();
@@ -483,7 +484,7 @@ public class ScrabbleModel implements Serializable {
         }
 
         for (BoardClick b : m.getMove().getCoords()) {
-            currentPlayer.addLetter(b.letter());
+            currentPlayer.addLetter(b.getLetter());
         }
 
         m.getMove().setMoveType(ScrabbleMove.MoveType.UNDO);
@@ -513,7 +514,7 @@ public class ScrabbleModel implements Serializable {
         UndoMove r = redoStack.pop();
         r.getMove().setMoveType(ScrabbleMove.MoveType.REDO);
         for (BoardClick b : r.getMove().getCoords()) {
-            board.getTileOnBoard(b.coords()[0], b.coords()[1]).setLetter(b.letter().charAt(0));
+            board.getTileOnBoard(b.getCoords()[0], b.getCoords()[1]).setLetter(b.getLetter().charAt(0));
         }
         play(r.getMove());
     }
