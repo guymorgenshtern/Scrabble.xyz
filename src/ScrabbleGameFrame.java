@@ -53,6 +53,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         JMenuItem save = new JMenuItem("Save");
 
         save.addActionListener(e-> {
+            fc.setDialogTitle("Save Scrabble.xyz (files are automatically given 'sxyz.ser' suffix)");
             int saveFileResult = fc.showSaveDialog(this);
 
             if (saveFileResult == JFileChooser.APPROVE_OPTION) {
