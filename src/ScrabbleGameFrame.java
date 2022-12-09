@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,14 +42,40 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         score.setText("Score:    \n");
         score.setSize(350,100);
 
-        add(boardPanel, BorderLayout.CENTER);
-        add(handPanel, BorderLayout.SOUTH);
-        add(infoPanel, BorderLayout.NORTH);
+        this.add(boardPanel, BorderLayout.CENTER);
+        this.add(handPanel, BorderLayout.SOUTH);
+        this.add(infoPanel, BorderLayout.NORTH);
+
+        JFileChooser fc = new JFileChooser();
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Menu");
+        JMenuItem save = new JMenuItem("Save");
+
+        save.addActionListener(e-> {
+            fc.setDialogTitle("Save Scrabble.xyz (files are automatically given 'sxyz.ser' suffix)");
+            int saveFileResult = fc.showSaveDialog(this);
+
+            if (saveFileResult == JFileChooser.APPROVE_OPTION) {
+                try {
+                    model.setLoadGame(true);
+                    model.saveScrabble(fc.getSelectedFile().getPath());
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
+
+        menuBar.add(menu);
+        menu.add(save);
+        this.setJMenuBar(menuBar);
 
         setSize(1000, 800); // expanded to enable text to show on button
         setVisible(true);
 
-        new InitController(model); // initialize the model
+        if (!model.isLoadGame()) {
+            new InitController(model); // initialize the model
+        }
     }
 
     /**
@@ -58,9 +85,11 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
      */
     @Override
     public void update(ScrabbleEvent event) {
+
         boardPanel.update(event);
         handPanel.update(event);
         infoPanel.update(event);
+
         if (event.getGameStatus() == ScrabbleModel.GameStatus.FINISHED || event.getGameStatus() == ScrabbleModel.GameStatus.TIE) {
             ArrayList<Player> listPlayers = event.getScrabbleModel().getPlayerList();
 

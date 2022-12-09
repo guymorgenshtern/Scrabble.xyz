@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -5,7 +6,7 @@ import java.util.HashMap;
  *  A Player in the game of Scrabble.
  *  @author Guy Morgenshtern 101151430
  */
-public class Player {
+public class Player implements Serializable {
 
     /** A String representing the player's name. */
     private final String name;

@@ -1,10 +1,11 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * ScrabbleMove represents a move a player made in Scrabble.
  * @author Guy Morgenshtern 101151430
  */
-public class ScrabbleMove {
+public class ScrabbleMove implements Serializable {
 
     /** A String representing a word. */
     private String word;
@@ -20,6 +21,19 @@ public class ScrabbleMove {
 
     /** A Player representing the player that placed the word. */
     private Player p;
+
+    private boolean isRedo;
+
+    private boolean isUndo;
+
+    public enum MoveType {
+        UNDO,
+        REDO,
+        DEFAULT,
+        INIT
+    }
+
+    private MoveType moveType;
 
     /**
      * Initializes a ScrabbleMove with no coordinates.
@@ -41,6 +55,17 @@ public class ScrabbleMove {
         this.direction = direction;
         isValid = false;
         this.p = player;
+        isRedo = false;
+        isUndo = false;
+        this.moveType = MoveType.DEFAULT;
+    }
+
+    public MoveType getMoveType() {
+        return moveType;
+    }
+
+    public void setMoveType(MoveType moveType) {
+        this.moveType = moveType;
     }
 
     /**

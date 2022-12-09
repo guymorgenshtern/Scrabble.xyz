@@ -2,6 +2,7 @@ package com.zetcode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  * A Library to store all valid words for validity checking.
  * @author Alexander Hum 101180821. Edited by Guy Morgenshtern 101151430.
  */
-public class Library {
+public class Library implements Serializable {
 
     /** An ArrayList of Strings to store all valid words. */
     private final ArrayList<String> validWords;

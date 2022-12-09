@@ -1,7 +1,9 @@
+import java.io.Serializable;
+
 /**
  * A Square in the game of Scrabble. A Letter can be placed on a Square, and a Square can have a Multiplier.
  */
-public class Square {
+public class Square implements Serializable {
 
     /** A Letter that is placed on the Square. */
     private char letter;
@@ -58,6 +60,10 @@ public class Square {
      */
     public Multiplier getMultiplier() {
         return multiplier;
+    }
+
+    public void serialize(String file_prefix) {
+
     }
 
 }
