@@ -2,6 +2,7 @@ import com.zetcode.Library;
 
 import javax.swing.*;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -547,69 +548,132 @@ public class ScrabbleModel implements Serializable {
     }
 
     /**
+     * removes letters used by a player in their move from their hand
+     * @param usedLetters
+     * @param currentPlayer
+     * @author Guy Morgenshtern - 101151430
+     */
+    private void removePlayedLettersFromPlayer(ArrayList<Integer> usedLetters, Player currentPlayer) {
+        // remove played letters
+        usedLetters.sort(Collections.reverseOrder());
+        for (Integer index : usedLetters) {
+            currentPlayer.removeLetter(index);
+        }
+    }
+
+    /**
+     * removes letters used by a bot in their move from their hand - bot interacts with board/model differently than player
+     * @param move
+     * @param currentPlayer
+     */
+    private void removePlayedLettersFromBot(ScrabbleMove move, Player currentPlayer) {
+        for (BoardClick boardClick : move.getCoords()) {
+            currentPlayer.removeLetter(boardClick.getLetter());
+        }
+    }
+
+    /**
+     * determines the direction of the move played
+     * @param move
+     */
+    private void determineMoveDirection(ScrabbleMove move) {
+        boolean horizontal = true;
+        boolean vertical = true;
+        for (int i = 1; i < move.getCoords().size(); i++) {
+            horizontal = horizontal && move.getCoords().get(i).getCoords()[1] == move.getCoords().get(0).getCoords()[1];
+            vertical = vertical && move.getCoords().get(i).getCoords()[0] == move.getCoords().get(0).getCoords()[0];
+        }
+
+        if ((horizontal) && (vertical) && move.getCoords().size() == 1) {
+            move.setDirection(Direction.HORIZONTAL);
+            String horizontalCheck = findFullWord(move);
+            move.setDirection(Direction.VERTICAL);
+            String verticalCheck = findFullWord(move);
+
+            //needed to determine the directionality of two-letter words (since player only places 1 letter)
+            if (verticalCheck.length() > move.getCoords().size()) {
+                move.setWord(verticalCheck);
+                move.setDirection(Direction.VERTICAL);
+            } else {
+                move.setWord(horizontalCheck);
+                move.setDirection(Direction.HORIZONTAL);
+            }
+        } else if (vertical) {
+            move.setDirection(Direction.VERTICAL);
+        } else if (horizontal) {
+            move.setDirection(Direction.HORIZONTAL);
+        } else {
+            System.out.println("This is an issue!");
+        }
+    }
+
+    private void dealLettersToPlayer(ScrabbleMove move, Player currentPlayer) {
+        // deal new letters to player
+        int numberOfBoardClicksUsed = move.getCoords().size();
+        // must account for the additional boardLetter that was added to the BotPlayer's hand
+        if (currentPlayer instanceof BotPlayer) {
+            numberOfBoardClicksUsed--;
+        }
+        for (int i = 0; i < numberOfBoardClicksUsed; i++) {
+            currentPlayer.addLetter(letterBag.getRandomLetter());
+        }
+    }
+
+    /**
+     * generates an event that signifies the end of the game and determines if tied or not
+     * @param move
+     * @param currentPlayer
+     * @return scrabble event
+     * @author Guy Morgenshtern - 101151430
+     */
+    private ScrabbleEvent generateEndGamEvent(ScrabbleMove move, Player currentPlayer) {
+        playerList.sort(playerComparator);
+
+        //if top 2 players have the same score its still a tie
+        GameStatus status = (playerList.get(0).getScore() == playerList.get(1).getScore())? GameStatus.TIE: GameStatus.FINISHED;
+
+        return new ScrabbleEvent(this, move, currentPlayer, this.board, status);
+    }
+
+    /**
+     * swap a random letter out from a players hand
+     * @param currentPlayer
+     * @author Guy Morgenshtern - 101151430
+     */
+    private void swapRandomLetterFromPlayerHand(Player currentPlayer) {
+        int rand = (int)(Math.random() * 7);
+        currentPlayer.removeLetter(rand);
+        currentPlayer.addLetter(letterBag.getRandomLetter());
+    }
+
+    /**
      * Plays the given ScrabbleMove that was constructed by a player.
      * @param move A ScrabbleMove to investigate.
      * @author Guy Morgenshtern 101151430. Edited by Alexander Hum 101180821.
      */
     public void play(ScrabbleMove move) {
         Player currentPlayer = (move.getMoveType() == ScrabbleMove.MoveType.REDO ? move.getPlayer() : getCurrentPlayer());
-        boolean horizontal = true;
-        boolean vertical = true;
-//        numberOfTries++;
+        ScrabbleEvent event;
 
         // coords is checking letters on the board
         if(status == GameStatus.NOT_FINISHED) {
             if (move.getCoords().size() == 0) {
+
                 //if the game has ended (all players have skipped their turn in succession)
                 if (haveAllPlayerSkipped()) {
-                    status = (playerList.get(0).getScore() == playerList.get(1).getScore())? GameStatus.TIE: GameStatus.FINISHED;
-                    //create the end game event
-                    playerList.sort(playerComparator);
-                    ScrabbleEvent event = new ScrabbleEvent(this, move, currentPlayer, this.board, status);
-                    for (ScrabbleView v : this.getViews()) {
-                        v.update(event);
-                    }
+                   event = generateEndGamEvent(move, currentPlayer);
                 } else {
                     // if the player skipped but the game isn't over, skip to next player
-                    int rand = (int)(Math.random() * 7);
-                    currentPlayer.removeLetter(rand);
-                    currentPlayer.addLetter(letterBag.getRandomLetter());
+                    swapRandomLetterFromPlayerHand(currentPlayer);
                     playerTurnCounter++;
-                    ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, GameStatus.NOT_FINISHED);
-                    for (ScrabbleView v : this.getViews()) {
-                        v.update(event);
-                    }
+                    event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), this.board, GameStatus.NOT_FINISHED);
                 }
             } else {
                 //reset skip count since a player has played a real turn
                 skipCounter = 0;
 
-                //determine if the word is horizontal or vertical
-                for (int i = 1; i < move.getCoords().size(); i++) {
-                    horizontal = horizontal && move.getCoords().get(i).getCoords()[1] == move.getCoords().get(0).getCoords()[1];
-                    vertical = vertical && move.getCoords().get(i).getCoords()[0] == move.getCoords().get(0).getCoords()[0];
-                }
-
-                if ((horizontal) && (vertical) && move.getCoords().size() == 1) {
-                    move.setDirection(Direction.HORIZONTAL);
-                    String horizontalCheck = findFullWord(move);
-                    move.setDirection(Direction.VERTICAL);
-                    String verticalCheck = findFullWord(move);
-
-                    if (verticalCheck.length() > move.getCoords().size()) {
-                        move.setWord(verticalCheck);
-                        move.setDirection(Direction.VERTICAL);
-                    } else {
-                        move.setWord(horizontalCheck);
-                        move.setDirection(Direction.HORIZONTAL);
-                    }
-                } else if (vertical) {
-                    move.setDirection(Direction.VERTICAL);
-                } else if (horizontal) {
-                    move.setDirection(Direction.HORIZONTAL);
-                } else {
-                    System.out.println("This is an issue!");
-                }
+                //determines and set the direction of the played move
+                determineMoveDirection(move);
 
                 //begin building the rest of the move
                 move.setPlayer(currentPlayer);
@@ -619,6 +683,8 @@ public class ScrabbleModel implements Serializable {
 
                 //score the move if it is valid
                 if (move.isValid()) {
+
+                    //clear the redo stack if played a regular move
                     if (redoStack.size() > 0 && move.getMoveType() != ScrabbleMove.MoveType.REDO) {
                         redoStack.clear();
                     }
@@ -626,36 +692,25 @@ public class ScrabbleModel implements Serializable {
                     usedLetters.sort(Collections.reverseOrder());
                     ArrayList<Integer> indexesOfUsedLetters = (ArrayList<Integer>) usedLetters.clone();
 
+                    //add current move to undo stack
                     UndoMove undoMove = new UndoMove(move, currentPlayer.getScore(), indexesOfUsedLetters);
 
                     //calculate score
                     currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
 
                     // remove played letters
-                    usedLetters.sort(Collections.reverseOrder());
-                    for (Integer index : usedLetters) {
-                        currentPlayer.removeLetter(index);
-                    }
                     // BotPlayer never touches a JButton, so usedLetters is never added to
                     if (currentPlayer instanceof BotPlayer) {
-                        // remove used letters from the BotPlayer's hand
-                        for (BoardClick boardClick : move.getCoords()) {
-                            currentPlayer.removeLetter(boardClick.getLetter());
-                        }
+                        removePlayedLettersFromBot(move, currentPlayer);
+                    } else {
+                        removePlayedLettersFromPlayer(usedLetters, currentPlayer);
                     }
 
                     // deal new letters to player
-                    int numberOfBoardClicksUsed = move.getCoords().size();
-                    // must account for the additional boardLetter that was added to the BotPlayer's hand
-                    if (currentPlayer instanceof BotPlayer) {
-                        numberOfBoardClicksUsed--;
-                    }
-                    for (int i = 0; i < numberOfBoardClicksUsed; i++) {
-                        currentPlayer.addLetter(letterBag.getRandomLetter());
-                    }
+                    dealLettersToPlayer(move, currentPlayer);
+
                     // add move to stack
                     undoStack.push(undoMove);
-                    System.out.println(undoStack);
                     //next player
                     playerTurnCounter++;
                 } else {
@@ -664,13 +719,14 @@ public class ScrabbleModel implements Serializable {
                 }
                 getUsedLetters().clear();
 
-
                 //update views
-                ScrabbleEvent event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), board, GameStatus.NOT_FINISHED);
+                 event = new ScrabbleEvent(this, move, playerList.get(playerTurnCounter % playerList.size()), board, GameStatus.NOT_FINISHED);
                 currentMove = new ScrabbleMove();
-                for (ScrabbleView v : getViews()) {
-                    v.update(event);
-                }
+            }
+
+            //update views
+            for (ScrabbleView v : getViews()) {
+                v.update(event);
             }
 
             // BotPlayer will play next if they're the next player
@@ -681,32 +737,12 @@ public class ScrabbleModel implements Serializable {
         }
     }
 
-//    public void loadScrabble(String fileName) throws IOException {
-//        FileInputStream fileIn = new FileInputStream(fileName);
-//        ObjectInputStream in = new ObjectInputStream(fileIn);
-//        Player.deserialize(in);
-//    }
-
-//    public void saveScrabble(String prefix) throws IOException {
-//        String suffix = ".ser";
-//        String playerListFile = prefix + "_player_list" + suffix;
-//        String boardFile = prefix + "_board" + suffix;
-//
-//        FileOutputStream fileOut = new FileOutputStream(playerListFile);
-//        ObjectOutputStream out = new ObjectOutputStream(fileOut);
-//        for (Player p : playerList) {
-//            System.out.println(p);
-//            p.serialize(out);
-//        }
-//        fileOut.close();
-//
-//        fileOut = new FileOutputStream(boardFile);
-//        out = new ObjectOutputStream(fileOut);
-//        this.board.serialize(out);
-//        fileOut.close();
-//
-//    }
-
+    /**
+     * Saves game state of scrabble into a file with prefix provided + _sxyz.ser
+     * @param prefix
+     * @throws IOException
+     * @author Guy Morgenshtern 101151430
+     */
     public void saveScrabble(String prefix) throws IOException {
         String suffix = "_sxyz.ser";
 
@@ -716,8 +752,16 @@ public class ScrabbleModel implements Serializable {
         fileOut.close();
     }
 
+    /**
+     * load a scrabble game given a file path
+     * @param filePath
+     * @return a scrabble model depicting the game state at time of save
+     * @throws IOException
+     * @author Guy Morgenshtern 101151430
+     */
     public static ScrabbleModel loadScrabble(String filePath) throws IOException {
 
+        //creating streams
         FileInputStream fileIn = new FileInputStream(filePath);
         ObjectInputStream in = null;
         try {
@@ -735,6 +779,7 @@ public class ScrabbleModel implements Serializable {
 
         }
         catch (EOFException exc) {
+            //always close streams
             System.out.println("end of file");
             fileIn.close();
             in.close();
