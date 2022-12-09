@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
+    private BoardPanel boardPanel;
+    private HandPanel handPanel;
+    private InfoPanel infoPanel;
+    private ScorePanel scorePanel;
 
     /** A JPanel to display the board. */
     private final BoardPanel boardPanel;
@@ -29,11 +33,17 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         setLayout(new BorderLayout(5, 5));
 
         model.getViews().add(this);
+        this.setFont(new Font("Helvetica", Font.PLAIN, 12));
 
-        infoPanel = new InfoPanel(model);
-        handPanel = new HandPanel(model);
-        boardPanel = new BoardPanel(model);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        this.model = model;
+        this.infoPanel = new InfoPanel(model);
+        this.handPanel = new HandPanel(model);
+        this.boardPanel = new BoardPanel(model);
+        this.scorePanel = new ScorePanel(model);
         JButton endTurn = new JButton();
+        this.textBoard = model.getBoard();
         endTurn.setText("End Turn");
         endTurn.addActionListener(e -> {
             model.play(model.getCurrentMove());
@@ -42,9 +52,10 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         score.setText("Score:    \n");
         score.setSize(350,100);
 
-        this.add(boardPanel, BorderLayout.CENTER);
-        this.add(handPanel, BorderLayout.SOUTH);
-        this.add(infoPanel, BorderLayout.NORTH);
+        this.add(infoPanel);
+        this.add(boardPanel);
+        this.add(scorePanel);
+        this.add(handPanel);
 
         JFileChooser fc = new JFileChooser();
 
@@ -89,6 +100,8 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         boardPanel.update(event);
         handPanel.update(event);
         infoPanel.update(event);
+        scorePanel.update(event);
+
 
         if (event.getGameStatus() == ScrabbleModel.GameStatus.FINISHED || event.getGameStatus() == ScrabbleModel.GameStatus.TIE) {
             ArrayList<Player> listPlayers = event.getScrabbleModel().getPlayerList();

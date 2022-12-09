@@ -5,6 +5,7 @@ import java.util.Stack;
 /**
  * Creates the JPanel for the top of the program. It includes the players name, score, and an end turn button when
  * the user wants to skip or end turn.
+ *
  * @author Alexander Hum 101180821
  */
 public class InfoPanel extends JPanel implements ScrabbleView {
@@ -21,13 +22,13 @@ public class InfoPanel extends JPanel implements ScrabbleView {
 
     /**
      * InfoPanel creates the layout and location for thr buttons and labels.
-     * @param scrabbleModel The game of Scrabble to represent.
+     * @param scrabbleModel The Game of Scrabble to update
      * @author Alexander Hum 101180821
      */
     public InfoPanel(ScrabbleModel scrabbleModel) {
         super();
-        setLayout(new GridLayout(1, 7));
-        setSize(900,100);
+        this.setLayout(new GridLayout(1, 7));
+        this.setSize(1000,100);
 
         // creates the labels
         playerName = new JLabel("", SwingConstants.CENTER);
@@ -50,8 +51,8 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         add(currentNameLabel);
         add(playerName);
         playerName.setForeground(Color.BLACK);
-        add(currentScoreLabel);
-        add(playerScore);
+        this.add(currentScoreLabel);
+        this.add(playerScore);
         playerScore.setForeground(Color.BLACK);
         this.add(endTurn);
         this.add(undoButton);
@@ -60,12 +61,12 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         // set background colour
         setBackground(new Color(253, 239, 117));
 
-        setVisible(true);
+        this.setVisible(true);
     }
 
     /**
-     * Updates the current player's name and score.
-     * @param event A ScrabbleEvent that has occurred.
+     * updates the players name and score.
+     * @param event for the ScrabbleEvent
      * @author Alexander Hum 101180821
      */
     @Override
@@ -85,5 +86,4 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         undoButton.setEnabled(setEnabled);
         redoButton.setEnabled(setEnabled);
     }
-
 }
