@@ -52,7 +52,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         int numCols = board.getNumCols();
         buttons = new JButton[numRows][numCols];
         setLayout(new GridLayout(numRows, numCols));
-        setSize(900,900);
+        setSize(1000,1000);
 
         // initialize the colours to use on the board
         doubleLetterColour = new Color(186, 238, 254);

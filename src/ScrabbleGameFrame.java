@@ -16,6 +16,10 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
     /** A JPanel to store the game information. */
     private final InfoPanel infoPanel;
 
+    /** A JPanel to store the users scores */
+    private final ScorePanel scorePanel;
+
+
     /**
      * Initializes a ScrabbleGameFrame to display the game of Scrabble.
      * @param model A ScrabbleModel to represent.
@@ -26,13 +30,14 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         super("Scrabble.xyz");
         setFont(new Font("Helvetica", Font.PLAIN, 12));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(5, 5));
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         model.getViews().add(this);
 
         infoPanel = new InfoPanel(model);
         handPanel = new HandPanel(model);
         boardPanel = new BoardPanel(model);
+        scorePanel = new ScorePanel(model);
         JButton endTurn = new JButton();
         endTurn.setText("End Turn");
         endTurn.addActionListener(e -> {
@@ -42,9 +47,11 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         score.setText("Score:    \n");
         score.setSize(350,100);
 
-        this.add(boardPanel, BorderLayout.CENTER);
-        this.add(handPanel, BorderLayout.SOUTH);
-        this.add(infoPanel, BorderLayout.NORTH);
+        this.add(infoPanel);
+        this.add(boardPanel);
+        this.add(scorePanel);
+        this.add(handPanel);
+
 
         JFileChooser fc = new JFileChooser();
 
@@ -89,6 +96,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         boardPanel.update(event);
         handPanel.update(event);
         infoPanel.update(event);
+        scorePanel.update(event);
 
         if (event.getGameStatus() == ScrabbleModel.GameStatus.FINISHED || event.getGameStatus() == ScrabbleModel.GameStatus.TIE) {
             ArrayList<Player> listPlayers = event.getScrabbleModel().getPlayerList();
