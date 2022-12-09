@@ -460,6 +460,10 @@ public class ScrabbleModel implements Serializable {
         return total;
     }
 
+    public Stack<UndoMove> getUndoStack() {
+        return undoStack;
+    }
+
     /**
      * Undoes the players current move
      * @author Alexander Hum 101180821

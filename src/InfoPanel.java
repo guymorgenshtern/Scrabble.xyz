@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.Stack;
 
 /**
  * Creates the JPanel for the top of the program. It includes the players name, score, and an end turn button when
@@ -13,6 +14,10 @@ public class InfoPanel extends JPanel implements ScrabbleView {
 
     /** JLabel for the current players name */
     private final JLabel playerScore;
+
+    private final JButton undoButton;
+
+    private final JButton redoButton;
 
     /**
      * InfoPanel creates the layout and location for thr buttons and labels.
@@ -36,24 +41,10 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         endTurn.addActionListener(e -> {
             scrabbleModel.play(scrabbleModel.getCurrentMove());
         });
-        JButton undoButton = new JButton("Undo");
-        undoButton.addActionListener(e -> {
-            String undoMessage = "At this time there are no plays to Undo";
-            if(scrabbleModel.getNumberOfUndoStack() == 0) {
-                JOptionPane.showMessageDialog(this, undoMessage);
-            } else {
-                scrabbleModel.undo();
-            }
-        });
-        JButton redoButton = new JButton("Redo");
-        redoButton.addActionListener(e -> {
-            String redoMessage = "At this time there are no plays to Redo";
-            if(scrabbleModel.getNumberOfRedoStack() == 0) {
-                JOptionPane.showMessageDialog(this, redoMessage);
-            } else {
-                scrabbleModel.redo();
-            }
-        });
+        undoButton = new JButton("Undo");
+        undoButton.addActionListener(e -> scrabbleModel.undo());
+        redoButton = new JButton("Redo");
+        redoButton.addActionListener(e -> scrabbleModel.redo());
 
         //adds labels and buttons to the panel
         add(currentNameLabel);
@@ -82,6 +73,17 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         Player currentPlayer = event.getCurrentPlayer();
         playerName.setText(currentPlayer.getName()); // sets text for players name
         playerScore.setText(currentPlayer.getScore() + ""); // sets text for the players score
+
+        Stack<UndoMove> undoStack = event.getScrabbleModel().getUndoStack();
+        boolean setEnabled;
+        if ((undoStack.size() > 0 && undoStack.peek().getMove().getPlayer() instanceof BotPlayer)
+            || undoStack.size() == 0) {
+            setEnabled = false;
+        } else {
+            setEnabled = true;
+        }
+        undoButton.setEnabled(setEnabled);
+        redoButton.setEnabled(setEnabled);
     }
 
 }

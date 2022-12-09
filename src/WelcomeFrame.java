@@ -70,8 +70,6 @@ public class WelcomeFrame extends JFrame {
                     ioException.printStackTrace();
                 }
             }
-
-            System.out.println("Load Game button was clicked!");
         });
 
         // finish initializing JFrame
