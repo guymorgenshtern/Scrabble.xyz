@@ -5,7 +5,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * A GUI representation of a game of Scrabble.
+ * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604 and Alexander Hum 101180821.
+ */
 public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
+
+    /** A JPanel to store the game information. */
+    private final InfoPanel infoPanel;
 
     /** A JPanel to display the board. */
     private final BoardPanel boardPanel;
@@ -13,8 +20,8 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
     /** A JPanel to display the current player's hand. */
     private final HandPanel handPanel;
 
-    /** A JPanel to store the game information. */
-    private final InfoPanel infoPanel;
+    /** A JPanel to display the players and their current scores. */
+    private final ScorePanel scorePanel;
 
     /**
      * Initializes a ScrabbleGameFrame to display the game of Scrabble.
@@ -23,28 +30,30 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
      * @author Guy Morgenshtern 101151430
      */
     public ScrabbleGameFrame(ScrabbleModel model) throws IOException {
+        // initialize the JFrame with a vertical BoxLayout
         super("Scrabble.xyz");
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setFont(new Font("Helvetica", Font.PLAIN, 12));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(5, 5));
 
+        // ScrabbleGameFrame waits for updates from the model
         model.getViews().add(this);
 
+        // create the JPanels that will make up the ScrabbleGameFrame
         infoPanel = new InfoPanel(model);
         handPanel = new HandPanel(model);
         boardPanel = new BoardPanel(model);
-        JButton endTurn = new JButton();
-        endTurn.setText("End Turn");
-        endTurn.addActionListener(e -> {
-            model.play(model.getCurrentMove());
-        });
-        JLabel score = new JLabel();
-        score.setText("Score:    \n");
-        score.setSize(350,100);
+        scorePanel = new ScorePanel();
 
-        this.add(boardPanel, BorderLayout.CENTER);
-        this.add(handPanel, BorderLayout.SOUTH);
-        this.add(infoPanel, BorderLayout.NORTH);
+        // set the maximum size of the panels
+        infoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+        handPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+        scorePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+
+        // add the panels to the JFrame
+        add(infoPanel);
+        add(boardPanel);
+        add(handPanel);
+        add(scorePanel);
 
         JFileChooser fc = new JFileChooser();
 
@@ -68,27 +77,30 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
 
         menuBar.add(menu);
         menu.add(save);
-        this.setJMenuBar(menuBar);
-
-        setSize(1000, 800); // expanded to enable text to show on button
-        setVisible(true);
+        setJMenuBar(menuBar);
 
         if (!model.isLoadGame()) {
             new InitController(model); // initialize the model
         }
+
+        // finish initializing the JFrame
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1000, 800); // expanded to enable text to show on button
+        setVisible(true);
     }
 
     /**
      * Update ScrabbleGameFrame and all of its panels.
      * @param event A ScrabbleEvent to update.
-     * @author Guy Morgenshtern 101151430
+     * @author Guy Morgenshtern 101151430 and Alexander Hum 101180821
      */
     @Override
     public void update(ScrabbleEvent event) {
-
+        // update the JPanels
+        infoPanel.update(event);
         boardPanel.update(event);
         handPanel.update(event);
-        infoPanel.update(event);
+        scorePanel.update(event);
 
         if (event.getGameStatus() == ScrabbleModel.GameStatus.FINISHED || event.getGameStatus() == ScrabbleModel.GameStatus.TIE) {
             ArrayList<Player> listPlayers = event.getScrabbleModel().getPlayerList();
