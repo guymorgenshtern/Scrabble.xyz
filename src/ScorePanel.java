@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class ScorePanel extends JPanel implements ScrabbleView {
 
     /** Component for current players scores */
-    private final JLabel allPlayersScores;
+    ArrayList<JLabel> scores;
 
 
     /**
@@ -19,17 +19,21 @@ public class ScorePanel extends JPanel implements ScrabbleView {
      */
     public ScorePanel(ScrabbleModel scrabbleModel) {
         super();
-        this.setLayout(new GridLayout(1, 1));
-        this.setSize(500, 250);
+        this.setLayout(new GridLayout(1, 7));
+        this.setSize(900, 250);
 
         // Player Score Label
-        allPlayersScores = new JLabel(" ", JLabel.LEFT);
-        JLabel scoreViewLabel = new JLabel("LEADERBOARD", JLabel.CENTER);
+        JLabel scoreViewLabel = new JLabel("Leaderboard", SwingConstants.CENTER);
         scoreViewLabel.setForeground(Color.BLACK);
+        scores = new ArrayList<>();
 
         this.add(scoreViewLabel);
-        this.add(allPlayersScores);
-        allPlayersScores.setForeground(Color.BLACK);
+        for (int i = 0; i < 6; i++) {
+            JLabel l = new JLabel("", SwingConstants.RIGHT);
+            scores.add(l);
+            this.add(l);
+        }
+
 
         this.setBackground(new Color(253, 239, 117));
         this.setVisible(true);
@@ -38,12 +42,13 @@ public class ScorePanel extends JPanel implements ScrabbleView {
 
     @Override
     public void update(ScrabbleEvent event) {
+
         ArrayList<Player> allPlayers = event.getScrabbleModel().getPlayerList();
 
-        for (int i = allPlayers.size() - 1; i >= 0; i--) {
-        allPlayersScores.setText(allPlayers.get(i).getName() + ": " + allPlayers.get(i).getScore() + "\n" +
-                allPlayers.get(allPlayers.size()-1).getName() + ": " + allPlayers.get(allPlayers.size()-1).getScore());
+        System.out.println("here1");
+        for (int i = 0; i < allPlayers.size(); i++) {
+            System.out.println("here");
+            scores.get(i).setText(allPlayers.get(i).getName() + ": " + allPlayers.get(i).getScore());
         }
-
     }
 }

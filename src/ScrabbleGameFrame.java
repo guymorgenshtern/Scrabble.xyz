@@ -34,6 +34,7 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
 
         model.getViews().add(this);
 
+
         infoPanel = new InfoPanel(model);
         handPanel = new HandPanel(model);
         boardPanel = new BoardPanel(model);
@@ -46,10 +47,13 @@ public class ScrabbleGameFrame extends JFrame implements ScrabbleView {
         JLabel score = new JLabel();
         score.setText("Score:    \n");
         score.setSize(350,100);
+        scorePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        handPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
+        infoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
 
         this.add(infoPanel);
-        this.add(boardPanel);
         this.add(scorePanel);
+        this.add(boardPanel);
         this.add(handPanel);
 
 
