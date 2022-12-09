@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * A JPanel representation of the Board.
+ * @author Guy Morgenshtern 101151430. Edited by Francisco DeGrano 101147447 and Emily Tang 101192604.
  */
 public class BoardPanel extends JPanel implements ScrabbleView {
 
@@ -31,9 +32,8 @@ public class BoardPanel extends JPanel implements ScrabbleView {
     /** A Color to represent the default multiplier colour. */
     private final Color defaultMultiplierColour;
 
-    private ScrabbleModel scrabbleModel;
-
-    private BoardController controller;
+    /** A BoardController to handle user interactions with the BoardPanel. */
+    private final BoardController controller;
 
     /**
      * Initializes a JPanel to display the Scrabble board.
@@ -44,10 +44,8 @@ public class BoardPanel extends JPanel implements ScrabbleView {
         super();
 
         // initialize the board
-        this.scrabbleModel = scrabbleModel;
-        this.controller = new BoardController(scrabbleModel, this);
+        controller = new BoardController(scrabbleModel, this);
         board = scrabbleModel.getBoard();
-
         int numRows = board.getNumRows();
         int numCols = board.getNumCols();
         buttons = new JButton[numRows][numCols];
@@ -67,21 +65,20 @@ public class BoardPanel extends JPanel implements ScrabbleView {
             for (int j = 0; j < numCols; j++) {
                 buttons[i][j] = new JButton();
                 buttons[i][j].setActionCommand(i + "," + j);
-
-                // ActionListener for when user presses a JButton
                 buttons[i][j].addActionListener(controller);
+                initializeButtonColor(i, j);
                 add(buttons[i][j]);
             }
         }
-        controller.updateButtons();
-        for (int i = 0; i < numRows; i++) {
-            for (int j = 0; j < numCols; j++) {
-                initializeButtonColor(i, j);
-            }
-        }
+        controller.updateButtons(); // update the state of the buttons in the BoardController
+
         setVisible(true);
     }
 
+    /**
+     * @return A 2D array of JButtons representing the board.
+     * @author Guy Morgenshtern 101151430
+     */
     public JButton[][] getButtons() {
         return buttons;
     }
@@ -144,6 +141,7 @@ public class BoardPanel extends JPanel implements ScrabbleView {
      * @param x An integer representing the row of the JButton that was pressed.
      * @param y An integer representing the column of the JButton that was pressed.
      * @param letter A String representing the letter that the JButton should display.
+     * @param move A ScrabbleMove to update.
      * @author Guy Morgenshtern 101151430
      */
     private void updateButton(int x, int y, String letter, ScrabbleMove move) {
@@ -169,14 +167,15 @@ public class BoardPanel extends JPanel implements ScrabbleView {
             buttons[x][y].setText(letter);
         }
 
-
         // repaint border
         buttons[x][y].setBorder(BorderFactory.createLineBorder(borderColour, 1, true));
         buttons[x][y].setBorderPainted(true);
     }
 
     /**
-     * Reinitializes a newly loaded board to resume game state
+     * Reinitializes a newly loaded board to resume game state.
+     * @param move A ScrabbleMove to update.
+     * @author Guy Morgenshtern 101151430
      */
     private void initializeLoadedBoard(ScrabbleMove move) {
         for (int x = 0; x < board.getNumRows(); x++) {
@@ -186,7 +185,6 @@ public class BoardPanel extends JPanel implements ScrabbleView {
                 if (charOnBoard != ' ') {
                     updateButton(x,y,String.valueOf(charOnBoard), move);
                 }
-
             }
         }
     }
@@ -197,15 +195,19 @@ public class BoardPanel extends JPanel implements ScrabbleView {
      * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
      */
     @Override
-    public void update(ScrabbleEvent event) { // Update Game Model
+    public void update(ScrabbleEvent event) {
+        // get the ScrabbleMove that occurred
+        ScrabbleMove move = event.getMove();
 
         if (event.getGameStatus() == ScrabbleModel.GameStatus.LOADED) {
-            initializeLoadedBoard(event.getMove());
+            initializeLoadedBoard(move);
         } else {
-            for (int i = 0; i < event.getMove().getCoords().size(); i++) {
-                int x = event.getMove().getCoords().get(i).getCoords()[0];
-                int y = event.getMove().getCoords().get(i).getCoords()[1];
-                updateButton(x, y, String.valueOf(event.getBoard().getTileOnBoard(x,y).getLetter()), event.getMove());
+            // update the JButtons on the board based on the BoardClicks
+            ArrayList<BoardClick> boardClicks = move.getCoords();
+            for (BoardClick boardClick : boardClicks) {
+                int x = boardClick.getCoords()[0];
+                int y = boardClick.getCoords()[1];
+                updateButton(x, y, String.valueOf(event.getBoard().getTileOnBoard(x, y).getLetter()), move);
             }
         }
     }

@@ -2,6 +2,7 @@ import java.io.Serializable;
 
 /**
  * A BoardClick holds a coordinate on the Board, and a Letter to place at that coordinate.
+ * @author Guy Morgenshtern 101151430
  */
 public class BoardClick implements Serializable {
 
@@ -16,6 +17,7 @@ public class BoardClick implements Serializable {
     /**
      * @param coords An array of integers to represent a coordinate on the Board.
      * @param letter A String to represent a letter to place at coords on the Board.
+     * @author Guy Morgenshtern 101151430
      */
     public BoardClick(int[] coords, String letter) {
         this.coords = coords;
@@ -24,6 +26,7 @@ public class BoardClick implements Serializable {
 
     /**
      * @return An array of integers to represent a coordinate on the Board.
+     * @author Guy Morgenshtern 101151430
      */
     public int[] getCoords() {
         return coords;
@@ -31,6 +34,7 @@ public class BoardClick implements Serializable {
 
     /**
      * @return A String to represent a letter to place at coords on the Board.
+     * @author Guy Morgenshtern 101151430
      */
     public String getLetter() {
         return letter;

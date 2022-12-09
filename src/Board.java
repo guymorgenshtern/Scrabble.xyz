@@ -77,12 +77,11 @@ public class Board implements Serializable {
      * Initializes the 15x15 Board using the specified file that contains ASCII characters.
      * @param fileName A String representing the name of the file that contains the orientation of the Scrabble board.
      * @throws IOException If an I/O error occurs.
-     * @author Edited by Emily Tang 101192604.
+     * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
      */
     private void initBoard(String fileName) throws IOException {
         // read in the board layout
-        try (InputStream inputStream = getClass().getResourceAsStream(fileName);
-             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(fileName)))) {
             String line = br.readLine(); // get the first row of the board layout
             int row = -1;
             int column;
@@ -131,7 +130,7 @@ public class Board implements Serializable {
      * @author Guy Morgenshtern 101151430
      */
     public Square getTileOnBoard(int row, int column){
-        return this.scrabbleBoard[row][column];
+        return scrabbleBoard[row][column];
     }
 
     /**
@@ -141,7 +140,7 @@ public class Board implements Serializable {
      * @author Guy Morgenshtern 101151430
      */
     public void setSquare(char letter, int row, int column) {
-        this.scrabbleBoard[row][column].setLetter(letter);
+        scrabbleBoard[row][column].setLetter(letter);
     }
 
     /**
@@ -160,22 +159,4 @@ public class Board implements Serializable {
         return numCols;
     }
 
-    /**
-     * Prints a text-based representation of the Board for debugging purposes.
-     * @author Guy Morgenshtern 101151430
-     */
-    public void printBoard() {
-        System.out.printf("%7d", 0);
-        for (int i = 1; i < scrabbleBoard.length; i++) {
-            System.out.printf("%5d", i);
-        }
-        System.out.println(" ");
-        for (int k = 0; k < scrabbleBoard.length; k++) {
-            System.out.printf("%2d", k);
-            for (int j = 0; j < scrabbleBoard[0].length; j++) {
-                System.out.printf("%5s", scrabbleBoard[k][j].getLetter());
-            }
-            System.out.println(" ");
-        }
-    }
 }

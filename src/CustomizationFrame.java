@@ -17,6 +17,7 @@ import java.util.Hashtable;
 /**
  * A JFrame to display when the user would like to create or load in their own custom board to play a game of Scrabble
  * with.
+ * @author Emily Tang 101192604
  */
 public class CustomizationFrame extends JFrame {
 

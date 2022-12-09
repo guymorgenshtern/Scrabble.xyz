@@ -3,6 +3,7 @@ import java.awt.*;
 
 /**
  * HandPanel will display the current player's hand.
+ * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
  */
 public class HandPanel extends JPanel implements ScrabbleView {
 
@@ -15,6 +16,7 @@ public class HandPanel extends JPanel implements ScrabbleView {
     /**
      * Initializes the HandPanel.
      * @param scrabbleModel A ScrabbleModel to update the "look" of.
+     * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
      */
     public HandPanel(ScrabbleModel scrabbleModel){
         super();
@@ -24,7 +26,6 @@ public class HandPanel extends JPanel implements ScrabbleView {
         this.scrabbleModel = scrabbleModel;
 
         buttons = new JButton[7];
-
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new JButton();
             buttons[i].setActionCommand("" + i);
@@ -42,6 +43,7 @@ public class HandPanel extends JPanel implements ScrabbleView {
     /**
      * Sets the JButtons to display the specified player's hand.
      * @param p A Player to display the hand of.
+     * @author Guy Morgenshtern 101151430
      */
     private void setHandForTurn(Player p) {
         for (int i = 0; i < buttons.length; i++) {
@@ -54,6 +56,7 @@ public class HandPanel extends JPanel implements ScrabbleView {
 
     /**
      * Updates the visibility of the JButton.
+     * @author Guy Morgenshtern 101151430
      */
     private void updateVisibility() {
         for (JButton b : buttons) {
@@ -67,11 +70,14 @@ public class HandPanel extends JPanel implements ScrabbleView {
     /**
      * Updates the "look" of the HandPanel.
      * @param event A ScrabbleEvent to update.
+     * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
      */
     @Override
     public void update(ScrabbleEvent event) {
-        if (!(event.getCurrentPlayer() instanceof BotPlayer)) {
-            setHandForTurn(event.getCurrentPlayer());
+        // update the HandPanel if the current player is not a BotPlayer
+        Player currentPlayer = event.getCurrentPlayer();
+        if (!(currentPlayer instanceof BotPlayer)) {
+            setHandForTurn(currentPlayer);
         }
         updateVisibility();
     }

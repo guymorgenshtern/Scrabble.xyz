@@ -5,24 +5,27 @@ import java.util.Stack;
 /**
  * Creates the JPanel for the top of the program. It includes the players name, score, and an end turn button when
  * the user wants to skip or end turn.
- * @author Alexander Hum 101180821
+ * @author Alexander Hum 101180821. Edited by Emily Tang 101192604 and Guy Morgenshtern 101151430.
  */
 public class InfoPanel extends JPanel implements ScrabbleView {
 
-    /** JLabel for the current players name */
+    /** A JLabel for the current player's name. */
     private final JLabel playerName;
 
-    /** JLabel for the current players name */
+    /** A JLabel for the current player's name. */
     private final JLabel playerScore;
 
+    /** A JButton to undo a ScrabbleMove. */
     private final JButton undoButton;
 
+    /** A JButton to redo a ScrabbleMove. */
     private final JButton redoButton;
 
     /**
-     * InfoPanel creates the layout and location for thr buttons and labels.
-     * @param scrabbleModel The game of Scrabble to represent.
-     * @author Alexander Hum 101180821
+     * Creates an InfoPanel to display the name and the score of the current player. InfoPanel also houses buttons to
+     * end the current player's turn, and to allow for undoing and redoing of ScrabbleMoves.
+     * @param scrabbleModel The ScrabbleModel to update.
+     * @author Alexander Hum 101180821. Edited by Emily Tang 101192604 and Guy Morgenshtern 101151430.
      */
     public InfoPanel(ScrabbleModel scrabbleModel) {
         super();
@@ -36,14 +39,19 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         currentNameLabel.setForeground(Color.BLACK);
         JLabel currentScoreLabel = new JLabel("Score: ", SwingConstants.RIGHT);
         currentScoreLabel.setForeground(Color.BLACK);
+
         JButton endTurn = new JButton("End Turn");
-        // action listener for what happens when the user clicks on the end turn button
+        // ActionListener for what happens when the user clicks on the end turn button
         endTurn.addActionListener(e -> {
             scrabbleModel.play(scrabbleModel.getCurrentMove());
         });
+
         undoButton = new JButton("Undo");
+        // ActionListener for what happens when the user clicks on the undo button
         undoButton.addActionListener(e -> scrabbleModel.undo());
+
         redoButton = new JButton("Redo");
+        // ActionListener for what happens when the user clicks on the redo button
         redoButton.addActionListener(e -> scrabbleModel.redo());
 
         //adds labels and buttons to the panel
@@ -53,9 +61,9 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         add(currentScoreLabel);
         add(playerScore);
         playerScore.setForeground(Color.BLACK);
-        this.add(endTurn);
-        this.add(undoButton);
-        this.add(redoButton);
+        add(endTurn);
+        add(undoButton);
+        add(redoButton);
 
         // set background colour
         setBackground(new Color(253, 239, 117));
@@ -64,16 +72,18 @@ public class InfoPanel extends JPanel implements ScrabbleView {
     }
 
     /**
-     * Updates the current player's name and score.
+     * Updates the current player's name and score. Disables/enables the undo and redo buttons.
      * @param event A ScrabbleEvent that has occurred.
-     * @author Alexander Hum 101180821
+     * @author Alexander Hum 101180821. Edited by Emily Tang 101192604.
      */
     @Override
     public void update(ScrabbleEvent event) {
         Player currentPlayer = event.getCurrentPlayer();
-        playerName.setText(currentPlayer.getName()); // sets text for players name
-        playerScore.setText(currentPlayer.getScore() + ""); // sets text for the players score
+        playerName.setText(currentPlayer.getName()); // displays the current player's name
+        playerScore.setText(currentPlayer.getScore() + ""); // displays the current player's score
 
+        // disable/enable the undo and redo buttons based on the amount of ScrabbleMoves in the stack
+        // do not allow the BotPlayer to undo moves
         Stack<UndoMove> undoStack = event.getScrabbleModel().getUndoStack();
         boolean setEnabled;
         if ((undoStack.size() > 0 && undoStack.peek().getMove().getPlayer() instanceof BotPlayer)

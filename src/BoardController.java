@@ -4,21 +4,45 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
 
+/**
+ * Handles user interactions with the BoardPanel.
+ * @author Guy Morgenshtern 101151430
+ */
 public class BoardController implements ActionListener, Serializable {
 
-    private ScrabbleModel model;
-    private BoardPanel view;
+    /** A ScrabbleModel to update. */
+    private final ScrabbleModel model;
+
+    /** A BoardPanel to update. */
+    private final BoardPanel boardPanel;
+
+    /** A 2D array of JButtons representing the board in BoardPanel. */
     private JButton[][] buttons;
 
-    public BoardController(ScrabbleModel model, BoardPanel view) {
+    /**
+     * Creates a BoardController with the specified ScrabbleModel and the BoardPanel.
+     * @param model A ScrabbleModel to update.
+     * @param boardPanel A BoardPanel to update.
+     * @author Guy Morgenshtern 101151430
+     */
+    public BoardController(ScrabbleModel model, BoardPanel boardPanel) {
         this.model = model;
-        this.view = view;
-        //buttons = view.getButtons();
+        this.boardPanel = boardPanel;
     }
 
+    /**
+     * Updates the JButtons to reflect the current state of the JButtons in the BoardPanel.
+     * @author Guy Morgenshtern 101151430
+     */
     public void updateButtons() {
-        buttons = view.getButtons();
+        buttons = boardPanel.getButtons();
     }
+
+    /**
+     * Handles user interactions with the BoardPanel.
+     * @param e The event to be processed when the user interacts with the BoardPanel.
+     */
+    @Override
     public void actionPerformed(ActionEvent e) {
         String actionCommand = e.getActionCommand();
 
@@ -30,8 +54,6 @@ public class BoardController implements ActionListener, Serializable {
         String selectedLetter = model.getSelectedLetter();
         buttons[x][y].setForeground(Color.BLACK);
         buttons[x][y].setFont(new Font("Helvetica", Font.PLAIN, 12));
-
-        // Alternate Implementation for Squares Coloring
 
         // support for blank tile
         if (selectedLetter.equals(" ")) {

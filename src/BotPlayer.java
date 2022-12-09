@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 /**
  * A BotPlayer in the game of Scrabble.
+ * @author Emily Tang 101192604
  */
 public class BotPlayer extends Player {
 
@@ -233,11 +234,11 @@ public class BotPlayer extends Player {
      * @param index An index representing where the pre-existing board letter is in the specified valid word.
      * @param row An integer representing the row where the pre-existing board letter is on the board.
      * @param col An integer representing the column where the pre-existing board letter is on the board.
-     * @return An ArrayList of BoardClicks representing the BotPlayer's turn (if the BotPlayer is playing the first move
-     * of the game).
+     * @return A ScrabbleMove representing the BotPlayer's turn (if the BotPlayer is playing the first move of the game).
      * @author Emily Tang 101192604
      */
-    private ArrayList<BoardClick> getBoardClicksForFirstMove(Board board, String validWord, int index, int row, int col) {
+    private ScrabbleMove getScrabbleMoveForFirstMove(Board board, String validWord, int index, int row, int col) {
+        // determine the BoardClicks that make up the ScrabbleMove
         ArrayList<BoardClick> boardClicks = new ArrayList<>();
         for (int i = 0; i < validWord.length(); i++) {
             if (i != index) { // do not add the pre-existing letter into ScrabbleMove
@@ -246,7 +247,7 @@ public class BotPlayer extends Player {
                 board.getTileOnBoard(row, walkingColumn).setLetter(validWord.charAt(i));
             }
         }
-        return boardClicks;
+        return new ScrabbleMove(boardClicks, ScrabbleModel.Direction.HORIZONTAL, this);
     }
 
     /**
@@ -275,10 +276,11 @@ public class BotPlayer extends Player {
      * @param direction A Direction representing the orientation of the word that the BotPlayer would like to play.
      * @param row An integer representing the starting row of the word that the BotPlayer would like to play.
      * @param col An integer representing the starting column of the word that the BotPlayer would like to play.
-     * @return An ArrayList of BoardClicks representing the BotPlayer's turn.
+     * @return A ScrabbleMove representing the BotPlayer's turn.
      * @author Emily Tang 101192604
      */
-    private ArrayList<BoardClick> getBoardClicks(Board board, String validWord, ScrabbleModel.Direction direction, int row, int col) {
+    private ScrabbleMove getScrabbleMove(Board board, String validWord, ScrabbleModel.Direction direction, int row, int col) {
+        // determine the BoardClicks that make up the ScrabbleMove
         ArrayList<BoardClick> boardClicks = new ArrayList<>();
         for (int i = 1; i < validWord.length(); i++) { // do not include the letter that's already on the board
             System.out.println("Adding letter " + validWord.charAt(i) + " to BoardClick at " + row + " " + col + ".");
@@ -290,7 +292,7 @@ public class BotPlayer extends Player {
                 row++; // move towards the bottom
             }
         }
-        return boardClicks;
+        return new ScrabbleMove(boardClicks, direction, this);
     }
 
     /**
@@ -334,7 +336,8 @@ public class BotPlayer extends Player {
                             // determine where the letter from the board is in the valid word
                             int index = getIndexOfBoardLetter(validWord, boardLetter.charAt(0));
                             // create an ArrayList of BoardClicks, BotPlayer will add this word horizontally
-                            return new ScrabbleMove(getBoardClicksForFirstMove(board, validWord, index, row, col), ScrabbleModel.Direction.HORIZONTAL, this);
+                            // return new ScrabbleMove(getScrabbleMoveForFirstMove(board, validWord, index, row, col), ScrabbleModel.Direction.HORIZONTAL, this);
+                            return getScrabbleMoveForFirstMove(board, validWord, index, row, col);
                         }
 
                     } else if (numOfSurroundingEmptySquares == 2 || numOfSurroundingEmptySquares == 3) {
@@ -368,7 +371,8 @@ public class BotPlayer extends Player {
                             if (validWord != null) {
                                 System.out.println("BotPlayer found a valid word! The word is: " + validWord + "!");
                                 // create an ArrayList of BoardClicks
-                                return new ScrabbleMove(getBoardClicks(board, validWord, direction, rowToPlaceLetter, colToPlaceLetter), direction, this);
+                                // return new ScrabbleMove(getScrabbleMove(board, validWord, direction, rowToPlaceLetter, colToPlaceLetter), direction, this);
+                                return getScrabbleMove(board, validWord, direction, rowToPlaceLetter, colToPlaceLetter);
                             }
                         }
                         // could not find a valid word to add to the board, remove the board letter from the hand
