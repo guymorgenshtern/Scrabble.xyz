@@ -123,10 +123,19 @@ public class ScrabbleModel implements Serializable {
         initializeLetterBag("/letters_by_quantity");
     }
 
+    /**
+     * @return boolean - is game a load
+     * @author Guy Morgenshtern - 101151430
+     */
     public boolean isLoadGame() {
         return loadGame;
     }
 
+    /**
+     * sets game loaded
+     * @param loadGame
+     * @author Guy Morgenshtern - 101151430
+     */
     public void setLoadGame(boolean loadGame) {
         this.loadGame = loadGame;
     }
