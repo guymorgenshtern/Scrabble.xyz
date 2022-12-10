@@ -8,6 +8,8 @@ import java.awt.*;
  */
 public class ScorePanel extends JPanel implements ScrabbleView {
 
+    private static final String SPACE = "               ";
+
     /** An ArrayList of JLabels to display the players and their current scores. */
     private final ArrayList<JLabel> playerLabels;
 
@@ -22,7 +24,7 @@ public class ScorePanel extends JPanel implements ScrabbleView {
         setSize(900, 100);
 
         // initialize a title for the panel
-        JLabel scoreboardLabel = new JLabel("Scoreboard               ");
+        JLabel scoreboardLabel = new JLabel("Scoreboard" + SPACE);
         scoreboardLabel.setFont(new Font("Dialog", Font.BOLD, 16));
         add(scoreboardLabel);
 
@@ -53,7 +55,11 @@ public class ScorePanel extends JPanel implements ScrabbleView {
         // update the players in the ScorePanel
         for (int i = 0; i < players.size(); i++) {
             Player p = players.get(i);
-            playerLabels.get(i).setText(p.getName() + ": " + p.getScore() + "               ");
+            String text = p.getName() + ": " + p.getScore();
+            if (i + 1 < players.size()) {
+                text += SPACE;
+            }
+            playerLabels.get(i).setText(text);
         }
     }
 }
