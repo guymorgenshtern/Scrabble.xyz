@@ -79,8 +79,6 @@ public class ScrabbleModel implements Serializable {
     public ScrabbleModel() throws IOException {
         board = new Board("/default_board.txt");
         initializeScrabbleModel();
-        undoStack = new Stack<>();
-        redoStack = new Stack<>();
     }
 
     /**
@@ -112,6 +110,8 @@ public class ScrabbleModel implements Serializable {
      * @author Emily Tang 101192604
      */
     private void initializeScrabbleModel() throws IOException {
+        undoStack = new Stack<>();
+        redoStack = new Stack<>();
         lib = new Library();
         scorePerLetter = new HashMap<>();
         views = new ArrayList<>();
@@ -271,6 +271,13 @@ public class ScrabbleModel implements Serializable {
      * @author Alexander Hum 101180821
      */
     public int getNumberOfRedoStack() { return redoStack.size(); }
+
+    /**
+     * get redoStack
+     * @return redoStack
+     * @author Guy Morgenshtern 101151430
+     */
+    public Stack<UndoMove> getRedoStack() { return redoStack; }
 
     /**
      * @param l A String representing a letter to check the score of.

@@ -86,19 +86,16 @@ public class InfoPanel extends JPanel implements ScrabbleView {
         // do not allow the BotPlayer to undo moves
         Stack<UndoMove> undoStack = event.getScrabbleModel().getUndoStack();
         boolean setEnabled;
-        if ((undoStack.size() > 0 && undoStack.peek().getMove().getPlayer() instanceof BotPlayer)
-            || undoStack.size() == 0) {
+        if (undoStack == null || ((undoStack.size() > 0 && undoStack.peek().getMove().getPlayer() instanceof BotPlayer)
+            || undoStack.size() == 0)) {
             setEnabled = false;
         } else {
             setEnabled = true;
         }
         undoButton.setEnabled(setEnabled);
 
-        if (event.getScrabbleModel().getNumberOfRedoStack() > 0) {
-            redoButton.setEnabled(true);
-        } else {
-            redoButton.setEnabled(false);
-        }
+        Stack<UndoMove> redoStack = event.getScrabbleModel().getRedoStack();
+        redoButton.setEnabled(redoStack != null && (redoStack.size() > 0));
     }
 
 }

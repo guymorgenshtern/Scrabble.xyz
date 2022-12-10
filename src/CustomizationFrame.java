@@ -419,7 +419,7 @@ public class CustomizationFrame extends JFrame {
                     customBoard[i][j] = buttons[i][j].getText();
 
                     // save premium squares in XML format if the user provided a file name
-                    if (!fileName.equals("") && !customBoard[i][j].equals("")) {
+                    if (fileName != null && !fileName.equals("") && !customBoard[i][j].equals("")) {
                         premiumSquareXML.append("    <PremiumSquare multiplier=\"").append(customBoard[i][j])
                                 .append("\" square=\"").append(i).append(",").append(j).append("\"/>\n");
                     }
