@@ -499,20 +499,26 @@ public class ScrabbleModel implements Serializable {
                 board.getTileOnBoard(coords[0], coords[1]).setLetter(' ');
             }
 
+            // returns the letters back into the letter bag after undo is clicked
             Player currentPlayer = m.getMove().getPlayer();
+            int handSize = currentPlayer.getAvailableLetters().size();
             for (int i = 0; i < m.getMove().getCoords().size(); i++) {
-                int index = currentPlayer.getAvailableLetters().size() - 1 - i;
+                int index = handSize - 1 - i;
                 letterBag.addLetter(currentPlayer.getAvailableLetters().get(index), 1);
                 currentPlayer.getAvailableLetters().remove(index);
+
             }
 
+            // adds the letters that were on the board back into the hand of the player
             for (BoardClick b : boardClicks) {
                 currentPlayer.addLetter(b.getLetter());
             }
 
             m.getMove().setMoveType(ScrabbleMove.MoveType.UNDO);
+            // changes the score of the player
             currentPlayer.setScore(m.getScore());
 
+            // updates the view
             for (ScrabbleView v : views) {
                 v.update(new ScrabbleEvent(this, m.getMove(), currentPlayer, board, GameStatus.NOT_FINISHED));
             }
@@ -525,7 +531,7 @@ public class ScrabbleModel implements Serializable {
                 v.update(event);
             }
             System.out.println("Popped " + m);
-            System.out.println(undoStack.size());
+            System.out.println("Size of Undo Stack: " + undoStack.size());
             System.out.println("Redo Stack:\n" + m2);
         }
     }
