@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 /**
  *  A Player in the game of Scrabble.
- *  @author Guy Morgenshtern 101151430
+ *  @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
  */
 public class Player implements Serializable {
 
@@ -45,6 +45,18 @@ public class Player implements Serializable {
     }
 
     /**
+     * @param map A HashMap to store the number of occurrences of letters.
+     * @param letter A String representing a letter to add to the specified HashMap.
+     * @return A HashMap that stores number of occurrences of letters.
+     * @author Emily Tang 101192604
+     */
+    private HashMap<String, Integer> putLetterInHashMap(HashMap<String, Integer> map, String letter) {
+        int numOfLetter = map.containsKey(letter) ? map.get(letter) + 1 : 1;
+        map.put(letter, numOfLetter);
+        return map;
+    }
+
+    /**
      * Determines if the Player has the letters to make the specified word.
      * @param input A String representation of word that will be checked.
      * @return True, if Player has all letters needed. False, if not.
@@ -54,22 +66,14 @@ public class Player implements Serializable {
         // create a HashMap to store all the occurrences of each letter in the Player's hand
         HashMap<String, Integer> letterOccurrencesInHand = new HashMap<>();
         for (String s : hand) {
-            if (letterOccurrencesInHand.containsKey(s)) {
-                letterOccurrencesInHand.put(s, letterOccurrencesInHand.get(s) + 1);
-            } else {
-                letterOccurrencesInHand.put(s, 1);
-            }
+            letterOccurrencesInHand = putLetterInHashMap(letterOccurrencesInHand, s);
         }
 
         // create a HashMap to store all the occurrences of each letter in the inputted String
         HashMap<String, Integer> letterOccurrencesInInput = new HashMap<>();
         for (char c : input.toUpperCase().toCharArray()) {
             String s = c + "";
-            if (letterOccurrencesInInput.containsKey(s)) {
-                letterOccurrencesInInput.put(s, letterOccurrencesInInput.get(s) + 1);
-            } else {
-                letterOccurrencesInInput.put(s, 1);
-            }
+            letterOccurrencesInInput = putLetterInHashMap(letterOccurrencesInInput, s);
         }
 
         // determine if the player has enough of each letter to create the inputted String

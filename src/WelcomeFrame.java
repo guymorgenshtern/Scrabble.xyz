@@ -21,18 +21,20 @@ public class WelcomeFrame extends JFrame {
 
     /**
      * Initializes a JFrame to welcome the users to the game of Scrabble.
-     * @author Emily Tang 101192604
+     * @author Emily Tang 101192604 and Guy Morgenshtern 101151430
      */
     public WelcomeFrame() {
         // initializes a JFrame with a vertical BoxLayout
         super("Welcome");
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-        ScrabbleFileFilter ff = new ScrabbleFileFilter();
 
         // set the welcomePanel in the center of the JFrame
         add(Box.createVerticalGlue());
         createWelcomePanel();
         add(Box.createVerticalGlue());
+
+        // create a ScrabbleFileFilter for the load feature
+        ScrabbleFileFilter fileFilter = new ScrabbleFileFilter();
 
         // ActionListener for when playGameButton is pressed
         playGameButton.addActionListener(e -> {
@@ -54,12 +56,12 @@ public class WelcomeFrame extends JFrame {
 
         // ActionListener for when loadGameButton is pressed
         loadGameButton.addActionListener(e -> {
-            JFileChooser fc = new JFileChooser();
-            fc.addChoosableFileFilter(ff);
-            int i = fc.showOpenDialog(this);
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.addChoosableFileFilter(fileFilter);
+            int i = fileChooser.showOpenDialog(this);
             ScrabbleModel model;
             if (i == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
+                File file = fileChooser.getSelectedFile();
                 String filePath = file.getPath();
 
                 try {

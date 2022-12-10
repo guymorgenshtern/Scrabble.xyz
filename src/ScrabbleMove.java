@@ -22,17 +22,10 @@ public class ScrabbleMove implements Serializable {
     /** A Player representing the player that placed the word. */
     private Player p;
 
-    private boolean isRedo;
+    /** An enumeration representing the different types of moves. */
+    public enum MoveType { UNDO, REDO, DEFAULT, INIT }
 
-    private boolean isUndo;
-
-    public enum MoveType {
-        UNDO,
-        REDO,
-        DEFAULT,
-        INIT
-    }
-
+    /** A MoveType representing the type of move that the ScrabbleMove is. */
     private MoveType moveType;
 
     /**
@@ -54,16 +47,23 @@ public class ScrabbleMove implements Serializable {
         this.coords = coords;
         this.direction = direction;
         isValid = false;
-        this.p = player;
-        isRedo = false;
-        isUndo = false;
-        this.moveType = MoveType.DEFAULT;
+        p = player;
+        moveType = MoveType.DEFAULT;
     }
 
+    /**
+     * @return A MoveType representing the type of move that the ScrabbleMove is.
+     * @author Guy Morgenshtern 101151430
+     */
     public MoveType getMoveType() {
         return moveType;
     }
 
+    /**
+     * Sets the move type to the specified move type.
+     * @param moveType A MoveType representing the type of move that the ScrabbleMove is.
+     * @author Guy Morgenshtern 101151430
+     */
     public void setMoveType(MoveType moveType) {
         this.moveType = moveType;
     }

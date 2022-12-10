@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * HandPanel will display the current player's hand.
@@ -43,13 +44,15 @@ public class HandPanel extends JPanel implements ScrabbleView {
     /**
      * Sets the JButtons to display the specified player's hand.
      * @param p A Player to display the hand of.
-     * @author Guy Morgenshtern 101151430
+     * @author Guy Morgenshtern 101151430. Edited by Emily Tang 101192604.
      */
     private void setHandForTurn(Player p) {
+        ArrayList<String> hand = p.getAvailableLetters();
         for (int i = 0; i < buttons.length; i++) {
-            buttons[i].setText(p.getAvailableLetters().get(i));
-            if (i > p.getAvailableLetters().size() - 1) {
+            if (i > hand.size() - 1) {
                 buttons[i].setEnabled(false);
+            } else {
+                buttons[i].setText(hand.get(i));
             }
         }
     }

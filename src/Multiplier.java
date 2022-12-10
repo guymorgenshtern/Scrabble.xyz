@@ -3,6 +3,7 @@ import java.io.Serializable;
 /**
  * A Multiplier can be added to a Square to multiply how many points a letter/word is worth. A Multiplier counts only on
  * the turn in which it is played.
+ * @author Emily Tang 101192604. Edited by Guy Morgenshtern 101151430.
  */
 public class Multiplier implements Serializable {
 
@@ -54,6 +55,7 @@ public class Multiplier implements Serializable {
 
     /**
      * @return An integer representing the factor of the Multiplier.
+     * @author Guy Morgenshtern 101151430
      */
     public int getMultiplier() {
         return multiplier;

@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Stack;
 
 /**
- * A text-based playable version of Scrabble.
- * @author Guy Morgenshtern 101151430
+ * A model of the game of Scrabble
+ * @author Guy Morgenshtern 101151430. Edited by Alexander Hum 101180821 and Emily Tang 101192604.
  */
 public class ScrabbleModel implements Serializable {
 
@@ -71,23 +71,16 @@ public class ScrabbleModel implements Serializable {
     /** A stack with UndoMove's for redo */
     private transient Stack<UndoMove> redoStack;
 
-    public ScrabbleModel(boolean loadGame) {
-        this.loadGame = loadGame;
-        views = new ArrayList<>();
-    }
-
     /**
-     * Runs a text-based playable version of Scrabble.
+     * Initializes a default ScrabbleModel.
      * @throws IOException If an I/O error occurs.
      * @author Guy Morgenshtern 101151430
      */
-
     public ScrabbleModel() throws IOException {
         board = new Board("/default_board.txt");
         initializeScrabbleModel();
         undoStack = new Stack<>();
         redoStack = new Stack<>();
-
     }
 
     /**
@@ -101,6 +94,16 @@ public class ScrabbleModel implements Serializable {
     public ScrabbleModel(String[][] customBoard, int numRows, int numCols) throws IOException {
         board = new Board(customBoard, numRows, numCols);
         initializeScrabbleModel();
+    }
+
+    /**
+     * Initializes a ScrabbleModel by loading a previous game in.
+     * @param loadGame True, if a game is to be loaded. False, if not.
+     * @author Guy Morgenshtern 101151430
+     */
+    public ScrabbleModel(boolean loadGame) {
+        this.loadGame = loadGame;
+        views = new ArrayList<>();
     }
 
     /**
@@ -124,17 +127,17 @@ public class ScrabbleModel implements Serializable {
     }
 
     /**
-     * @return boolean - is game a load
-     * @author Guy Morgenshtern - 101151430
+     * @return True, if the game was loaded in. False, if not.
+     * @author Guy Morgenshtern 101151430
      */
     public boolean isLoadGame() {
         return loadGame;
     }
 
     /**
-     * sets game loaded
-     * @param loadGame
-     * @author Guy Morgenshtern - 101151430
+     * Sets the game to be loaded.
+     * @param loadGame True, if a game is to be loaded in. False, if not.
+     * @author Guy Morgenshtern 101151430
      */
     public void setLoadGame(boolean loadGame) {
         this.loadGame = loadGame;
@@ -211,15 +214,14 @@ public class ScrabbleModel implements Serializable {
     }
 
     /**
-     * Initialises a Scrabble.xyz game from a model generated from loading
-     * @author Guy Morgenshtern - 101151430
+     * Initializes a Scrabble.xyz game from a load.
+     * @author Guy Morgenshtern 101151430
      */
     public void initializeLoadedGame() throws IOException {
         views = new ArrayList<>();
         undoStack = new Stack<>();
         redoStack = new Stack<>();
         usedLetters = new ArrayList<>();
-        // numberOfTries = 0;
         ScrabbleMove initMove = new ScrabbleMove();
         initMove.setValid(true);
         new ScrabbleGameFrame(this); // navigate to the default game of Scrabble
@@ -232,6 +234,7 @@ public class ScrabbleModel implements Serializable {
      * Initializes the LetterBag using the specified file.
      * @param fileName A String representing the name of the file that contains the specific quantity of letters.
      * @throws IOException If an I/O error occurs.
+     * @author Guy Morgenshtern 101151430
      */
     public void initializeLetterBag(String fileName) throws IOException {
         InputStream inputStream = getClass().getResourceAsStream(fileName);
@@ -239,11 +242,12 @@ public class ScrabbleModel implements Serializable {
 
         String line = br.readLine();
         while (line != null) {
-            //letter quantity
-            letterBag.addLetter(line.substring(0, 1), Integer.parseInt(line.substring(2, line.lastIndexOf("-"))));
-
-            //letter score
-            scorePerLetter.put(line.substring(0, 1), Integer.parseInt(line.substring(line.lastIndexOf("-") + 1)));
+            // get the letter
+            String letter = line.substring(0, 1);
+            // set the letter quantity
+            letterBag.addLetter(letter, Integer.parseInt(line.substring(2, line.lastIndexOf("-"))));
+            // set the letter score
+            scorePerLetter.put(letter, Integer.parseInt(line.substring(line.lastIndexOf("-") + 1)));
             line = br.readLine();
         }
     }
@@ -257,14 +261,14 @@ public class ScrabbleModel implements Serializable {
     }
 
     /**
-     * Gets the number of moves for the undo stack
-     * @return An integer of the number of moves
+     * @return An integer representing the number of moves in the undo stack.
+     * @author Alexander Hum 101180821
      */
     public int getNumberOfUndoStack() { return undoStack.size(); }
 
     /**
-     * Gets the number of moves for the redo stack
-     * @return An integer of the number of moves
+     * @return An integer representing the number of moves in the redo stack.
+     * @author Alexander Hum 101180821
      */
     public int getNumberOfRedoStack() { return redoStack.size(); }
 
@@ -305,22 +309,17 @@ public class ScrabbleModel implements Serializable {
         int columnCenterSquare = (board.getNumCols() - 1) / 2;
         board.setSquare(firstLetter.toCharArray()[0], rowCenterSquare, columnCenterSquare);
 
-
-        // Game is initialized with a singular letter in the centre of the board
+        // game is initialized with a singular letter in the centre of the board
         ArrayList<BoardClick> coordsList = new ArrayList<>();
-        int[] coords = new int[2];
-        coords[0] = rowCenterSquare;
-        coords[1] = columnCenterSquare;
-        BoardClick b = new BoardClick(coords, firstLetter);
-        coordsList.add(b);
-        ScrabbleMove m = new ScrabbleMove();
-        m.setCoords(coordsList);
-        m.setValid(true);
-        m.setMoveType(ScrabbleMove.MoveType.INIT);
+        coordsList.add(new BoardClick(new int[] { rowCenterSquare, columnCenterSquare }, firstLetter));
+        ScrabbleMove move = new ScrabbleMove();
+        move.setCoords(coordsList);
+        move.setValid(true);
+        move.setMoveType(ScrabbleMove.MoveType.INIT);
 
         // update the views to display the letter at the centre of the board
         for (ScrabbleView v : getViews()) {
-            v.update(new ScrabbleEvent(this, m, playerList.get(0), board, GameStatus.NOT_FINISHED));
+            v.update(new ScrabbleEvent(this, move, playerList.get(0), board, GameStatus.NOT_FINISHED));
         }
     }
 
@@ -459,25 +458,32 @@ public class ScrabbleModel implements Serializable {
         for (String s : lettersToScore) {
             total += getLetterScore(s);
         }
+
         //score any surrounding words created
         for (String s : findSurroundingWords(move)) {
             for (char c : s.toCharArray()) {
                 total += scorePerLetter.get(c + "");
             }
         }
+
         for (Multiplier m : wordMultipliers) {
             total = m.calculateScore(total);
         }
+
         return total;
     }
 
+    /**
+     * @return A Stack of the current moves in the undo stack.
+     * @author Emily Tang 101192604
+     */
     public Stack<UndoMove> getUndoStack() {
         return undoStack;
     }
 
     /**
-     * Undoes the players current move
-     * @author Alexander Hum 101180821
+     * Undoes the player's current move.
+     * @author Alexander Hum 101180821. Edited by Guy Morgenshtern 101151430.
      */
     public void undo() {
         if (!(undoStack.peek().getMove().getPlayer() instanceof BotPlayer)) {
@@ -486,26 +492,21 @@ public class ScrabbleModel implements Serializable {
             playerTurnCounter--;
 
             // sets squares on the board to be blank
-            for (int i = 0; i < m.getMove().getCoords().size(); i++) {
-                board.getTileOnBoard(m.getMove().getCoords().get(i).getCoords()[0], m.getMove().getCoords().get(i).getCoords()[1]).setLetter(' ');
+            ArrayList<BoardClick> boardClicks = m.getMove().getCoords();
+            for (BoardClick boardClick : boardClicks) {
+                // get the coordinates of the BoardClick
+                int[] coords = boardClick.getCoords();
+                board.getTileOnBoard(coords[0], coords[1]).setLetter(' ');
             }
 
             Player currentPlayer = m.getMove().getPlayer();
-            System.out.println("Current player is: " + currentPlayer);
             for (int i = 0; i < m.getMove().getCoords().size(); i++) {
-                System.out.println("currentPlayer.getAvailableLetters().size() - 1 - i: " + (currentPlayer.getAvailableLetters().size() - 1 - i));
-                this.letterBag.addLetter(currentPlayer.getAvailableLetters().get(currentPlayer.getAvailableLetters().size() - 1 - i), 1);
-                currentPlayer.getAvailableLetters().remove(currentPlayer.getAvailableLetters().size() - 1 - i);
+                int index = currentPlayer.getAvailableLetters().size() - 1 - i;
+                letterBag.addLetter(currentPlayer.getAvailableLetters().get(index), 1);
+                currentPlayer.getAvailableLetters().remove(index);
             }
 
-            // letters in current players hand
-            String letters = currentPlayer.getAvailableLetters().size() + " Letters in " + currentPlayer.getName() + "'s hand: ";
-            for (String s : currentPlayer.getAvailableLetters()) {
-                letters += s + " ";
-            }
-            System.out.println(letters);
-
-            for (BoardClick b : m.getMove().getCoords()) {
+            for (BoardClick b : boardClicks) {
                 currentPlayer.addLetter(b.getLetter());
             }
 
@@ -513,12 +514,12 @@ public class ScrabbleModel implements Serializable {
             currentPlayer.setScore(m.getScore());
 
             for (ScrabbleView v : views) {
-                v.update(new ScrabbleEvent(this, m.getMove(), m.getMove().getPlayer(), board, GameStatus.NOT_FINISHED));
+                v.update(new ScrabbleEvent(this, m.getMove(), currentPlayer, board, GameStatus.NOT_FINISHED));
             }
 
             System.out.println(getCurrentPlayer().getScore());
 
-            ScrabbleEvent event = new ScrabbleEvent(this, m.getMove(), playerList.get(playerTurnCounter % playerList.size()), this.board, GameStatus.NOT_FINISHED);
+            ScrabbleEvent event = new ScrabbleEvent(this, m.getMove(), playerList.get(playerTurnCounter % playerList.size()), board, GameStatus.NOT_FINISHED);
             currentMove = new ScrabbleMove();
             for (ScrabbleView v : this.getViews()) {
                 v.update(event);
@@ -531,13 +532,14 @@ public class ScrabbleModel implements Serializable {
 
     /**
      * Redoes the player current move
-     * @author Alexander Hum 101180821
+     * @author Alexander Hum 101180821. Edited by Emily Tang 101192604.
      */
     public void redo() {
         UndoMove r = redoStack.pop();
         r.getMove().setMoveType(ScrabbleMove.MoveType.REDO);
         for (BoardClick b : r.getMove().getCoords()) {
-            board.getTileOnBoard(b.getCoords()[0], b.getCoords()[1]).setLetter(b.getLetter().charAt(0));
+            int[] coords = b.getCoords();
+            board.getTileOnBoard(coords[0], coords[1]).setLetter(b.getLetter().charAt(0));
         }
         play(r.getMove());
     }
@@ -552,16 +554,19 @@ public class ScrabbleModel implements Serializable {
         return skipCounter == playerList.size();
     }
 
+    /**
+     * @return A Player representing the current player.
+     * @author Alexander Hum 101180821
+     */
     public Player getCurrentPlayer() {
-        Player currentPlayer = playerList.get(playerTurnCounter % playerList.size());
-        return currentPlayer;
+        return playerList.get(playerTurnCounter % playerList.size());
     }
 
     /**
-     * removes letters used by a player in their move from their hand
-     * @param usedLetters
-     * @param currentPlayer
-     * @author Guy Morgenshtern - 101151430
+     * Removes letters used by a player during their move from their hand.
+     * @param usedLetters An ArrayList of Integers representing the index of the used letters in the player's hand.
+     * @param currentPlayer A Player to remove letters from their hand.
+     * @author Guy Morgenshtern 101151430
      */
     private void removePlayedLettersFromPlayer(ArrayList<Integer> usedLetters, Player currentPlayer) {
         // remove played letters
@@ -572,9 +577,10 @@ public class ScrabbleModel implements Serializable {
     }
 
     /**
-     * removes letters used by a bot in their move from their hand - bot interacts with board/model differently than player
-     * @param move
-     * @param currentPlayer
+     * Removes letters used by a BotPlayer during their move from their hand.
+     * @param move A ScrabbleMove representing the BotPlayer's move.
+     * @param currentPlayer A Player representing the BotPlayer.
+     * @author Guy Morgenshtern 101151430 and Emily Tang 101192604
      */
     private void removePlayedLettersFromBot(ScrabbleMove move, Player currentPlayer) {
         for (BoardClick boardClick : move.getCoords()) {
@@ -583,8 +589,9 @@ public class ScrabbleModel implements Serializable {
     }
 
     /**
-     * determines the direction of the move played
-     * @param move
+     * Determines the direction of the move that was played.
+     * @param move A ScrabbleMove that was just played.
+     * @author Guy Morgenshtern 101151430
      */
     private void determineMoveDirection(ScrabbleMove move) {
         boolean horizontal = true;
@@ -617,6 +624,12 @@ public class ScrabbleModel implements Serializable {
         }
     }
 
+    /**
+     * Deals new letters to player.
+     * @param move A ScrabbleMove that was just played.
+     * @param currentPlayer A Player representing the current player.
+     * @author Guy Morgenshtern 101151430 and Emily Tang 101192604
+     */
     private void dealLettersToPlayer(ScrabbleMove move, Player currentPlayer) {
         // deal new letters to player
         int numberOfBoardClicksUsed = move.getCoords().size();
@@ -630,11 +643,11 @@ public class ScrabbleModel implements Serializable {
     }
 
     /**
-     * generates an event that signifies the end of the game and determines if tied or not
-     * @param move
-     * @param currentPlayer
-     * @return scrabble event
-     * @author Guy Morgenshtern - 101151430
+     * Generates an event that signifies the end of the game and determines if tied or not.
+     * @param move A ScrabbleMove that was just played.
+     * @param currentPlayer A Player representing the current player.
+     * @return A ScrabbleEvent representing the current state of the game.
+     * @author Guy Morgenshtern 101151430
      */
     private ScrabbleEvent generateEndGamEvent(ScrabbleMove move, Player currentPlayer) {
         playerList.sort(playerComparator);
@@ -646,13 +659,12 @@ public class ScrabbleModel implements Serializable {
     }
 
     /**
-     * swap a random letter out from a players hand
-     * @param currentPlayer
-     * @author Guy Morgenshtern - 101151430
+     * Swaps a random letter out from a player's hand.
+     * @param currentPlayer A Player representing the player to swap a letter out of.
+     * @author Guy Morgenshtern 101151430
      */
     private void swapRandomLetterFromPlayerHand(Player currentPlayer) {
-        int rand = (int)(Math.random() * 7);
-        currentPlayer.removeLetter(rand);
+        currentPlayer.removeLetter((int) (Math.random() * 7));
         currentPlayer.addLetter(letterBag.getRandomLetter());
     }
 
@@ -668,7 +680,6 @@ public class ScrabbleModel implements Serializable {
         // coords is checking letters on the board
         if(status == GameStatus.NOT_FINISHED) {
             if (move.getCoords().size() == 0) {
-
                 //if the game has ended (all players have skipped their turn in succession)
                 if (haveAllPlayerSkipped()) {
                    event = generateEndGamEvent(move, currentPlayer);
@@ -693,17 +704,15 @@ public class ScrabbleModel implements Serializable {
 
                 //score the move if it is valid
                 if (move.isValid()) {
-
                     //clear the redo stack if played a regular move
                     if (redoStack.size() > 0 && move.getMoveType() != ScrabbleMove.MoveType.REDO) {
                         redoStack.clear();
                     }
 
                     usedLetters.sort(Collections.reverseOrder());
-                    ArrayList<Integer> indexesOfUsedLetters = (ArrayList<Integer>) usedLetters.clone();
 
                     //add current move to undo stack
-                    UndoMove undoMove = new UndoMove(move, currentPlayer.getScore(), indexesOfUsedLetters);
+                    UndoMove undoMove = new UndoMove(move, currentPlayer.getScore());
 
                     //calculate score
                     currentPlayer.setScore(currentPlayer.getScore() + calculateMoveScore(move));
@@ -749,8 +758,8 @@ public class ScrabbleModel implements Serializable {
 
     /**
      * Saves game state of scrabble into a file with prefix provided + _sxyz.ser
-     * @param prefix
-     * @throws IOException
+     * @param prefix A String representing the prefix of the file name.
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
      * @author Guy Morgenshtern 101151430
      */
     public void saveScrabble(String prefix) throws IOException {
@@ -763,14 +772,13 @@ public class ScrabbleModel implements Serializable {
     }
 
     /**
-     * load a scrabble game given a file path
-     * @param filePath
-     * @return a scrabble model depicting the game state at time of save
-     * @throws IOException
+     * Load a Scrabble game given a file path.
+     * @param filePath A String representing the file path.
+     * @return A ScrabbleModel depicting the state of the game at the time of save.
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
      * @author Guy Morgenshtern 101151430
      */
     public static ScrabbleModel loadScrabble(String filePath) throws IOException {
-
         //creating streams
         FileInputStream fileIn = new FileInputStream(filePath);
         ObjectInputStream in = null;
@@ -783,18 +791,14 @@ public class ScrabbleModel implements Serializable {
         }
 
         ScrabbleModel m = new ScrabbleModel(true);
-        try
-        {
+        try {
             m = (ScrabbleModel) in.readObject();
-
-        }
-        catch (EOFException exc) {
+        } catch (EOFException exc) {
             //always close streams
             System.out.println("end of file");
             fileIn.close();
             in.close();
-        }
-        catch (IOException | ClassNotFoundException exc) {
+        } catch (IOException | ClassNotFoundException exc) {
             JOptionPane.showMessageDialog(null, "Could not load game, please ensure file type is " +
                     "'.ser' and the file is a valid Scrabble.xyz save");
             exc.printStackTrace();

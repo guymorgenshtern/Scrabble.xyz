@@ -3,10 +3,10 @@ import java.io.IOException;
 
 /**
  * Initializes players in a game of Scrabble using JOptionPanes.
- *
  * The first JOptionPane asks the user for the total number of players. The second JOption asks the user how many bot
  * players they would like to play with. The following JOptionPanes asks the user to input the names of the real
  * players.
+ * @author Emily Tang 101192604
  */
 public class InitController extends JOptionPane {
 

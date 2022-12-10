@@ -1,5 +1,6 @@
 /**
  * The View in the MVC pattern of a game of Scrabble.
+ * @author Francisco DeGrano 101147447
  */
 public interface ScrabbleView {
 

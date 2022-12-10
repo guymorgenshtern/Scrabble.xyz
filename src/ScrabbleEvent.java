@@ -2,6 +2,7 @@ import java.util.EventObject;
 
 /**
  * Triggers when a game event occurs in Scrabble.
+ * @author Guy Morgenshtern 101151430. Edited by Alexander Hum 101180821.
  */
 public class ScrabbleEvent extends EventObject {
 
@@ -24,7 +25,7 @@ public class ScrabbleEvent extends EventObject {
      * @param currentPlayer A Player representing the current player.
      * @param board A Board representing the current game board.
      * @param gameStatus A GameStatus to determine if the game is finished or not.
-     * @author Guy Morgenshtern 101151430
+     * @author Guy Morgenshtern 101151430. Edited by Alexander Hum 101180821.
      */
     public ScrabbleEvent(ScrabbleModel scrabbleModel, ScrabbleMove move, Player currentPlayer, Board board, ScrabbleModel.GameStatus gameStatus) {
         super(scrabbleModel);
@@ -68,7 +69,7 @@ public class ScrabbleEvent extends EventObject {
 
     /**
      * @return A GameStatus to determine if the game is finished or not.
-     * @author Guy Morgenshtern 101151430
+     * @author Guy Morgenshtern 101151430. Edited by Alexander Hum 101180821.
      */
     public ScrabbleModel.GameStatus getGameStatus() { return gameStatus; }
 

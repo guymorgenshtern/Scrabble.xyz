@@ -1,6 +1,9 @@
 import java.io.Serializable;
 import java.util.Comparator;
 
+/**
+ * Compares scores of players using Comparator.
+ */
 public class PlayerComparator implements Comparator<Player>, Serializable {
 
     /**

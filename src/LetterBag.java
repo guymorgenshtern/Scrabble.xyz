@@ -1,9 +1,9 @@
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 
 /**
- * Letter Bag that will hold letters and the quantity
+ * LetterBag holds all the letter tiles in the game of Scrabble.
+ * @author Alexander Hum 101180821. Edited by Guy Morgenshtern 101151430 and Emily Tang 101192604.
  */
 public class LetterBag implements Serializable {
 
