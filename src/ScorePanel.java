@@ -8,6 +8,7 @@ import java.awt.*;
  */
 public class ScorePanel extends JPanel implements ScrabbleView {
 
+    /** A String representing spacing between elements. */
     private static final String SPACE = "               ";
 
     /** An ArrayList of JLabels to display the players and their current scores. */
